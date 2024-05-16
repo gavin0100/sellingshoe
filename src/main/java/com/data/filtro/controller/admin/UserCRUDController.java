@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -43,6 +44,7 @@ public class UserCRUDController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'WAREHOUSE_STAFF', 'ACCOUNTING_STAFF') and hasAnyAuthority('FULL_ACCESS_USER', 'VIEW_USER')")
     public String show(@RequestParam(defaultValue = "5") int sortType, @RequestParam("currentPage") Optional<Integer> page, Model model, HttpSession session) {
         User admin = (User) session.getAttribute("admin");
         if (admin == null) {
@@ -68,18 +70,21 @@ public class UserCRUDController {
 
 
     @PostMapping("/create")
+    @PreAuthorize("hasAnyRole('ADMIN', 'WAREHOUSE_STAFF', 'ACCOUNTING_STAFF') and hasAnyAuthority( 'VIEW_USER')")
     public String create(@ModelAttribute User user) {
         userService.create(user);
         return "redirect:/admin/user";
     }
 
     @PostMapping("/update")
+    @PreAuthorize("hasAnyRole('ADMIN', 'WAREHOUSE_STAFF', 'ACCOUNTING_STAFF') and hasAnyAuthority( 'VIEW_USER')")
     public String update(@ModelAttribute User user) {
         userService.update(user);
         return "redirect:/admin/user";
     }
 
     @PostMapping("/delete")
+    @PreAuthorize("hasAnyRole('ADMIN', 'WAREHOUSE_STAFF', 'ACCOUNTING_STAFF') and hasAnyAuthority( 'VIEW_USER')")
     public String delete(@RequestParam("id") int id) {
         User user = userService.getByUserId(id);
         userService.deleteById(id);

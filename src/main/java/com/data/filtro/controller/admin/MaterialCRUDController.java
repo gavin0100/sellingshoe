@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -36,6 +37,7 @@ public class MaterialCRUDController {
     }
 
     @GetMapping()
+    @PreAuthorize("hasAnyRole('ADMIN', 'WAREHOUSE_STAFF', 'ACCOUNTING_STAFF') and hasAnyAuthority('FULL_ACCESS_MATERIAL', 'VIEW_MATERIAL')")
     public String show(@RequestParam(defaultValue = "5") int sortType, @RequestParam("currentPage") Optional<Integer> page, Model model, HttpSession session) {
         Account admin = (Account) session.getAttribute("admin");
         if (admin == null) {
@@ -60,18 +62,21 @@ public class MaterialCRUDController {
     }
 
     @PostMapping("/create")
+    @PreAuthorize("hasAnyRole('ADMIN', 'WAREHOUSE_STAFF', 'ACCOUNTING_STAFF') and hasAnyAuthority('FULL_ACCESS_MATERIAL')")
     public String create(@ModelAttribute Material material) {
         materialService.create(material);
         return "redirect:/admin/material";
     }
 
     @PostMapping("/update")
+    @PreAuthorize("hasAnyRole('ADMIN', 'WAREHOUSE_STAFF', 'ACCOUNTING_STAFF') and hasAnyAuthority('FULL_ACCESS_MATERIAL')")
     public String update(@ModelAttribute Material material) {
         materialService.update(material);
         return "redirect:/admin/material";
     }
 
     @PostMapping("/delete")
+    @PreAuthorize("hasAnyRole('ADMIN', 'WAREHOUSE_STAFF', 'ACCOUNTING_STAFF') and hasAnyAuthority('FULL_ACCESS_MATERIAL')")
     public String delete(@RequestParam int id) {
         materialService.delete(id);
         return "redirect:/admin/material";

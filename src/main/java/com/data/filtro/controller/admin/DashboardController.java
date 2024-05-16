@@ -18,7 +18,7 @@ public class DashboardController {
             return "redirect:/admin/login";
         }
 
-        return "redirect:/admin/account";
+        return "redirect:/admin/user";
     }
 
 

@@ -8,6 +8,7 @@ import com.data.filtro.service.OrderService;
 import com.data.filtro.service.PaymentMethodService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +32,7 @@ public class OrderController {
     PaymentMethodService paymentMethodService;
 
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('FULL_ACCESS_PLACE_ORDER')")
     public String show(HttpSession session, Model model) {
         User user = (User) session.getAttribute("user");
         if (user != null) {
@@ -53,6 +55,7 @@ public class OrderController {
     }
 
     @PostMapping("/placeOrder")
+    @PreAuthorize("hasAnyAuthority('FULL_ACCESS_PLACE_ORDER')")
     public String placeOrder(
             @RequestParam("email") String email,
             @RequestParam("phone") String phone,
@@ -77,6 +80,7 @@ public class OrderController {
 
 
     @PostMapping("/cancel")
+    @PreAuthorize("hasAnyAuthority('FULL_ACCESS_PLACE_ORDER')")
     public String cancel(@RequestParam int id) {
         orderService.updateCancelOrder(id);
         return "redirect:/user/billing";

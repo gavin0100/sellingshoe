@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -38,6 +39,7 @@ public class OrderCRUDController {
     }
 
     @GetMapping()
+    @PreAuthorize("hasAnyRole('ADMIN', 'WAREHOUSE_STAFF', 'ACCOUNTING_STAFF') and hasAnyAuthority('FULL_ACCESS_ORDER', 'VIEW_ORDER')")
     public String show(@RequestParam(defaultValue = "5") int sortType, @RequestParam("currentPage") Optional<Integer> page, Model model, HttpSession session) {
         Account admin = (Account) session.getAttribute("admin");
         if (admin == null) {
@@ -64,6 +66,7 @@ public class OrderCRUDController {
     }
 
     @PostMapping("/update")
+    @PreAuthorize("hasAnyRole('ADMIN', 'WAREHOUSE_STAFF', 'ACCOUNTING_STAFF') and hasAnyAuthority('FULL_ACCESS_ORDER')")
     public String update(@ModelAttribute Order order) {
         System.out.println(order.getStatus());
         orderService.update(order);
@@ -72,6 +75,7 @@ public class OrderCRUDController {
     }
 
     @PostMapping("/delete")
+    @PreAuthorize("hasAnyRole('ADMIN', 'WAREHOUSE_STAFF', 'ACCOUNTING_STAFF') and hasAnyAuthority('FULL_ACCESS_ORDER')")
     public String delete(@RequestParam int id) {
         orderService.delete(id);
         return "redirect:/admin/order";

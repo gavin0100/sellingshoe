@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -48,6 +49,7 @@ public class ProductCURDController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'WAREHOUSE_STAFF', 'ACCOUNTING_STAFF') and hasAnyAuthority('FULL_ACCESS_PRODUCT', 'VIEW_PRODUCT')")
     public String show(@RequestParam(defaultValue = "5") int sortType, @RequestParam("currentPage") Optional<Integer> page, Model model, HttpSession session) {
         Account admin = (Account) session.getAttribute("admin");
         if (admin == null) {
@@ -78,6 +80,7 @@ public class ProductCURDController {
     }
 
     @PostMapping("/create")
+    @PreAuthorize("hasAnyRole('ADMIN', 'WAREHOUSE_STAFF', 'ACCOUNTING_STAFF') and hasAnyAuthority('FULL_ACCESS_PRODUCT')")
     public String create(@ModelAttribute("product") Product product) throws Exception {
         productService.addProduct(product);
         return "redirect:/admin/product";
@@ -85,6 +88,7 @@ public class ProductCURDController {
 
 
     @PostMapping("/update")
+    @PreAuthorize("hasAnyRole('ADMIN', 'WAREHOUSE_STAFF', 'ACCOUNTING_STAFF') and hasAnyAuthority('FULL_ACCESS_PRODUCT')")
     public String update(@ModelAttribute("product") Product product) throws Exception {
         productService.addProduct(product);
         return "redirect:/admin/product";

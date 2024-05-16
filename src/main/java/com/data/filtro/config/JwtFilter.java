@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
@@ -31,19 +32,26 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 //        System.out.println(request.getHeader("Host"));
-        final String authHeader = request.getHeader(AUTHORIZATION);
-        final String jwt;
-        final String accountName;
-//        System.out.println(authHeader);
-        if(authHeader!=null && authHeader.startsWith("Bearer ")){
-            jwt = authHeader.substring(7);
-            accountName = jwtService.extractUsername(jwt);
-        }else{
-            if (authHeader != null){
-                logger.error("JWT Token does not begin with Bearer String");
+
+        System.out.println("doFilterInternal trong jwtFilter");
+
+//        final String authHeader = request.getHeader(AUTHORIZATION);
+        String jwt = "";
+        String accountName = "";
+        if (request.getCookies() != null){
+            for (int i =0; i < request.getCookies().length; i++){
+//                System.out.println(request.getCookies()[i].getName() + " " + request.getCookies()[i].getValue()  );
+                if (request.getCookies()[i].getName().equals("token")){
+                    jwt = request.getCookies()[i].getValue();
+                    accountName = jwtService.extractUsername(jwt);
+                    break;
+                }
             }
-            else
-                filterChain.doFilter(request, response);
+        }
+//        System.out.println(authHeader);
+        if(jwt.equals("")){
+            logger.error("JWT Token does not begin with Bearer String");
+            filterChain.doFilter(request, response);
             return;
         }
 

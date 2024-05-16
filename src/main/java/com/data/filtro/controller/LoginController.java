@@ -3,6 +3,8 @@ package com.data.filtro.controller;
 import com.data.filtro.exception.AuthenticationAccountException;
 import com.data.filtro.model.*;
 import com.data.filtro.service.*;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -57,6 +59,7 @@ public class LoginController {
     public String login(@RequestParam("accountName") String accountName,
                         @RequestParam("password") String password,
                         @RequestParam("_csrfParameterName") String csrfTokenForm,
+                        HttpServletResponse response,
                         HttpSession session,
                         Model model) {
 //        System.out.println("Da vao ham post logging");
@@ -78,9 +81,10 @@ public class LoginController {
 //            User user = userService.authenticateUser(accountName, password);
 //            System.out.println(user.getName());
             session.setAttribute("user", authenticateResponse.getUser());
-            session.setAttribute("token", authenticateResponse.getAccessToken());
-            System.out.println(authenticateResponse.getAccessToken());
-            System.out.println(authenticateResponse.getUser().getName() + " " + authenticateResponse.getUser().getPhoneNumber());
+            Cookie cookie = new Cookie("token", authenticateResponse.getAccessToken());
+            cookie.setHttpOnly(true);
+            cookie.setPath("/"); // This makes the cookie valid for all routes on your domain
+            response.addCookie(cookie);
             Cart cart = (Cart) session.getAttribute("cart");
             GuestCart guestCart = (GuestCart) session.getAttribute("guestCart");
             if (guestCart != null) {
