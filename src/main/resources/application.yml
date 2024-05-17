@@ -32,6 +32,13 @@ application:
     jwt:
       secret-key: f2f1035db6a255e7885838b020f370d702d4bb0f35a368f06ded1ce8e6684a27
       expiration: 36000000
+    momo:
+      access-key: mTCKt9W3eU1m39TW
+      partner-code: MOMOLRJZ20181206
+      secret-key: SetA5RDnLHvt51AULf51DyauxUo3kDU6
+    vnpay:
+      vnp_TmnCode: ZF769ZRJ
+      vnp_HashSecret: DEFBUBPEMBQFYDQGIIUJAXKRCUKMOOYU
 
 
 

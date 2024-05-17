@@ -1,6 +1,8 @@
 package com.data.filtro.service;
 
 import com.data.filtro.model.*;
+import com.data.filtro.model.payment.OrderStatus;
+import com.data.filtro.model.payment.PaymentMethod;
 import com.data.filtro.repository.OrderDetailRepository;
 import com.data.filtro.repository.OrderRepository;
 import jakarta.transaction.Transactional;
@@ -10,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.management.Query;
 import java.util.*;
 
 @Service
@@ -25,6 +28,8 @@ public class OrderService {
     ProductService productService;
     @Autowired
     OrderShipperService donHangDaGiaoUserService;
+
+
     public Order placeOrder(User user, String phone, String email, String address, String city, int zip, PaymentMethod paymentMethod, List<CartItem> cartItemList) {
         Order order = new Order();
         order.setUser(user);
@@ -75,12 +80,17 @@ public class OrderService {
         }
         order.setTotal(total);
         order.setOrderDetails(orderDetails);
+        order.setStatusPayment(OrderStatus.PENDING);
         orderRepository.save(order);
         return order;
     }
 
     public List<Order> getOrderByUserId(int id) {
         return orderRepository.findOrderByUserId(id);
+    }
+
+    public Order getOrderByOrderCode(String orderCode) {
+        return orderRepository.findOrderByOrderCode(orderCode);
     }
 
     public List<Order> findOrderByStatusOrder (int status){return orderRepository.findOrderByStatusOrder(status);};
@@ -234,5 +244,11 @@ public class OrderService {
         }
     }
 
+    public void saveOrder(Order order){
+        orderRepository.save(order);
+    }
 
+    public List<OrderDetail> getOrderDetailByOrderId (int orderId){
+        return orderDetailRepository.findOrderDetailByOrderId(orderId);
+    }
 }

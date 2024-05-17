@@ -26,7 +26,4 @@ public class PaymentMethod implements Serializable {
     @Column(name = "mota")
     private String description;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "paymentMethod")
-    @JsonBackReference
-    List<Order> orders;
 }

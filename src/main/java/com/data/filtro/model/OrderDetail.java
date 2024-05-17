@@ -1,5 +1,6 @@
 package com.data.filtro.model;
 
+import com.data.filtro.model.payment.OrderDetailDto;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -38,4 +39,16 @@ public class OrderDetail implements Serializable {
 
     @Column(name = "tong")
     private Integer total;
+
+    public OrderDetailDto convertToDto(){
+        return OrderDetailDto.builder()
+                .idProductDetail(this.id)
+                .productName(this.getProduct().getProductName())
+                .urlImage(this.getProduct().getImage())
+                .quantity(this.quantity)
+                .price(this.price)
+                .total(this.total)
+                .build();
+    }
+
 }

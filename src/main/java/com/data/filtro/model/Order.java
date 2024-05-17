@@ -1,5 +1,7 @@
 package com.data.filtro.model;
 
+import com.data.filtro.model.payment.OrderStatus;
+import com.data.filtro.model.payment.PaymentMethod;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -56,10 +58,15 @@ public class Order implements Serializable {
     @Column(name = "tinhtrang")
     private Integer status;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "phuongthucthanhtoan", referencedColumnName = "id")
-    @JsonManagedReference
+    @Column(name = "trang_thai")
+    @Enumerated(EnumType.STRING)
+    private OrderStatus statusPayment;
+    @Column(name = "phuongthucthanhtoan")
+    @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
+
+    @Column(name = "order_code")
+    private String order_code;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "orderId")
 //    @JsonIgnore

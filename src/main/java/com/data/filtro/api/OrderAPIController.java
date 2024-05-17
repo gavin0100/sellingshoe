@@ -179,7 +179,7 @@ public class OrderAPIController {
             List<CartItem> cartItemList = cart.getCartItemList();
             PaymentMethod payment = paymentMethodService.getMethodById(paymentId);
 
-            Order order = orderService.placeOrder(user, phone, email, address, city, zip, payment,
+            Order order = orderService.placeOrder(user, phone, email, address, city, zip, com.data.filtro.model.payment.PaymentMethod.COD,
                     cartItemList);
             cartService.removeAllProductInCar(cart);
 

@@ -44,4 +44,9 @@ public class CartItemService {
     public void updateQuantityByProductId(int cartId, int productId, int quantity, int totalPriceItem, int latestPrice){
         cartItemRepository.updateQuantityByProductId(cartId, productId, quantity, totalPriceItem, latestPrice);
     }
+
+    public void deleteCartItemFromCartItemIdAndCartId(int cartItemId, int cartId){
+        cartItemRepository.deleteCartItemByCartItemIdAndCartId(cartItemId, cartId);
+    }
+
 }
