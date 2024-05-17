@@ -24,7 +24,7 @@ public class AuthenticationService {
 
 
     public AuthenticateResponse authenticate(String accountName, String password, HttpSession session){
-        System.out.println("truy cap vao authenticate cua authenticationService");
+//        System.out.println("truy cap vao authenticate cua authenticationService");
 //        HttpSession session = req.getSession(true);
         System.out.println(accountName + " " + password);
         try{
@@ -32,8 +32,8 @@ public class AuthenticationService {
                     accountName,
                     password
             );
-            System.out.println("token trong authenticationService: " + token);
-            System.out.println("token trong authenticationService: " + token.getCredentials());
+//            System.out.println("token trong authenticationService: " + token);
+//            System.out.println("token trong authenticationService: " + token.getCredentials());
             manager.authenticate(token);
             session.setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
 //            System.out.println(SecurityContextHolder.getContext().getAuthentication().getCredentials().toString());

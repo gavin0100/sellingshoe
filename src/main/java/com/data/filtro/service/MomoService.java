@@ -52,6 +52,7 @@ public class MomoService {
     CartItemService cartItemService;
 
     public MomoResponse createMomoOrder(Order order){
+        System.out.println("truy cap vao create Momo order");
         String endpoint = MOMO_API + "/create";
         MomoRequest momoRequest = momoRequest(order);
         return processMomoOrder(endpoint, momoRequest);
@@ -59,6 +60,7 @@ public class MomoService {
 
 
     private MomoResponse processMomoOrder(String endpoint, MomoRequest momoRequest) {
+        System.out.println("truy cap vao process momo order");
         try{
             ObjectMapper mapper = new ObjectMapper();
             String json = mapper.writeValueAsString(momoRequest);
@@ -163,11 +165,15 @@ public class MomoService {
     }
 
     private MomoRequest momoRequest(Order order){
+        System.out.println("truy cap vao momo request");
         List<OrderDetail> orderDetail = orderService.getOrderDetailByOrderId(order.getId());
+        System.out.println(orderDetail.size());
         List<OrderDetailDto> orderDetailDtos = new ArrayList<>();
+        System.out.println("truoc khi chuyen dto");
         if(orderDetail!=null){
             orderDetail.forEach(od-> orderDetailDtos.add(od.convertToDto()));
         }
+        System.out.println("sau khi chuyen dto");
         String orderName = order.getOrder_code() + " " + order.getUser().getAccountName();
         MomoRequest momoRequest = MomoRequest.builder()
                 .partnerCode(env.getProperty("application.security.momo.partner-code"))
@@ -177,7 +183,7 @@ public class MomoService {
                 .redirectUrl(RETURN_URL)
                 .ipnUrl(IPN_API + "/api/v1/momo/webhook/ipn")
                 .requestId(UUID.randomUUID().toString())
-                .amount(Long.valueOf(order.getTotal()))
+                .amount(Long.valueOf(order.getTotal() * 24000))
                 .lang("vi")
                 .orderId(order.getOrder_code())
                 .orderInfo("Thanh toán đơn hàng bằng MOMO")

@@ -81,27 +81,81 @@ public class OrderController {
         List<CartItem> cartItemList = cart.getCartItemList();
         cartService.removeCartByCartId(cart.getId());
         com.data.filtro.model.payment.PaymentMethod paymentMethod1 = com.data.filtro.model.payment.PaymentMethod.COD;
-        if (paymentMethod.equals("COD")){
-            paymentMethod1 = com.data.filtro.model.payment.PaymentMethod.COD;
-        }
-        if (paymentMethod.equals("MOMO")){
-            paymentMethod1 = com.data.filtro.model.payment.PaymentMethod.MOMO;
-        }
-        if (paymentMethod.equals("VNPAY")){
-            paymentMethod1 = com.data.filtro.model.payment.PaymentMethod.VNPAY;
-        }
+        paymentMethod1 = com.data.filtro.model.payment.PaymentMethod.COD;
         Order order = orderService.placeOrder(user, phone, email, address, city, zip, paymentMethod1, cartItemList);
         int orderId = order.getId();
-        if (paymentMethod.equals("COD")){
-            return "redirect:/invoice/" + orderId;
-        }
-        if (paymentMethod.equals("MOMO")){
-            MomoResponse momoResponse = placeMomoOrder(orderId);
-        }
-        if (paymentMethod.equals("VNPAY")){
-            VNPResponse vnpResponse = placeVNPayOrder(orderId, request);
-        }
         return "redirect:/invoice/" + orderId;
+//        System.out.println("thanh toan cod");
+//        return "redirect:/login";
+    }
+
+    @PostMapping("/placeOrderMomo")
+    @PreAuthorize("hasAnyAuthority('FULL_ACCESS_PLACE_ORDER')")
+    public String placeOrderMomo(
+            @RequestParam("email") String email,
+            @RequestParam("phone") String phone,
+            @RequestParam("address") String address,
+            @RequestParam("city") String city,
+            @RequestParam("zip") Integer zip,
+            @RequestParam("paymentMethod") String paymentMethod,
+            HttpSession session,
+            HttpServletRequest request,
+            Model model
+    ) {
+        System.out.println("truy cap order controller momo");
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            throw new RuntimeException("Please login before checkout");
+        }
+        Cart cart = cartService.getCurrentCartByUserId(user.getId());
+        List<CartItem> cartItemList = cart.getCartItemList();
+        cartService.removeCartByCartId(cart.getId());
+        com.data.filtro.model.payment.PaymentMethod paymentMethod1 = com.data.filtro.model.payment.PaymentMethod.COD;
+        paymentMethod1 = com.data.filtro.model.payment.PaymentMethod.MOMO;
+        System.out.println("truoc khi tao order");
+        Order order = orderService.placeOrder(user, phone, email, address, city, zip, paymentMethod1, cartItemList);
+        System.out.println("sau khi tao order");
+        int orderId = order.getId();
+        String url = "";
+        MomoResponse momoResponse = placeMomoOrder(orderId);
+        url = momoResponse.getPayUrl();
+        System.out.println(url);
+//        return "redirect:/invoice/" + orderId;
+        System.out.println("thanh toan momo");
+        return "redirect:/login";
+    }
+
+    @PostMapping("/placeOrderVnpay")
+    @PreAuthorize("hasAnyAuthority('FULL_ACCESS_PLACE_ORDER')")
+    public String placeOrderVnpay(
+            @RequestParam("email") String email,
+            @RequestParam("phone") String phone,
+            @RequestParam("address") String address,
+            @RequestParam("city") String city,
+            @RequestParam("zip") Integer zip,
+            @RequestParam("paymentMethod") String paymentMethod,
+            HttpSession session,
+            HttpServletRequest request,
+            Model model
+    ) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            throw new RuntimeException("Please login before checkout");
+        }
+        Cart cart = cartService.getCurrentCartByUserId(user.getId());
+        List<CartItem> cartItemList = cart.getCartItemList();
+        cartService.removeCartByCartId(cart.getId());
+        com.data.filtro.model.payment.PaymentMethod paymentMethod1 = com.data.filtro.model.payment.PaymentMethod.COD;
+        paymentMethod1 = com.data.filtro.model.payment.PaymentMethod.VNPAY;
+        Order order = orderService.placeOrder(user, phone, email, address, city, zip, paymentMethod1, cartItemList);
+        int orderId = order.getId();
+        String url = "";
+        VNPResponse vnpResponse = placeVNPayOrder(orderId, request);
+        url = vnpResponse.getPaymentUrl();
+        System.out.println(url);
+//        return "redirect:/invoice/" + orderId;
+        System.out.println("thanh toan vnpay");
+        return "redirect:/login"    ;
     }
 
     public MomoResponse placeMomoOrder(int orderId){

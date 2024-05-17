@@ -1,5 +1,6 @@
 package com.data.filtro.service;
 
+import com.data.filtro.Util.Utility;
 import com.data.filtro.model.*;
 import com.data.filtro.model.payment.OrderStatus;
 import com.data.filtro.model.payment.PaymentMethod;
@@ -28,6 +29,7 @@ public class OrderService {
     ProductService productService;
     @Autowired
     OrderShipperService donHangDaGiaoUserService;
+
 
 
     public Order placeOrder(User user, String phone, String email, String address, String city, int zip, PaymentMethod paymentMethod, List<CartItem> cartItemList) {
@@ -63,6 +65,11 @@ public class OrderService {
         order.setOrderDate(new Date());
         order.setPaymentMethod(paymentMethod);
         order.setStatus(1);
+
+        order.setStatusPayment(OrderStatus.PENDING);
+        String orderCode = Utility.generateRandomString(10) + order.getUser().getAccountName();
+        System.out.println("orderCode: " + orderCode);
+        order.setOrder_code(orderCode);
         orderRepository.save(order);
 //        System.out.println("price chuan bi nhap vo order detail: " + cartItemList.get(0).getPrice() + " " + cartItemList.get(1).getPrice() );
         List<OrderDetail> orderDetails = new ArrayList<>();
@@ -80,7 +87,6 @@ public class OrderService {
         }
         order.setTotal(total);
         order.setOrderDetails(orderDetails);
-        order.setStatusPayment(OrderStatus.PENDING);
         orderRepository.save(order);
         return order;
     }
@@ -249,6 +255,7 @@ public class OrderService {
     }
 
     public List<OrderDetail> getOrderDetailByOrderId (int orderId){
+        System.out.println("getOrderDetailByOrderId");
         return orderDetailRepository.findOrderDetailByOrderId(orderId);
     }
 }

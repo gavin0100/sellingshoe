@@ -11,6 +11,6 @@ import java.util.List;
 
 @Repository
 public interface OrderDetailRepository extends JpaRepository<OrderDetail, Integer> {
-    @Query("select o from OrderDetail o where o.orderId =:orderId")
+    @Query("select o from OrderDetail o where o.id =:orderId")
     List<OrderDetail> findOrderDetailByOrderId(@Param("orderId") int orderId);
 }

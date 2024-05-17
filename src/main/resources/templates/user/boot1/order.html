@@ -63,7 +63,7 @@
                 </div>
                 <div class="col-md-8 order-md-1">
                     <h4 class="mb-3">Billing Address</h4>
-                    <form method="post" th:action="@{/order/placeOrder}" class="needs-validation" novalidate="">
+                    <form method="post" id="orderForm" class="needs-validation" novalidate="">
                         <div class="mb-3">
                             <label for="username">Name</label>
                             <div class="input-group">
@@ -165,7 +165,7 @@
                                 <input id="vnpayRadio" value="paymentMethodVnpay" name="paymentMethod"
                                        type="radio" class="custom-control-input"
                                        required="">
-                                <label class="custom-control-label" for="vnpayRadio">Momo</label>
+                                <label class="custom-control-label" for="vnpayRadio">Vnpay</label>
                             </div>
                         </div>
                         <div class="form-group" id="cc-fields">
@@ -209,6 +209,26 @@
             </div>
         </th:block>
     </div>
+    <script>
+        // Khi tài liệu được tải xong
+        document.addEventListener('DOMContentLoaded', function () {
+            // Lắng nghe sự kiện 'change' trên các radio button
+            document.querySelectorAll('input[name="paymentMethod"]').forEach(function (radio) {
+                radio.addEventListener('change', function () {
+                    // Lấy form
+                    var form = document.getElementById('orderForm');
+                    // Thay đổi 'action' của form dựa vào radio button được chọn
+                    if (this.id === 'codRadio') {
+                        form.action = '/order/placeOrder';
+                    } else if (this.id === 'momoRadio') {
+                        form.action = '/order/placeOrderMomo';
+                    } else if (this.id === 'vnpayRadio') {
+                        form.action = '/order/placeOrderVnpay';
+                    }
+                });
+            });
+        });
+    </script>
 </th:block>
 </body>
 </html>
