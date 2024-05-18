@@ -27,6 +27,8 @@ spring:
           auth: true
           starttls:
             enable: true
+  main:
+    allow-circular-references: true
 application:
   security:
     jwt:
@@ -37,8 +39,8 @@ application:
       partner-code: MOMOLRJZ20181206
       secret-key: SetA5RDnLHvt51AULf51DyauxUo3kDU6
     vnpay:
-      vnp_TmnCode: ZF769ZRJ
-      vnp_HashSecret: DEFBUBPEMBQFYDQGIIUJAXKRCUKMOOYU
+      vnp_TmnCode: X3VCO73C
+      vnp_HashSecret: 70OXPPONL7XA9QR57L1QDWQVZPYC4L3U
 
 
 

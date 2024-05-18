@@ -109,7 +109,6 @@ public class OrderController {
         }
         Cart cart = cartService.getCurrentCartByUserId(user.getId());
         List<CartItem> cartItemList = cart.getCartItemList();
-        cartService.removeCartByCartId(cart.getId());
         com.data.filtro.model.payment.PaymentMethod paymentMethod1 = com.data.filtro.model.payment.PaymentMethod.COD;
         paymentMethod1 = com.data.filtro.model.payment.PaymentMethod.MOMO;
         System.out.println("truoc khi tao order");
@@ -144,7 +143,6 @@ public class OrderController {
         }
         Cart cart = cartService.getCurrentCartByUserId(user.getId());
         List<CartItem> cartItemList = cart.getCartItemList();
-        cartService.removeCartByCartId(cart.getId());
         com.data.filtro.model.payment.PaymentMethod paymentMethod1 = com.data.filtro.model.payment.PaymentMethod.COD;
         paymentMethod1 = com.data.filtro.model.payment.PaymentMethod.VNPAY;
         Order order = orderService.placeOrder(user, phone, email, address, city, zip, paymentMethod1, cartItemList);

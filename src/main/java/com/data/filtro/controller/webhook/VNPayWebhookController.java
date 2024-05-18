@@ -19,6 +19,7 @@ public class VNPayWebhookController {
 
     @GetMapping
     public ResponseEntity<VNPIPNResponse> getVNPayWebhook(@RequestParam Map<String , String> params){
+        System.out.println("truy cập getVNPayWebhook");
         VNPIPNResponse response = vnPayService.processIpn(params);
         return ResponseEntity.ok(response);
     }

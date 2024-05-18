@@ -43,6 +43,8 @@ public class SecurityConfig{
                                         "/register",
                                         "/",
                                         "/admin/login",
+                                        "/api/v1/momo/**",
+                                        "/api/v1/vnpay/**",
                                         "/access-denied"
                                         ).permitAll()
                                 .requestMatchers("/css/**", "/js/**", "/image/**", "/javascript/**").permitAll()

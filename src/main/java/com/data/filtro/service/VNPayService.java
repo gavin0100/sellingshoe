@@ -42,7 +42,7 @@ public class VNPayService {
     private final Environment env;
     private final OrderService orderService;
     private final CartService cartService;
-    private final String RETURN_URL = "http://localhost:4200/payment/vnpay";
+    private final String RETURN_URL = "http://localhost:3030/";
     private final String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
 
     @Autowired
@@ -124,7 +124,7 @@ public class VNPayService {
     private boolean verifyAmount(VNPIPN vnpipn){
         Order order = orderService.getOrderByOrderCode(vnpipn.getVnp_TxnRef());
         if(order != null){
-                return order.getTotal() == Integer.parseInt(vnpipn.getVnp_Amount())/100;
+                return order.getTotal() == Integer.parseInt(vnpipn.getVnp_Amount())/(100*24000);
         }
         return false;
     }
@@ -135,9 +135,10 @@ public class VNPayService {
     }
 
     private boolean verifyOrderStatus(VNPIPN vnpipn){
+        System.out.println(vnpipn.getVnp_TxnRef());
         Order order = orderService.getOrderByOrderCode(vnpipn.getVnp_TxnRef());
         if(order != null){
-            return order.getStatus().equals(OrderStatus.PENDING);
+            return order.getStatusPayment().equals(OrderStatus.PENDING);
         }
         return false;
     }
@@ -185,7 +186,7 @@ public class VNPayService {
         VNPRequest request = VNPRequest.builder()
                 .vnp_Version("2.1.0")
                 .vnp_Command("pay")
-                .vnp_Amount(String.valueOf(order.getTotal()*100))
+                .vnp_Amount(String.valueOf(order.getTotal()*100*24000))
                 .vnp_TxnRef(order.getOrder_code())
                 .vnp_BankCode("")
                 .vnp_IpAddr(getIpAddress(req))

@@ -70,11 +70,10 @@ public class CartController {
         GuestCart guestCart = (GuestCart) session.getAttribute("guestCart");
         Cart cart = null;
         if (user != null) {
+            System.out.println("bat dau tim cart trong add cart: " + user.getId());
             cart = cartService.getCurrentCartByUserId(user.getId());
-            if (cart == null) {
-                cart = cartService.createCart(user);
-                session.setAttribute("cart", cart);
-            }
+            System.out.println("cartid trong add cart: " + cart.getId() + " " + cart.getUser().getId());
+            session.setAttribute("cart", cart);
             cartService.addProductToCart(cart, productId, quantity);
         } else if (guestCart != null) {
             cartService.addProductToGuestCart(guestCart, productId, quantity);

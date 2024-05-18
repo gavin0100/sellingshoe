@@ -5,6 +5,7 @@ import com.data.filtro.exception.AuthenticationAccountException;
 import com.data.filtro.exception.PasswordDoNotMatchException;
 import com.data.filtro.exception.UserNotFoundException;
 import com.data.filtro.model.Account;
+import com.data.filtro.model.Cart;
 import com.data.filtro.model.User;
 import com.data.filtro.model.UserPermission;
 import com.data.filtro.repository.AccountRepository;
@@ -33,6 +34,10 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     private UserPermissionRepository userPermissionRepository;
+
+    @Autowired
+    CartService cartService;
+
     public User getUserById(int id) {
         return userRepository.findUserById(id);
     }
@@ -81,6 +86,7 @@ public class UserService implements UserDetailsService {
         user.setUserPermission(userPermission);
 
         userRepository.save(user);
+        Cart cart = cartService.createCart(user);
     }
 
     public User getUserByEmail(String email) {

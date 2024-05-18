@@ -85,12 +85,13 @@ public class LoginController {
             cookie.setHttpOnly(true);
             cookie.setPath("/"); // This makes the cookie valid for all routes on your domain
             response.addCookie(cookie);
-            Cart cart = (Cart) session.getAttribute("cart");
+            Cart cart = cartService.getCurrentCartByUserId(authenticateResponse.getUser().getId());
             GuestCart guestCart = (GuestCart) session.getAttribute("guestCart");
             if (guestCart != null) {
                 cart = cartService.convertGuestCartToCart(guestCart,  authenticateResponse.getUser());
                 session.removeAttribute("guestCart");
             }
+            session.setAttribute("cart", cart);
             return "redirect:/";
         } catch (AuthenticationAccountException exception) {
             exception.printStackTrace();
