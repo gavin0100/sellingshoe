@@ -22,6 +22,7 @@ public class MomoWebhookController {
 
     @PostMapping("/ipn")
     public ResponseEntity<String> momoWebhook(@RequestBody String request){
+        System.out.println("xu ly ipn momo");
         momoService.processIPN(request);
         return ResponseEntity.noContent().build();
     }

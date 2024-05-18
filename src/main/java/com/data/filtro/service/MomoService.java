@@ -41,7 +41,7 @@ import java.util.UUID;
 public class MomoService {
     private final String MOMO_API = "https://test-payment.momo.vn/v2/gateway/api";
     private final String RETURN_URL = "http://localhost:3030/";
-    private final String IPN_API = "https://4ebf72d4d03e2ebce7df37b93e4872ab.serveo.net";
+    private final String IPN_API = "https://985a91baf7e850df19929308159de75f.serveo.net";
 
 
     private final Environment env;
@@ -86,7 +86,6 @@ public class MomoService {
             momoIPN.setAccessKey(env.getProperty("application.security.momo.access-key"));
             String signature = momoIPN.getSignature();
             String rawSignature = ipnHashedSignature(momoIPN);
-            System.out.println(request);
             if(signature.equals(rawSignature) && (verifyOrder(momoIPN) && verifyAmount(momoIPN))){
                     updateOrderStatus(momoIPN);
                     logger.info("IPN verified and updated order status {}, {}", momoIPN.getOrderId(), momoIPN.getResultCode());
@@ -104,7 +103,7 @@ public class MomoService {
 
     private boolean verifyAmount(MomoIPN momoIPN){
         Order order = orderService.getOrderByOrderCode(momoIPN.getOrderId());
-        return String.valueOf(order.getTotal()).equals(String.valueOf(momoIPN.getAmount()));
+        return String.valueOf(order.getTotal()).equals(String.valueOf(momoIPN.getAmount()/24000));
     }
 
     private void updateOrderStatus(MomoIPN momoIPN){
@@ -180,7 +179,7 @@ public class MomoService {
         MomoRequest momoRequest = MomoRequest.builder()
                 .partnerCode(env.getProperty("application.security.momo.partner-code"))
                 .partnerName("TEST")
-                .storeName("FILTRO-COFEE")
+                .storeName("FOUR-LEAVES-SHOE")
                 .requestType("captureWallet")
                 .redirectUrl(RETURN_URL)
                 .ipnUrl(IPN_API + "/api/v1/momo/webhook/ipn")
