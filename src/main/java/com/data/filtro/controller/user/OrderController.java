@@ -6,6 +6,7 @@ import com.data.filtro.model.payment.momo.MomoResponse;
 import com.data.filtro.model.payment.vnpay.VNPResponse;
 import com.data.filtro.service.*;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +14,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
 import java.util.List;
 
 @Controller
@@ -91,7 +94,7 @@ public class OrderController {
 
     @PostMapping("/placeOrderMomo")
     @PreAuthorize("hasAnyAuthority('FULL_ACCESS_PLACE_ORDER')")
-    public String placeOrderMomo(
+    public void placeOrderMomo(
             @RequestParam("email") String email,
             @RequestParam("phone") String phone,
             @RequestParam("address") String address,
@@ -100,8 +103,10 @@ public class OrderController {
             @RequestParam("paymentMethod") String paymentMethod,
             HttpSession session,
             HttpServletRequest request,
-            Model model
-    ) {
+            HttpServletResponse response,
+            Model model,
+            RedirectAttributes redirectAttributes
+    ) throws IOException {
         System.out.println("truy cap order controller momo");
         User user = (User) session.getAttribute("user");
         if (user == null) {
@@ -111,22 +116,18 @@ public class OrderController {
         List<CartItem> cartItemList = cart.getCartItemList();
         com.data.filtro.model.payment.PaymentMethod paymentMethod1 = com.data.filtro.model.payment.PaymentMethod.COD;
         paymentMethod1 = com.data.filtro.model.payment.PaymentMethod.MOMO;
-        System.out.println("truoc khi tao order");
         Order order = orderService.placeOrder(user, phone, email, address, city, zip, paymentMethod1, cartItemList);
-        System.out.println("sau khi tao order");
         int orderId = order.getId();
         String url = "";
         MomoResponse momoResponse = placeMomoOrder(orderId);
-        url = momoResponse.getPayUrl();
-        System.out.println(url);
-//        return "redirect:/invoice/" + orderId;
-        System.out.println("thanh toan momo");
-        return "redirect:/login";
+//        model.addAttribute("redirectUrl", momoResponse.getPayUrl());
+//        return "user/boot1/payment/paymentRedirect";
+        response.sendRedirect(momoResponse.getPayUrl());
     }
 
     @PostMapping("/placeOrderVnpay")
     @PreAuthorize("hasAnyAuthority('FULL_ACCESS_PLACE_ORDER')")
-    public String placeOrderVnpay(
+    public void placeOrderVnpay(
             @RequestParam("email") String email,
             @RequestParam("phone") String phone,
             @RequestParam("address") String address,
@@ -135,8 +136,10 @@ public class OrderController {
             @RequestParam("paymentMethod") String paymentMethod,
             HttpSession session,
             HttpServletRequest request,
-            Model model
-    ) {
+            HttpServletResponse response,
+            Model model,
+            RedirectAttributes redirectAttributes
+    ) throws IOException {
         User user = (User) session.getAttribute("user");
         if (user == null) {
             throw new RuntimeException("Please login before checkout");
@@ -149,12 +152,11 @@ public class OrderController {
         int orderId = order.getId();
         String url = "";
         VNPResponse vnpResponse = placeVNPayOrder(orderId, request);
-        url = vnpResponse.getPaymentUrl();
-        System.out.println(url);
-//        return "redirect:/invoice/" + orderId;
-        System.out.println("thanh toan vnpay");
-        return "redirect:/login"    ;
+//        model.addAttribute("redirectUrl", vnpResponse.getPaymentUrl());
+        response.sendRedirect(vnpResponse.getPaymentUrl());
+
     }
+
 
     public MomoResponse placeMomoOrder(int orderId){
         Order order = orderService.getOrderById(orderId);
