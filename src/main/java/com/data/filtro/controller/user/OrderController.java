@@ -2,6 +2,7 @@ package com.data.filtro.controller.user;
 
 import com.data.filtro.exception.AuthenticationAccountException;
 import com.data.filtro.model.*;
+import com.data.filtro.model.payment.OrderStatus;
 import com.data.filtro.model.payment.momo.MomoResponse;
 import com.data.filtro.model.payment.vnpay.VNPResponse;
 import com.data.filtro.service.*;
@@ -76,20 +77,23 @@ public class OrderController {
             HttpServletRequest request,
             Model model
     ) {
+
         User user = (User) session.getAttribute("user");
         if (user == null) {
             throw new RuntimeException("Please login before checkout");
         }
         Cart cart = cartService.getCurrentCartByUserId(user.getId());
         List<CartItem> cartItemList = cart.getCartItemList();
-        cartService.removeCartByCartId(cart.getId());
         com.data.filtro.model.payment.PaymentMethod paymentMethod1 = com.data.filtro.model.payment.PaymentMethod.COD;
         paymentMethod1 = com.data.filtro.model.payment.PaymentMethod.COD;
         Order order = orderService.placeOrder(user, phone, email, address, city, zip, paymentMethod1, cartItemList);
+        List<CartItem> cartItems = cart.getCartItemList();
+        for (CartItem cartItem : cartItems){
+            cartItemService.deleteCartItemFromCartItemIdAndCartId(cartItem.getId(), cartItem.getCart().getId());
+        }
+        orderService.updateStatusOrder(OrderStatus.CONFIRMED, order);
         int orderId = order.getId();
         return "redirect:/invoice/" + orderId;
-//        System.out.println("thanh toan cod");
-//        return "redirect:/login";
     }
 
     @PostMapping("/placeOrderMomo")

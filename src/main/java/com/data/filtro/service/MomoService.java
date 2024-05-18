@@ -40,7 +40,7 @@ import java.util.UUID;
 @Slf4j
 public class MomoService {
     private final String MOMO_API = "https://test-payment.momo.vn/v2/gateway/api";
-    private final String RETURN_URL = "http://localhost:3030/order";
+    private final String RETURN_URL = "http://localhost:3030/user/billing";
     private final String IPN_API = "https://985a91baf7e850df19929308159de75f.serveo.net";
 
 

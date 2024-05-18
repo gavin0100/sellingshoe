@@ -91,6 +91,11 @@ public class OrderService {
         return order;
     }
 
+    public void updateStatusOrder(OrderStatus orderStatus, Order order){
+        order.setStatusPayment(orderStatus);
+        orderRepository.save(order);
+    }
+
     public List<Order> getOrderByUserId(int id) {
         return orderRepository.findOrderByUserId(id);
     }
