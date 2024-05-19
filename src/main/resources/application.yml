@@ -29,6 +29,7 @@ spring:
             enable: true
   main:
     allow-circular-references: true
+ 
 application:
   security:
     jwt:
