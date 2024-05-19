@@ -9,15 +9,33 @@
         <script src="/javascript/boot1/admin/charts-lines.js" th:src="@{/javascript/boot1/admin/charts-lines.js}" ></script>
         <script src="/javascript/boot1/admin/charts-pie.js" th:src="@{/javascript/boot1/admin/charts-pie.js}"></script>
         <!--        <link rel="stylesheet" href="/css/crud.css">-->
-        <script src="/javascript/modalUser.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+        <script src="/javascript/modalUserPermission.js"></script>
         <!-- Theme style -->
         <!--        <link rel="stylesheet" href="/admin/dist/css/adminlte.min.css">-->
         <link rel="stylesheet/scss" href="/javascript/scss/bootstrap/scss/_modal.scss" th:href="@{/javascript/scss/bootstrap/scss/_modal.scss}"/>
     </th:block>
 </head>
 <body>
+
 <th:block th:fragment="content">
+    <style>
+        .custom-form-group {
+            display: flex; /* Kích hoạt Flexbox */
+            justify-content: space-between; /* Căn chỉnh items sang hai bên */
+            align-items: center; /* Đảm bảo các items ở giữa theo chiều dọc */
+        }
+
+        .custom-form-group label {
+            flex-grow: 1; /* Cho phép label chiếm mọi không gian có sẵn */
+            text-align: left; /* Căn chỉnh text của label sang trái */
+        }
+
+        .custom-form-group .form-control {
+            flex-grow: 2; /* Cho phép select chiếm không gian lớn hơn */
+            width: 50%;
+            max-width: 130px;
+        }
+    </style>
     <div class="flex flex-col flex-1 w-full">
         <!--        header-->
         <header class="z-10 py-4 bg-white shadow-md dark:bg-gray-800">
@@ -259,31 +277,6 @@
                     </div>
                     <span>View more &RightArrow;</span>
                 </a>
-                <!-- Cards -->
-                <div class="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
-                    <!-- Card -->
-                    <div
-                      class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800"
-                    >
-                        <div
-                          class="p-3 mr-4 text-orange-500 bg-orange-100 rounded-full dark:text-orange-100 dark:bg-orange-500"
-                        >
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                <path
-                                  d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"
-                                ></path>
-                            </svg>
-                        </div>
-                        <div>
-                            <p class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
-                                Total
-                            </p>
-                            <p class="text-lg font-semibold text-gray-700 dark:text-gray-200" th:text="${totalElements}"></p>
-                        </div>
-                    </div>
-
-
-                </div>
 
 
 
@@ -295,45 +288,49 @@
                             <tr
                               class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800"
                             >
-                                <th class="px-4 py-3">Name</th>
-                                <th class="px-4 py-3">Email</th>
-                                <th class="px-4 py-3">Address</th>
-                                <th class="px-4 py-3">Phone</th>
-                                <th class="px-4 py-3">Account Name</th>
-                                <th class="px-4 py-3">Pass word</th>
-                                <th class="px-4 py-3">Status</th>
+                                <th class="px-4 py-3">ID</th>
                                 <th class="px-4 py-3">Role</th>
-                                <th class="px-4 py-3">Actions</th>
+                                <th class="px-4 py-3">Category</th>
+                                <th class="px-4 py-3">Order</th>
+                                <th class="px-4 py-3">Product</th>
+                                <th class="px-4 py-3">User</th>
+                                <th class="px-4 py-3">Staff</th>
+                                <th class="px-4 py-3">Material</th>
+                                <th class="px-4 py-3">Place Order</th>
+
                             </tr>
                             </thead>
                             <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-                            <tr class="text-gray-700 dark:text-gray-400" th:each="user : ${users}">
+                            <tr class="text-gray-700 dark:text-gray-400" th:each="userPerrmission : ${userPermissions}">
                                 <td class="px-4 py-3">
                                     <div class="flex items-center text-sm">
                                         <div>
-                                            <p class="font-semibold" id="idName" th:text="${user.name}">Hans Burger</p>
+                                            <p class="font-semibold" id="idName" th:text="'#'+${userPerrmission.getPermissionId()}">Hans Burger</p>
                                         </div>
                                     </div>
                                 </td>
-                                <td class="px-4 py-3 text-sm" th:text="${user.email}">
+                                <td class="px-4 py-3 text-sm" th:text="${userPerrmission.getRole()}">
                                     2022-11-12
                                 </td>
-                                <td class="px-4 py-3 text-sm" th:text="${user.address}">
+                                <td class="px-4 py-3 text-sm" th:text="${userPerrmission.categoryManagement}">
                                     1
                                 </td>
-                                <td class="px-4 py-3 text-sm" th:text="${user.phoneNumber}">
+                                <td class="px-4 py-3 text-sm" th:text="${userPerrmission.orderManagement}">
                                     1
                                 </td>
-                                <td class="px-4 py-3 text-sm" th:text="${user.accountName}">
+                                <td class="px-4 py-3 text-sm" th:text="${userPerrmission.productManagement}">
                                     1
                                 </td>
-                                <td class="px-4 py-3 text-sm" th:text="${user.password}">
+                                <td class="px-4 py-3 text-sm" th:text="${userPerrmission.userManagement}">
                                     1
                                 </td>
-                                <td class="px-4 py-3 text-sm" th:text="${user.status == 1} ? 'Hoạt động' : 'Khóa'">
+                                <td class="px-4 py-3 text-sm" th:text="${userPerrmission.staffManagement}">
                                     1
                                 </td>
-                                <td class="px-4 py-3 text-sm" th:text="${user.userPermission.getRole()}">
+                                <td class="px-4 py-3 text-sm" th:text="${userPerrmission.materialManagement}">
+                                    1
+                                </td>
+                                <td class="px-4 py-3 text-sm" th:text="${userPerrmission.placeOrderManagement}">
                                     1
                                 </td>
                                 <td class="px-4 py-3 text-sm">
@@ -342,234 +339,99 @@
                                       class="material-icons"
                                       data-toggle="tooltip"
                                       title="Edit">&#xE254;</i></a>
-                                    <a href="#deleteModal" id="deleteModalIcon" class="delete" data-toggle="modal"
-                                       onclick="showDeleteModal()"><i
-                                      class="material-icons"
-                                      data-toggle="tooltip"
-                                      title="Delete">&#xE872;</i></a>
-                                    <input type="hidden" id="id" th:value="${user.id}">
+                                    <input type="hidden" id="id" th:value="${userPerrmission.getPermissionId()}">
                                 </td>
                             </tr>
 
                             </tbody>
                         </table>
                     </div>
-                    <div
-                      class="grid px-4 py-3 text-xs font-semibold tracking-wide text-gray-500 uppercase border-t dark:border-gray-700 bg-gray-50 sm:grid-cols-9 dark:text-gray-400 dark:bg-gray-800"
-                    >
-                <span th:if="${currentPage*sortType < totalElements }" class="flex items-center col-span-3-paging" th:text="${'Showing ' + (((currentPage*sortType)-sortType) + 1) + '-' + currentPage*sortType + ' of ' + totalElements}">
-                  Showing 21-30 of 100
-                </span>
-                        <span th:if="${currentPage*sortType >= totalElements }" class="flex items-center col-span-3-paging" th:text="${'Showing ' + (((currentPage*sortType)-sortType) + 1) + '-' + totalElements + ' of ' + totalElements}">
-                  Showing 21-30 of 100
-                </span>
-                        <span th:if="${(((currentPage*sortType)-sortType) + 1) > totalElements }" class="flex items-center col-span-3-paging" th:text="${'Out of list!'}">
-                  Showing 21-30 of 100
-                </span>
-                        <div class="flex items-center col-span-3-paging"><label for="entries">Show entries:</label>
-                            <select id="entries" onchange="getPageFromEntries(this.value)">
-                                <option value="5" onclick="getPageFromEntries(this.id)" th:selected="${sortType == 5}">5</option>
-                                <option value="10" onclick="getPageFromEntries(this.id)" th:selected="${sortType == 10}">10</option>
-                                <option value="25" onclick="getPageFromEntries(this.id)" th:selected="${sortType == 25}">25</option>
-                                <option value="50" onclick="getPageFromEntries(this.id)" th:selected="${sortType == 50}">50</option>
-                            </select><label th:text="'out of ' + ${totalElements} + ' entries'">25</label>
-                        </div>
-                        <!-- Pagination -->
-                        <span class="flex col-span-4 mt-2 sm:mt-auto sm:justify-end">
-                    <nav aria-label="Table navigation">
-                        <ul class="inline-flex items-center">
-                            <li class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple" th:classappend="${currentPage == 1 ? 'disabled' :''}"
-                                th:if="${currentPage>1}">
-                                <a th:href="@{/admin/user(sortType=${sortType}, currentPage=${currentPage - 1})}" tabindex="-1">Previous</a>
-                            </li>
-                            <li class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple"
-                                th:classappend="${page==currentPage ? 'active': ''}"
-                                th:style="${page == currentPage ? 'background: blue; color: white;' : ''}"
-                                th:each="page : ${#numbers.sequence(1, totalPages)}">
-                                <a th:href="@{/admin/user(sortType=${sortType}, currentPage=${page})}" class="page-link"
-                                   th:text="${page}">3</a></li>
-                            <li class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple"
-                                th:classappend="${currentPage == totalPages ? 'disabled' : ''}"
-                                th:if="${currentPage<totalPages}">
-                                <a th:href="@{/admin/user(sortType=${sortType}, currentPage=${currentPage+1})}"
-                                   class="page-link">Next</a>
-                            </li>
-                        </ul>
-                    </nav>
-                </span>
-                    </div>
                 </div>
                 <!-- Edit Modal HTML -->
-<!--                <div id="editModal" class="modal fade" style="display: none; width: 350px;">-->
-<!--                    <div class="modal-dialog">-->
-<!--                        <div class="modal-content">-->
-<!--                            <form method="post" th:action="@{/admin/user/create}">-->
-<!--                                <div class="modal-header">-->
-<!--                                    <div class="header-left">-->
-<!--                                        <h4 class="modal-title text-primary"><i class="fas fa-user-edit"></i> Create Account</h4>-->
-<!--                                    </div>-->
-<!--                                    <div class="header-right">-->
-<!--                                        <button type="button" class="close text-danger" data-dismiss="modal" aria-hidden="true">&times;</button>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                                <div class="modal-body">-->
-<!--                                    <div class="form-group">-->
-<!--                                        <label>Name</label>-->
-<!--                                        <input type="text" name="name" class="form-control" required>-->
-<!--                                    </div>-->
-<!--                                    <div class="form-group">-->
-<!--                                        <label>Email</label>-->
-<!--                                        <input type="email" name="email" class="form-control" required>-->
-<!--                                    </div>-->
-<!--                                    <div class="form-group">-->
-<!--                                        <label>Address</label>-->
-<!--                                        <input type="text" class="form-control" name="address" required></input>-->
-<!--                                    </div>-->
-<!--                                    <div class="form-group">-->
-<!--                                        <label>Phone</label>-->
-<!--                                        <input type="text" name="phoneNumber" class="form-control" required>-->
-<!--                                    </div>-->
-<!--                                    <div class="form-group">-->
-<!--                                        <label>City</label>-->
-<!--                                        <input type="text" name="city" class="form-control" required>-->
-<!--                                    </div>-->
-<!--                                    <div class="form-group">-->
-<!--                                        <label>Zip</label>-->
-<!--                                        <input type="text" name="zip" class="form-control" required>-->
-<!--                                    </div>-->
-<!--                                    <div class="form-group">-->
-<!--                                        <label>DOB</label>-->
-<!--                                        <input type="text" placeholder="1998/02/15" name="dob" class="form-control" required>-->
-<!--                                    </div>-->
-<!--                                    <div class="form-group">-->
-<!--                                        <label>Sex</label>-->
-<!--                                        <input type="text" name="sex" class="form-control" required>-->
-<!--                                    </div>-->
-<!--                                    <label for="addAccount">Account</label>-->
-<!--                                    <select id="addAccount" name="account">-->
-<!--                                        <th:block th:each="usable : ${usableAccounts}">-->
-<!--                                            <option th:value="${usable.getId()}" th:text="${usable.getAccountName()}"></option>-->
-<!--                                        </th:block>-->
-<!--                                    </select>-->
-<!--                                </div>-->
-<!--                                <div class="modal-footer">-->
-<!--                                    <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">-->
-<!--                                    <input type="submit" class="btn btn-success" value="Add">-->
-<!--                                </div>-->
-<!--                            </form>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-                <!-- Create Modal HTML -->
-                <div id="editModal" class="modal fade" style="display: none; width: 350px;">
+                <div id="editModal" class="modal fade" style="display: none;width: 380px;">
                     <div class="modal-dialog">
                         <div class="modal-content">
-                            <form method="post" th:action="@{/admin/user/update}" id="editForm">
+                            <form method="post" th:action="@{/admin/user-permission/update}">
                                 <div class="modal-header">
                                     <div class="header-left">
-                                        <h4 class="modal-title">Edit Account</h4>
+                                        <h4 class="modal-title text-primary"><i class="fas fa-user-edit"></i>Edit User Permission</h4>
                                     </div>
                                     <div class="header-right">
-                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <button type="button" class="close text-danger" data-dismiss="modal" aria-hidden="true">&times;</button>
                                     </div>
                                 </div>
                                 <div class="modal-body">
-                                    <div class="form-group">
-                                        <label>Name</label>
-                                        <input type="text" name="name" id="name" class="form-control" required>
+                                    <div class="form-group custom-form-group">
+                                        <label>Role</label>
+                                        <input style="width: 130px" type="text" name="role" id="role" class="form-control" readonly>
                                     </div>
-                                    <div class="form-group">
-                                        <label>Email</label>
-                                        <input type="email" name="email" id="email" class="form-control" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Address</label>
-                                        <input type="text" class="form-control" id="address" name="address" required></input>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Phone</label>
-                                        <input type="text" name="phoneNumber" id="phoneNumber" class="form-control" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>City</label>
-                                        <input type="text" name="city" id="city" class="form-control" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Zip</label>
-                                        <input type="text" name="zip" id="zip" class="form-control" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>DOB</label>
-                                        <input type="text" name="dob" id="dob" class="form-control" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Sex</label>
-                                        <input type="text" name="sex" id="sex" class="form-control" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>AccountName</label>
-                                        <input type="text" name="accountName" id="accountName" class="form-control" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Password</label>
-                                        <input type="text" name="password" id="password" class="form-control" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="editStatus" class="text-primary">Status:</label>
-                                        <select id="editStatus" name="status" class="form-control">
-                                            <option value="1">Hoạt động</option>
-                                            <option value="0">Khóa</option>
+                                    <div class="form-group custom-form-group">
+                                        <label for="editCategory" class="text-primary">Category management:</label>
+                                        <select style="width: 130px" id="editCategory" name="categoryManagement" class="form-control">
+                                            <option value="VIEW">VIEW</option>
+                                            <option value="FULL_ACCESS">FULL_ACCESS</option>
+                                            <option value="ACCESS_DENIED">ACCESS_DENIED</option>
                                         </select>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="editRole" class="text-primary">Role:</label>
-                                        <select id="editRole" name="userPermissionId" class="form-control">
-                                            <option value="1">Admin</option>
-                                            <option value="2">WAREHOUSE_STAFF</option>
-                                            <option value="3">ACCOUNTING_STAFF</option>
-                                            <option value="4">USER</option>
+                                    <div class="form-group custom-form-group">
+                                        <label for="editOrder" class="text-primary">Order management:</label>
+                                        <select  id="editOrder" name="orderManagement" class="form-control">
+                                            <option value="VIEW">VIEW</option>
+                                            <option value="FULL_ACCESS">FULL_ACCESS</option>
+                                            <option value="ACCESS_DENIED">ACCESS_DENIED</option>
                                         </select>
                                     </div>
+                                    <div class="form-group custom-form-group">
+                                        <label for="editProduct" class="text-primary">Product management:</label>
+                                        <select  id="editProduct" name="productManagement" class="form-control">
+                                            <option value="VIEW">VIEW</option>
+                                            <option value="FULL_ACCESS">FULL_ACCESS</option>
+                                            <option value="ACCESS_DENIED">ACCESS_DENIED</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group custom-form-group">
+                                        <label for="editUser" class="text-primary">User management:</label>
+                                        <select  id="editUser" name="userManagement" class="form-control">
+                                            <option value="VIEW">VIEW</option>
+                                            <option value="FULL_ACCESS">FULL_ACCESS</option>
+                                            <option value="ACCESS_DENIED">ACCESS_DENIED</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group custom-form-group">
+                                        <label for="editStaff" class="text-primary">Staff management:</label>
+                                        <select  id="editStaff" name="staffManagement" class="form-control">
+                                            <option value="VIEW">VIEW</option>
+                                            <option value="FULL_ACCESS">FULL_ACCESS</option>
+                                            <option value="ACCESS_DENIED">ACCESS_DENIED</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group custom-form-group">
+                                        <label for="editMaterial" class="text-primary">Material management:</label>
+                                        <select  id="editMaterial" name="materialManagement" class="form-control">
+                                            <option value="VIEW">VIEW</option>
+                                            <option value="FULL_ACCESS">FULL_ACCESS</option>
+                                            <option value="ACCESS_DENIED">ACCESS_DENIED</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group custom-form-group">
+                                        <label for="editPlaceOrder" class="text-primary">Place order management:</label>
+                                        <select  id="editPlaceOrder" name="placeOrderManagement" class="form-control">
+                                            <option value="VIEW">VIEW</option>
+                                            <option value="FULL_ACCESS">FULL_ACCESS</option>
+                                            <option value="ACCESS_DENIED">ACCESS_DENIED</option>
+                                        </select>
+                                    </div>
+
                                 </div>
                                 <div class="modal-footer">
                                     <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
                                     <input type="submit" class="btn btn-success" value="Save">
-                                    <input type="hidden" name="id" id="saveUserId">
+                                    <input type="hidden" name="permissionId" id="saveId">
                                 </div>
                             </form>
                         </div>
                     </div>
                 </div>
-                <!--    &lt;!&ndash; Delete Modal HTML &ndash;&gt;-->
-                <div id="deleteModal" class="modal fade" style="display: none; width: 350px;">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <form method="post" th:action="@{/admin/user/delete}">
-                                <div class="modal-header">
-                                    <div class="header-left">
-                                        <h4 class="modal-title">Delete User</h4>
-                                    </div>
-                                    <div class="header-right">
-                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                    </div>
-                                </div>
-                                <div class="modal-body">
-                                    <p id="idName2">Are you sure you want to delete these Records?</p>
-                                    <p class="text-warning"><small>This action cannot be undone.</small></p>
-                                </div>
-                                <div class="modal-footer">
-                                    <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-                                    <input type="submit" class="btn btn-danger" value="Delete">
-                                    <input type="hidden" name="id" id="deleteId">
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                <form id="hiddenForm" th:href="@{/admin/user}" method="GET" style="display: none;">
-                    <input type="hidden" name="sortType" th:value="${sortType}" />
-                    <input type="hidden" name="currentPage" th:value="${currentPage}" />
-                </form>
             </div>
         </main>
     </div>
@@ -608,9 +470,9 @@
     <script>
         function showDeleteModal() {
             var editModal = document.getElementById("editModal");
-            // var createModal = document.getElementById("addModal");
+            var createModal = document.getElementById("addModal");
             var deleteModal = document.getElementById("deleteModal");
-            // createModal.style.display = "none";
+            createModal.style.display = "none";
             deleteModal.style.display = "block";
             editModal.style.display = "none";
             // var idName = document.getElementById('idName');

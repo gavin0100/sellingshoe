@@ -28,7 +28,10 @@ $(document).ready(function () {
         const dobUTC = moment.utc(user.dob, "YYYY/MM/DD").add(1, 'days').format("YYYY-MM-DD");
         $("#editModal #dob").val(dobUTC);
         // $("#editModal #dob").val(user.dob);
-        $("#editModal #account").val(user.account.id);
+        $("#editModal #accountName").val(user.accountName);
+        $("#editModal #password").val(user.password);
+        $("#editModal #editStatus").val(user.status);
+        $("#editModal #editRole").val(user.userPermission.permissionId);
       },
     });
   });

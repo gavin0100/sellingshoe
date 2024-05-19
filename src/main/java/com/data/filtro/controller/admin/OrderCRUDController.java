@@ -1,8 +1,8 @@
 package com.data.filtro.controller.admin;
 
-import com.data.filtro.model.Account;
 import com.data.filtro.model.Category;
 import com.data.filtro.model.Order;
+import com.data.filtro.model.User;
 import com.data.filtro.service.CategoryService;
 import com.data.filtro.service.OrderService;
 import jakarta.servlet.http.HttpSession;
@@ -41,7 +41,7 @@ public class OrderCRUDController {
     @GetMapping()
     @PreAuthorize("hasAnyRole('ADMIN', 'WAREHOUSE_STAFF', 'ACCOUNTING_STAFF') and hasAnyAuthority('FULL_ACCESS_ORDER', 'VIEW_ORDER')")
     public String show(@RequestParam(defaultValue = "5") int sortType, @RequestParam("currentPage") Optional<Integer> page, Model model, HttpSession session) {
-        Account admin = (Account) session.getAttribute("admin");
+        User admin = (User) session.getAttribute("admin");
         if (admin == null) {
             return "redirect:/admin/login";
         }

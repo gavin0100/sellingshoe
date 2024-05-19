@@ -1,6 +1,5 @@
 package com.data.filtro.controller.admin;
 
-import com.data.filtro.model.Account;
 import com.data.filtro.model.User;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;

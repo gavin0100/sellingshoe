@@ -1,9 +1,6 @@
 package com.data.filtro.controller.admin;
 
-import com.data.filtro.model.Account;
-import com.data.filtro.model.Category;
-import com.data.filtro.model.Material;
-import com.data.filtro.model.Product;
+import com.data.filtro.model.*;
 import com.data.filtro.service.CategoryService;
 import com.data.filtro.service.MaterialService;
 import com.data.filtro.service.ProductService;
@@ -51,7 +48,7 @@ public class ProductCURDController {
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'WAREHOUSE_STAFF', 'ACCOUNTING_STAFF') and hasAnyAuthority('FULL_ACCESS_PRODUCT', 'VIEW_PRODUCT')")
     public String show(@RequestParam(defaultValue = "5") int sortType, @RequestParam("currentPage") Optional<Integer> page, Model model, HttpSession session) {
-        Account admin = (Account) session.getAttribute("admin");
+        User admin = (User) session.getAttribute("admin");
         if (admin == null) {
             return "redirect:/admin/login";
         }

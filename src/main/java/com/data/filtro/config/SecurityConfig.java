@@ -48,7 +48,10 @@ public class SecurityConfig{
                                         "/api/v1/vnpay/**",
                                         "/access-denied",
                                         "/oauth2user",
-                                        "/forgot-password"
+                                        "/forgot-password",
+                                        "/category",
+                                        "/contact"
+
                                         ).permitAll()
                                 .requestMatchers("/css/**", "/js/**", "/image/**", "/javascript/**").permitAll()
 //                                .anyRequest().authenticated().and().exceptionHandling().accessDeniedHandler(accessDeniedHandler()).authenticationEntryPoint(accessDeniedHandler())

@@ -6,6 +6,7 @@ import com.data.filtro.exception.PasswordDoNotMatchException;
 import com.data.filtro.exception.UserNotFoundException;
 import com.data.filtro.model.Account;
 import com.data.filtro.model.Cart;
+import com.data.filtro.model.DTO.UserDTO;
 import com.data.filtro.model.User;
 import com.data.filtro.model.UserPermission;
 import com.data.filtro.repository.AccountRepository;
@@ -99,7 +100,7 @@ public class UserService implements UserDetailsService {
 
 
 
-    public void create(User user) {
+    public void create(UserDTO user) {
         User newUser = new User();
         newUser.setName(user.getName());
         newUser.setEmail(user.getEmail());
@@ -111,15 +112,20 @@ public class UserService implements UserDetailsService {
         newUser.setStatus(1);
         newUser.setAddress(user.getAddress());
         newUser.setAccountName(user.getAccountName());
-        newUser.setPassword(user.getPassword());
+
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String hashPassword = passwordEncoder.encode(user.getPassword());
+        newUser.setPassword(hashPassword);
+
+
         newUser.setCreatedDate(new Date());
-        UserPermission userPermission = userPermissionRepository.findByPermissionId(4);
-        user.setUserPermission(userPermission);
+        UserPermission userPermission = userPermissionRepository.findByPermissionId(user.getUserPermissionId());
+        newUser.setUserPermission(userPermission);
         userRepository.save(newUser);
     }
 
 
-    public void update(User user) {
+    public void update(UserDTO user) {
         User newUser = getByUserId(user.getId());
         newUser.setName(user.getName());
         newUser.setEmail(user.getEmail());
@@ -129,6 +135,15 @@ public class UserService implements UserDetailsService {
         newUser.setZip(user.getZip());
         newUser.setDob(user.getDob());
         newUser.setSex(user.getSex());
+        newUser.setStatus(user.getStatus());
+        newUser.setAccountName(user.getAccountName());
+
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String hashPassword = passwordEncoder.encode(user.getPassword());
+        newUser.setPassword(hashPassword);
+
+        UserPermission userPermission = userPermissionRepository.findByPermissionId(user.getUserPermissionId());
+        newUser.setUserPermission(userPermission);
         userRepository.save(newUser);
     }
 
@@ -170,7 +185,9 @@ public class UserService implements UserDetailsService {
                 user.setAccountName(newUser.getAccountName());
             }
             if (newUser.getPassword() != null) {
-                user.setPassword(newUser.getPassword());
+                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+                String hashPassword = passwordEncoder.encode(newUser.getPassword());
+                user.setPassword(hashPassword);
             }
 
             if (newUser.getUserPermission() != null) {

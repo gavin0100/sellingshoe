@@ -1,6 +1,7 @@
 package com.data.filtro.controller.admin;
 
 import com.data.filtro.model.Account;
+import com.data.filtro.model.DTO.UserDTO;
 import com.data.filtro.model.User;
 import com.data.filtro.service.AccountService;
 import com.data.filtro.service.UserService;
@@ -70,21 +71,21 @@ public class UserCRUDController {
 
 
     @PostMapping("/create")
-    @PreAuthorize("hasAnyRole('ADMIN', 'WAREHOUSE_STAFF', 'ACCOUNTING_STAFF') and hasAnyAuthority( 'VIEW_USER')")
-    public String create(@ModelAttribute User user) {
+    @PreAuthorize("hasAnyRole('ADMIN', 'WAREHOUSE_STAFF', 'ACCOUNTING_STAFF') and hasAnyAuthority( 'FULL_ACCESS_USER')")
+    public String create(@ModelAttribute UserDTO user) {
         userService.create(user);
         return "redirect:/admin/user";
     }
 
     @PostMapping("/update")
-    @PreAuthorize("hasAnyRole('ADMIN', 'WAREHOUSE_STAFF', 'ACCOUNTING_STAFF') and hasAnyAuthority( 'VIEW_USER')")
-    public String update(@ModelAttribute User user) {
+    @PreAuthorize("hasAnyRole('ADMIN', 'WAREHOUSE_STAFF', 'ACCOUNTING_STAFF') and hasAnyAuthority( 'FULL_ACCESS_USER')")
+    public String update(@ModelAttribute UserDTO user) {
         userService.update(user);
         return "redirect:/admin/user";
     }
 
     @PostMapping("/delete")
-    @PreAuthorize("hasAnyRole('ADMIN', 'WAREHOUSE_STAFF', 'ACCOUNTING_STAFF') and hasAnyAuthority( 'VIEW_USER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'WAREHOUSE_STAFF', 'ACCOUNTING_STAFF') and hasAnyAuthority( 'FULL_ACCESS_USER')")
     public String delete(@RequestParam("id") int id) {
         User user = userService.getByUserId(id);
         userService.deleteById(id);

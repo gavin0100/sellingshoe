@@ -71,7 +71,7 @@ public class UserAPIController {
             user.setZip(zipcode);
             user.setEmail(email);
             user.setPhoneNumber(phonenumber);
-            userService.update(user);
+//            userService.update(user);
             return new ResponseEntity<>("Đã cập nhật user", HttpStatus.OK);
         }
         catch (NoSuchElementException ex){
