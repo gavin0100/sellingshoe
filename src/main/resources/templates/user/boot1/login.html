@@ -8,6 +8,7 @@
     <link rel="stylesheet" type="text/css" href="/css/boot1/login/main.css" th:href="@{/css/boot1/login/main.css}">
     <link rel="stylesheet" type="text/css" href="/css/boot1/style.css" th:href="@{/css/boot1/style.css}">
   </th:block>
+
 </head>
 <body>
 <div th:fragment="content">
@@ -53,10 +54,15 @@
                   <label for="f-option2">Keep me logged in</label>
                 </div>
               </div>
+
               <div class="col-md-12 form-group">
                 <input type="hidden" name="_csrfParameterName" th:value="${_csrfToken}">
                 <button type="submit" class="primary-btn">Log In</button>
                 <a th:href="@{/forgot-password}">Forgot Password?</a>
+<!--                <button class="primary-btn"><a>Log In With Facebook</a></button>-->
+<!--                <button class="primary-btn"><a>Log In With Google</a></button>-->
+                <a th:href="@{/oauth2/authorization/facebook}" style="background-color: #3b5998; color: white; padding: 10px 15px; text-decoration: none; font-weight: bold; border-radius: 5px; display: inline-block;">Log In With Facebook</a>
+                <a th:href="@{/oauth2/authorization/google}" style="background-color: #dd4b39; color: white; padding: 10px 15px; text-decoration: none; font-weight: bold; border-radius: 5px; display: inline-block;">Log In With Google</a>
               </div>
             </form>
           </div>

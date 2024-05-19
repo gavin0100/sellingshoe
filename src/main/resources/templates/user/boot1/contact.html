@@ -43,13 +43,13 @@
                             <div class="navbar-nav mr-auto py-0">
                                 <a th:href="@{/}" class="nav-item nav-link">Home</a>
                                 <a th:href="@{/category/{id}(id='all')}" class="nav-item nav-link ">Shop</a>
-                                <a th:if="${session.containsKey('account') && session.account != null}" th:href="@{/user/profile}" class="nav-item nav-link">Account</a>
+                                <a th:if="${session.containsKey('user') && session.user != null}" th:href="@{/user/profile}" class="nav-item nav-link">Account</a>
                                 <a th:href="@{/contact}" class="nav-item nav-link active">Contact</a>
                             </div>
                             <div class="navbar-nav ml-auto py-0">
-                                <a th:if="${session.containsKey('account') && session.account == null}" th:href="@{/login}" class="nav-item nav-link">Login</a>
-                                <a th:if="${session.containsKey('account') && session.account == null}" th:href="@{/register}" class="nav-item nav-link">Register</a>
-                                <a th:if="${session.containsKey('account') && session.account != null}" th:href="@{/logout}" class="nav-item nav-link">Logout</a>
+                                <a th:if="${session.containsKey('user') && session.user == null}" th:href="@{/login}" class="nav-item nav-link">Login</a>
+                                <a th:if="${session.containsKey('user') && session.user == null}" th:href="@{/register}" class="nav-item nav-link">Register</a>
+                                <a th:if="${session.containsKey('user') && session.user != null}" th:href="@{/logout}" class="nav-item nav-link">Logout</a>
                             </div>
                         </div>
                     </nav>

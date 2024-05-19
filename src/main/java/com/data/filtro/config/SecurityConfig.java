@@ -15,6 +15,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 
 @Configuration
@@ -45,10 +46,34 @@ public class SecurityConfig{
                                         "/admin/login",
                                         "/api/v1/momo/**",
                                         "/api/v1/vnpay/**",
-                                        "/access-denied"
+                                        "/access-denied",
+                                        "/oauth2user",
+                                        "/forgot-password"
                                         ).permitAll()
                                 .requestMatchers("/css/**", "/js/**", "/image/**", "/javascript/**").permitAll()
-                                .anyRequest().authenticated().and().exceptionHandling().accessDeniedHandler(accessDeniedHandler()).authenticationEntryPoint(accessDeniedHandler());
+//                                .anyRequest().authenticated().and().exceptionHandling().accessDeniedHandler(accessDeniedHandler()).authenticationEntryPoint(accessDeniedHandler())
+                                .anyRequest().authenticated()
+                                .and()
+                                .formLogin()
+                                .loginPage("/login")
+                                .loginProcessingUrl("/sign-in")
+                                .defaultSuccessUrl("/", true)
+                                .permitAll()
+                                .and()
+                                .logout()
+                                .invalidateHttpSession(true)
+                                .deleteCookies("JSESSIONID")
+                                .deleteCookies("token")
+                                .clearAuthentication(true)
+                                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                                .logoutSuccessUrl("/login?logout")
+                                .and()
+                                .exceptionHandling()
+                                .accessDeniedPage("/access-denied");
+//                                .and()
+//                                .oauth2Login()
+//                                .loginPage("/login")
+//                                .defaultSuccessUrl("/oauth2user", true);
                     } catch (Exception e) {
                         System.out.println("Lỗi truy cập xử lý html");
                         throw new RuntimeException(e);
@@ -59,12 +84,8 @@ public class SecurityConfig{
                 .formLogin(AbstractHttpConfigurer::disable)
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(filterExceptionHandler, JwtFilter.class);
-//                .logout(logout -> logout
-//                        .addLogoutHandler(logoutHandler)
-//                        .logoutUrl("/logout")
-//                        .logoutSuccessHandler((request, response, authentication)->{
-//                            SecurityContextHolder.clearContext();
-//                        }))
+
+
         return http.build();
     }
 }

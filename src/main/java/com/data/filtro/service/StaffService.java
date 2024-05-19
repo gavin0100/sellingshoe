@@ -15,6 +15,8 @@ import java.util.List;
 
 @Service
 public class StaffService {
+    public StaffService() {
+    }
 
     @Autowired
     StaffRepository staffRepository;

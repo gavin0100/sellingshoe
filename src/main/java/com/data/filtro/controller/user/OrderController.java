@@ -1,6 +1,5 @@
 package com.data.filtro.controller.user;
 
-import com.data.filtro.exception.AuthenticationAccountException;
 import com.data.filtro.model.*;
 import com.data.filtro.model.payment.OrderStatus;
 import com.data.filtro.model.payment.momo.MomoResponse;
@@ -10,7 +9,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -40,6 +38,9 @@ public class OrderController {
     MomoService momoService;
     @Autowired
     VNPayService vnpayService;
+
+    @Autowired
+    MailSenderService mailSender;
 
     @GetMapping
     @PreAuthorize("hasAnyAuthority('FULL_ACCESS_PLACE_ORDER')")
@@ -92,6 +93,18 @@ public class OrderController {
             cartItemService.deleteCartItemFromCartItemIdAndCartId(cartItem.getId(), cartItem.getCart().getId());
         }
         orderService.updateStatusOrder(OrderStatus.CONFIRMED, order);
+        String to = user.getEmail();
+
+        // Sender's email ID needs to be mentioned
+        String from = "voduc0100@gmail.com";
+
+        // Assuming you are sending email from localhost
+        String host = "smtp.gmail.com";
+
+        // Subject
+        String subject = "SHOP BÁN GIÀY FOUR LEAVES SHOE - HÓA ĐƠN MUA HÀNG!";
+
+        mailSender.sendHoaDon(to, from, host, subject, order, order.getOrderDetails());
         int orderId = order.getId();
         return "redirect:/invoice/" + orderId;
     }
