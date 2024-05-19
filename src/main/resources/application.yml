@@ -29,10 +29,6 @@ spring:
             enable: true
   main:
     allow-circular-references: true
-  security:
-    oauth2:
-      client:
-        registration:
 
 application:
   security:
