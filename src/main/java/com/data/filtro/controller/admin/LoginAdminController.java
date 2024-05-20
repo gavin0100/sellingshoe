@@ -26,7 +26,10 @@ public class LoginAdminController {
     private AuthenticationService authenticationService;
 
     @GetMapping
-    public String show() {
+    public String show(HttpSession session) {
+        if (session.getAttribute("admin") != null){
+            return "redirect:/admin/dashboard";
+        }
         return "admin/boot1/login";
     }
 
@@ -48,7 +51,9 @@ public class LoginAdminController {
             return "redirect:/admin";
         } catch (AuthenticationAccountException exception) {
             exception.printStackTrace();
-            model.addAttribute("message", exception.getMessage());
+            model.addAttribute("message", "Tên tài khoản hoặc mật khẩu không chính xác");
+        } catch (Exception err){
+            model.addAttribute("message", "Tên tài khoản hoặc mật khẩu không chính xác");
         }
         return "admin/boot1/login";
     }

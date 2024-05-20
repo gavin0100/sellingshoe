@@ -27,6 +27,8 @@ public class SecurityConfig{
     private final JwtFilter jwtFilter;
     private final FilterExceptionHandler filterExceptionHandler;
 
+    private final JWTAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+
     @Bean
     public CustomAccessDeniedHandler accessDeniedHandler(){
         return new CustomAccessDeniedHandler();
@@ -40,7 +42,7 @@ public class SecurityConfig{
                 .authorizeHttpRequests(ahr -> {
                     try {
                         ahr
-                                .requestMatchers("/login",
+                                .requestMatchers("/login/**",
                                         "/register",
                                         "/",
                                         "/admin/login",
@@ -54,25 +56,32 @@ public class SecurityConfig{
 
                                         ).permitAll()
                                 .requestMatchers("/css/**", "/js/**", "/image/**", "/javascript/**").permitAll()
-//                                .anyRequest().authenticated().and().exceptionHandling().accessDeniedHandler(accessDeniedHandler()).authenticationEntryPoint(accessDeniedHandler())
                                 .anyRequest().authenticated()
                                 .and()
-                                .formLogin()
-                                .loginPage("/login")
-                                .loginProcessingUrl("/sign-in")
-                                .defaultSuccessUrl("/", true)
-                                .permitAll()
+                                .exceptionHandling()
+                                .authenticationEntryPoint(accessDeniedHandler())  // chuyen huong den trang access-denied khi cố gắng truy cập vào một tài nguyên mà họ không được phép khi chưa xác thực
+//                                .anyRequest().authenticated()
                                 .and()
-                                .logout()
+                                .exceptionHandling()
+//                                .accessDeniedHandler(accessDeniedHandler())
+                                .accessDeniedPage("/access-denied")
+                                .and()
+//                                .formLogin(form ->  form.failureForwardUrl("/login/login-failure"))
+//                                .loginPage("/login")
+//                                .loginProcessingUrl("/sign-in")
+//                                .defaultSuccessUrl("/", true)
+//                                .permitAll()
+//                                .and()
+                                .logout() // neu da dang ky ngoai nay thi may cai viet trong controler logout khong duoc thuc hien
                                 .invalidateHttpSession(true)
                                 .deleteCookies("JSESSIONID")
                                 .deleteCookies("token")
                                 .clearAuthentication(true)
                                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                                .logoutSuccessUrl("/login?logout")
-                                .and()
-                                .exceptionHandling()
-                                .accessDeniedPage("/access-denied");
+                                .logoutSuccessUrl("/login");
+//                                .and()
+//                                .exceptionHandling()
+//                                .accessDeniedPage("/access-denied");
 //                                .and()
 //                                .oauth2Login()
 //                                .loginPage("/login")
@@ -84,9 +93,11 @@ public class SecurityConfig{
                 })
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
-                .formLogin(AbstractHttpConfigurer::disable)
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(filterExceptionHandler, JwtFilter.class);
+//                .exceptionHandling(eh-> eh.authenticationEntryPoint(jwtAuthenticationEntryPoint))
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+//                .exceptionHandling()
+//                .accessDeniedPage("/access-denied");
+//                .addFilterBefore(filterExceptionHandler, JwtFilter.class);
 
 
         return http.build();

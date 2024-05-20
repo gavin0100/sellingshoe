@@ -2,6 +2,7 @@ package com.data.filtro.service;
 
 
 import com.data.filtro.authentication.JwtService;
+import com.data.filtro.exception.AuthenticationAccountException;
 import com.data.filtro.model.AuthenticateResponse;
 import com.data.filtro.model.User;
 import jakarta.servlet.http.HttpServletRequest;
@@ -39,7 +40,7 @@ public class AuthenticationService {
 //            System.out.println(SecurityContextHolder.getContext().getAuthentication().getCredentials().toString());
         }catch (AuthenticationException e){
 //            System.out.println(e.getMessage());
-            throw new RuntimeException("Invalid username/password supplied: " + e.getMessage());
+            throw new AuthenticationAccountException("Invalid username/password supplied: " + e.getMessage());
         }
         User user = userService.getUserByAccountName(accountName);
         String token = jwtService.generateToken(user);

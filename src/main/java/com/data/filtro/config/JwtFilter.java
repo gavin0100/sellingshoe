@@ -31,8 +31,15 @@ public class JwtFilter extends OncePerRequestFilter {
     private  final JwtService jwtService;
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-//        System.out.println(request.getHeader("Host"));
+        String path = request.getRequestURI();
+//        System.out.println(request.getRequestURL());
+        if (path.startsWith("/css/") || path.startsWith("/javascript/") || path.startsWith("/image/") || path.startsWith("/login") || path.startsWith("/img/") || path.startsWith("/access-denied")) {
+            // Nếu đúng là tài nguyên tĩnh, cho phép yêu cầu đi qua mà không xử lý thêm
+            filterChain.doFilter(request, response);
+            return;
+        }
 
+//        System.out.println(request.getHeader("Host"));
 //        System.out.println("doFilterInternal trong jwtFilter");
 
 //        final String authHeader = request.getHeader(AUTHORIZATION);
@@ -50,10 +57,11 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 //        System.out.println(authHeader);
         if(jwt.equals("")){
-            logger.error("JWT Token does not begin with Bearer String");
+//            logger.error("JWT Token does not begin with Bearer String");
             filterChain.doFilter(request, response);
             return;
         }
+
 
         if(accountName!=null && SecurityContextHolder.getContext().getAuthentication() == null){
             UserDetails userDetails = userDetailsService.loadUserByUsername(accountName);

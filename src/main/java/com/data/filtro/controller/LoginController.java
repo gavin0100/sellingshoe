@@ -42,6 +42,9 @@ public class LoginController {
 
     @GetMapping
     public String show(Model model, HttpSession session) {
+        if (session.getAttribute("user") != null){
+            return "redirect:/";
+        }
         User user = (User) session.getAttribute("user");
         if (user == null) {
             String _csrfToken = generateRandomString();
@@ -53,6 +56,13 @@ public class LoginController {
         else {
             return "redirect:/";
         }
+    }
+
+    @GetMapping("/login-failure")
+    public String loginFailure(Model model, HttpSession session) {
+        model.addAttribute("message", "Thông tin đăng nhập không đúng");
+        System.out.println("hihi");
+        return "user/boot1/login";
     }
 
     @PostMapping
@@ -96,7 +106,15 @@ public class LoginController {
         } catch (AuthenticationAccountException exception) {
             exception.printStackTrace();
 //            System.out.println(exception.getMessage());
-            model.addAttribute("message", exception.getMessage());
+            model.addAttribute("message", "Tên tài khoản hoặc mật khẩu không đúng!");
+            String _csrfToken = generateRandomString();
+            csrfToken = _csrfToken;
+            model.addAttribute("_csrfToken", _csrfToken);
+        } catch (Exception err){
+            model.addAttribute("message", "Tên tài khoản hoặc mật khẩu không đúng!");
+            String _csrfToken = generateRandomString();
+            csrfToken = _csrfToken;
+            model.addAttribute("_csrfToken", _csrfToken);
         }
         return "user/boot1/login";
     }

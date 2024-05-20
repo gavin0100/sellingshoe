@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class AccessDenied {
     @GetMapping("/access-denied")
     public String getAccessDenied(HttpServletResponse response){
+//        System.out.println("hihihiihhihihihhihiih");
         return "error/accessDenied";
     }
 }

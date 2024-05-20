@@ -19,7 +19,6 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler, Authentic
     public void handle(HttpServletRequest request, HttpServletResponse response,
                        AccessDeniedException accessDeniedException) throws IOException, ServletException {
         System.out.println("ban khong co quyen truy cap trong handle");
-        // Tùy chỉnh phản hồi ở đây, ví dụ chuyển hướng người dùng đến một trang HTML tùy chỉnh
         response.sendRedirect("/access-denied");
     }
 

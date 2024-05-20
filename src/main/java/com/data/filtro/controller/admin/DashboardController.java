@@ -17,7 +17,12 @@ public class DashboardController {
             return "redirect:/admin/login";
         }
 
-        return "redirect:/admin/user";
+        return "redirect:/admin/dashboard";
+    }
+
+    @GetMapping("/dashboard")
+    public String showDashboard(){
+        return "/admin/boot1/dashboard";
     }
 
 

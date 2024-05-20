@@ -17,6 +17,13 @@ import javax.servlet.http.HttpServletRequest;
 public class LogoutController {
     @GetMapping
     public String logout(HttpSession session, HttpServletRequest request, HttpServletResponse response) {
+        String sessionAccount = "";
+        if (session.getAttribute("user") != null){
+            sessionAccount = "user";
+        }
+        if (session.getAttribute("admin") != null){
+            sessionAccount = "admin";
+        }
         session.invalidate();
         // Clear the security context
         SecurityContextHolder.clearContext();
@@ -34,6 +41,12 @@ public class LogoutController {
 
         // Add the cookie to the response to instruct the browser to delete it
         response.addCookie(jwtCookie);
+        if (sessionAccount.equals("user")){
+            return "redirect:/login";
+        }
+        if (sessionAccount.equals("admin")){
+            return "redirect:/admin/login";
+        }
         return "redirect:/login";
     }
 }
