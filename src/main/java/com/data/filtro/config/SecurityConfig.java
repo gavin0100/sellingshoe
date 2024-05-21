@@ -1,6 +1,7 @@
 package com.data.filtro.config;
 
 import com.data.filtro.handler.FilterExceptionHandler;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -61,10 +62,11 @@ public class SecurityConfig{
                                 .exceptionHandling()
                                 .authenticationEntryPoint(accessDeniedHandler())  // chuyen huong den trang access-denied khi cố gắng truy cập vào một tài nguyên mà họ không được phép khi chưa xác thực
 //                                .anyRequest().authenticated()
-                                .and()
-                                .exceptionHandling()
+//                                .and()
+//                                .exceptionHandling()
 //                                .accessDeniedHandler(accessDeniedHandler())
-                                .accessDeniedPage("/access-denied")
+//                                .accessDeniedPage("/access-denied")
+//                                .authenticationEntryPoint(accessDeniedHandler())
                                 .and()
 //                                .formLogin(form ->  form.failureForwardUrl("/login/login-failure"))
 //                                .loginPage("/login")

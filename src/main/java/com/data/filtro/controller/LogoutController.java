@@ -24,6 +24,7 @@ public class LogoutController {
         if (session.getAttribute("admin") != null){
             sessionAccount = "admin";
         }
+        System.out.println(sessionAccount);
         session.invalidate();
         // Clear the security context
         SecurityContextHolder.clearContext();
