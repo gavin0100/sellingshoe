@@ -30,12 +30,12 @@
                                 </p>
                             </div>
                             <div class="col-auto">
-                                <span th:if="${order.getStatus() == 1}">Status: <strong>Pending verification</strong> </span>
-                                <span th:if="${order.getStatus() == 2}">Status: <strong>Verified</strong> </span>
-                                <span th:if="${order.getStatus() == 3}">Status: <strong>On its way (Estimated 5 days)</strong> </span>
-                                <span th:if="${order.getStatus() == 4}">Status: <strong>Delivered</strong> </span>
-                                <span th:if="${order.getStatus() == 5}">Status: <strong>Processing return</strong> </span>
-                                <span th:if="${order.getStatus() == 6}">Status: <strong>Return processed</strong> </span>
+                                <span>Status: <strong th:text="${order.statusPayment}"></strong> </span>
+<!--                                <span>Status: <strong>Verified</strong> </span>-->
+<!--                                <span>Status: <strong>On its way (Estimated 5 days)</strong> </span>-->
+<!--                                <span>Status: <strong>Delivered</strong> </span>-->
+<!--                                <span>Status: <strong>Processing return</strong> </span>-->
+<!--                                <span>Status: <strong>Return processed</strong> </span>-->
                             </div>
                         </div>
                     </div>

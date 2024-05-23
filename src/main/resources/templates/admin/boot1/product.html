@@ -17,6 +17,24 @@
 </head>
 <body>
 <th:block th:fragment="content">
+    <style>
+        .custom-form-group {
+            display: flex; /* Kích hoạt Flexbox */
+            justify-content: space-between; /* Căn chỉnh items sang hai bên */
+            align-items: center; /* Đảm bảo các items ở giữa theo chiều dọc */
+        }
+
+        .custom-form-group label {
+            flex-grow: 1; /* Cho phép label chiếm mọi không gian có sẵn */
+            text-align: left; /* Căn chỉnh text của label sang trái */
+        }
+
+        .custom-form-group .form-control {
+            flex-grow: 2; /* Cho phép select chiếm không gian lớn hơn */
+            width: 50%;
+            max-width: 130px;
+        }
+    </style>
     <div class="flex flex-col flex-1 w-full">
         <!--        header-->
         <header class="z-10 py-4 bg-white shadow-md dark:bg-gray-800">
@@ -474,24 +492,26 @@
                         <!-- Pagination -->
                         <span class="flex col-span-4 mt-2 sm:mt-auto sm:justify-end">
                     <nav aria-label="Table navigation">
-                        <ul class="inline-flex items-center">
-                            <li class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple" th:classappend="${currentPage == 1 ? 'disabled' :''}"
-                                th:if="${currentPage>1}">
-                                <a th:href="@{/admin/product(sortType=${sortType}, currentPage=${currentPage - 1})}" tabindex="-1">Previous</a>
-                            </li>
-                            <li class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple"
-                                th:classappend="${page==currentPage ? 'active': ''}"
-                                th:style="${page == currentPage ? 'background: blue; color: white;' : ''}"
-                                th:each="page : ${#numbers.sequence(1, totalPages)}">
-                                <a th:href="@{/admin/product(sortType=${sortType}, currentPage=${page})}" class="page-link"
-                                   th:text="${page}">3</a></li>
-                            <li class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple"
-                                th:classappend="${currentPage == totalPages ? 'disabled' : ''}"
-                                th:if="${currentPage<totalPages}">
-                                <a th:href="@{/admin/product(sortType=${sortType}, currentPage=${currentPage+1})}"
-                                   class="page-link">Next</a>
-                            </li>
-                        </ul>
+                      <ul class="inline-flex items-center">
+                        <li class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple" th:classappend="${currentPage == 1 ? 'disabled' :''}" th:if="${currentPage>1}">
+                          <a th:href="@{/admin/product(sortType=${sortType}, currentPage=${currentPage - 1})}" tabindex="-1">Previous</a>
+                        </li>
+
+                        <li th:if="${currentPage > 3}" class="px-3 py-1">...</li>
+
+                        <li class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple"
+                            th:classappend="${page==currentPage ? 'active': ''}"
+                            th:style="${page == currentPage ? 'background: blue; color: white;' : ''}"
+                            th:each="page : ${#numbers.sequence(currentPage > 3 ? currentPage - 2 : 1, currentPage < totalPages - 2 ? currentPage + 2 : totalPages)}">
+                          <a th:href="@{/admin/product(sortType=${sortType}, currentPage=${page})}" class="page-link" th:text="${page}">3</a>
+                        </li>
+
+                        <li th:if="${currentPage < totalPages - 2}" class="px-3 py-1">...</li>
+
+                        <li class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple" th:classappend="${currentPage == totalPages ? 'disabled' : ''}" th:if="${currentPage<totalPages}">
+                          <a th:href="@{/admin/product(sortType=${sortType}, currentPage=${currentPage+1})}" class="page-link">Next</a>
+                        </li>
+                      </ul>
                     </nav>
                 </span>
                     </div>
@@ -510,42 +530,42 @@
                                     </div>
                                 </div>
                                 <div class="modal-body">
-                                    <div class="form-group">
+                                    <div class="form-group custom-form-group">
                                         <label>Name</label>
                                         <input type="text" name="productName" id="productName" class="form-control" required>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group custom-form-group">
                                         <label>Quantity</label>
                                         <input type="text" name="quantity" id="quantity" class="form-control" required>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group custom-form-group">
                                         <label>Price</label>
                                         <input type="text" class="form-control" id="price" name="price" required></input>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group custom-form-group">
                                         <label>Description</label>
                                         <textarea name="description" id="description" class="form-control" style="width: 187px; height: 90px;"  required></textarea>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group custom-form-group">
                                         <label>Image</label>
                                         <input type="text" name="image" id="image" class="form-control" required>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group custom-form-group">
                                         <label>Sold</label>
                                         <input type="text" name="sold" id="sold" class="form-control" required>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group custom-form-group">
                                         <label for="editProductStatus">Status</label>
                                         <select name="status" id="editProductStatus">
                                             <option value="1">Available</option>
                                             <option value="0">Out of stock</option>
                                         </select>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group custom-form-group">
                                         <label>Discount</label>
                                         <input type="text" name="discount" id="discount" class="form-control" required>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group custom-form-group">
                                         <label for="editMaterial">Material</label>
                                         <select id="editMaterial" name="material">
                                             <th:block th:each="material : ${materials}">
@@ -553,7 +573,7 @@
                                             </th:block>
                                         </select>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group custom-form-group">
                                         <label for="editCategory">Category</label>
                                         <select id="editCategory" name="category">
                                             <th:block th:each="category : ${categories}">
@@ -586,42 +606,42 @@
                                     </div>
                                 </div>
                                 <div class="modal-body">
-                                    <div class="form-group">
+                                    <div class="form-group custom-form-group">
                                         <label>Name</label>
                                         <input type="text" name="productName" class="form-control" required>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group custom-form-group">
                                         <label>Quantity</label>
                                         <input type="text" name="quantity" class="form-control" required>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group custom-form-group">
                                         <label>Price</label>
                                         <input type="text" class="form-control" name="price" required></input>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group custom-form-group">
                                         <label>Description</label>
                                         <textarea name="description" class="form-control" required></textarea>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group custom-form-group">
                                         <label>Image</label>
                                         <input type="text" name="image" class="form-control" required>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group custom-form-group">
                                         <label>Sold</label>
                                         <input type="text" name="sold" class="form-control" required>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group custom-form-group">
                                         <label for="addProductStatus">Status</label>
                                         <select name="status" id="addProductStatus">
                                             <option value="0">Unavailable</option>
                                             <option value="1">Available</option>
                                         </select>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group custom-form-group">
                                         <label>Discount</label>
                                         <input type="text" name="discount" class="form-control" required>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group custom-form-group">
                                         <label for="addFlavor">Material</label>
                                         <select id="addFlavor" name="material">
                                             <th:block th:each="material : ${materials}">
@@ -629,7 +649,7 @@
                                             </th:block>
                                         </select>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group custom-form-group">
                                         <label for="addCategory">Category</label>
                                         <select id="addCategory" name="category">
                                             <th:block th:each="category : ${categories}">
@@ -675,7 +695,7 @@
                 </div>
                 <form id="hiddenForm" th:href="@{/admin/product}" method="GET" style="display: none;">
                     <input type="hidden" name="sortType" th:value="${sortType}" />
-                    <input type="hidden" name="currentPage" th:value="${currentPage}" />
+                    <input type="hidden" name="currentPage" th:value="1" />
                 </form>
             </div>
         </main>

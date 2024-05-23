@@ -66,6 +66,14 @@ public class UserService implements UserDetailsService {
         return userRepository.findAll(pageable);
     }
 
+    public Page<User> getAllPagingUser(Pageable pageable) {
+        return userRepository.findAllUser(pageable);
+    }
+
+    public Page<User> getAllPagingStaff(Pageable pageable) {
+        return userRepository.findAllStaff(pageable);
+    }
+
 
     public void registerUser(String userName, String accountName, String email, String password, String repeatPassword) {
 

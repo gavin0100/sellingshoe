@@ -3,6 +3,7 @@ package com.data.filtro.controller.admin;
 import com.data.filtro.model.Category;
 import com.data.filtro.model.Order;
 import com.data.filtro.model.User;
+import com.data.filtro.model.payment.OrderStatus;
 import com.data.filtro.service.CategoryService;
 import com.data.filtro.service.OrderService;
 import jakarta.servlet.http.HttpSession;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,6 +57,8 @@ public class OrderCRUDController {
         Pageable pageable;
         pageable = sortOrder(currentPage, pageSize, sortType);
         orderPage = orderService.getAllPaging(pageable);
+        List<OrderStatus> orderStatusList = returnListOrderStatus();
+        model.addAttribute("orderStatusList", orderStatusList);
         model.addAttribute("orders", orderPage.getContent());
         model.addAttribute("totalPages", orderPage.getTotalPages());
         model.addAttribute("currentPage", currentPage);
@@ -68,7 +72,6 @@ public class OrderCRUDController {
     @PostMapping("/update")
     @PreAuthorize("hasAnyRole('ADMIN', 'WAREHOUSE_STAFF', 'ACCOUNTING_STAFF') and hasAnyAuthority('FULL_ACCESS_ORDER')")
     public String update(@ModelAttribute Order order) {
-        System.out.println(order.getStatus());
         orderService.update(order);
         orderService.updateSoldByOrderStatus(order);
         return "redirect:/admin/order";
@@ -81,5 +84,17 @@ public class OrderCRUDController {
         return "redirect:/admin/order";
     }
 
+    public List<OrderStatus> returnListOrderStatus(){
+        List<OrderStatus> danhSachOrderStatus = new ArrayList<>();
+        danhSachOrderStatus.add(OrderStatus.PENDING);
+        danhSachOrderStatus.add(OrderStatus.PAID_MOMO);
+        danhSachOrderStatus.add(OrderStatus.PAID_VNPAY);
+        danhSachOrderStatus.add(OrderStatus.CONFIRMED);
+        danhSachOrderStatus.add(OrderStatus.SHIPPING);
+        danhSachOrderStatus.add(OrderStatus.DELIVERED);
+        danhSachOrderStatus.add(OrderStatus.CANCELED);
+        danhSachOrderStatus.add(OrderStatus.FAILED);
+        return danhSachOrderStatus;
+    }
 
 }

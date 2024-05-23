@@ -59,7 +59,7 @@ public class UserCRUDController {
         Pageable pageable;
         Page<User> userPage;
         pageable = sortUser(currentPage, pageSize, sortType);
-        userPage = userService.getAllPaging(pageable);
+        userPage = userService.getAllPagingUser(pageable);
         model.addAttribute("users", userPage.getContent());
         model.addAttribute("totalPages", userPage.getTotalPages());
         model.addAttribute("currentPage", currentPage);

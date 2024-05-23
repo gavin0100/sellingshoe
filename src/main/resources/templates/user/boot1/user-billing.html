@@ -53,23 +53,19 @@
                                 $29.99
                             </td>
                             <td>
-                                <span th:if="${item.getStatus() == 1}"
-                                      class="badge bg-light text-dark">Pending verification</span>
-                                <span th:if="${item.getStatus() == 2}"
-                                      class="badge bg-light text-dark">Verified</span>
-                                <span th:if="${item.getStatus() == 3}"
-                                      class="badge bg-light text-dark">On its way</span>
-                                <span th:if="${item.getStatus() == 4}"
-                                      class="badge bg-success text-dark">Delivered</span>
-                                <span th:if="${item.getStatus() == 5}"
-                                      class="badge bg-light text-dark">Processing return</span>
-                                <span th:if="${item.getStatus() == 6}"
-                                      class="badge bg-success text-dark">Return processed</span>
+                                <span th:if="${item.statusPayment == orderStatusList.get(0)}" style="background-color: #ffc107; color: #212529; width: 90px;" class="badge">PENDING</span>
+                                <span th:if="${item.statusPayment == orderStatusList.get(1)}" style="background-color: #17a2b8; color: #212529; width: 90px;" class="badge">PAID_MOMO</span>
+                                <span th:if="${item.statusPayment == orderStatusList.get(2)}" style="background-color: #417739; color: #212529; width: 90px;" class="badge">PAID_VNPAY</span>
+                                <span th:if="${item.statusPayment == orderStatusList.get(3)}" style="background-color: #28a745; color: #212529; width: 90px;" class="badge">CONFIRMED</span>
+                                <span th:if="${item.statusPayment == orderStatusList.get(4)}" style="background-color: #007bff; color: #212529; width: 90px;" class="badge">SHIPPING</span>
+                                <span th:if="${item.statusPayment == orderStatusList.get(5)}" style="background-color: #8ea893; color: #212529; width: 90px;" class="badge">DELIVERED</span>
+                                <span th:if="${item.statusPayment == orderStatusList.get(6)}" style="background-color: #e7959d; color: #212529; width: 90px;" class="badge">CANCELED</span>
+                                <span th:if="${item.statusPayment == orderStatusList.get(7)}" style="background-color: #dc3545; color: #212529; width: 90px;" class="badge">FAILED</span>
                             </td>
                             <td class="action-td"><a
                                     th:href="@{/invoice/{orderId}(orderId=${item.getId()})}"
                                     class="btn btn-outline-primary btn-sm">Read Invoice</a>
-                                <th:block th:if="${item.getStatus() gt 2}">
+                                <th:block th:if="${item.statusPayment == 'PENDING' || item.statusPayment == 'DELIVERED'}">
                                     <a
                                             href="#deleteBillingModal" data-toggle="modal"
                                             class="delete btn btn-outline-danger btn-sm">Cancel Order</a>

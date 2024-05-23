@@ -17,6 +17,24 @@
 </head>
 <body>
 <th:block th:fragment="content">
+    <style>
+        .custom-form-group {
+            display: flex; /* Kích hoạt Flexbox */
+            justify-content: space-between; /* Căn chỉnh items sang hai bên */
+            align-items: center; /* Đảm bảo các items ở giữa theo chiều dọc */
+        }
+
+        .custom-form-group label {
+            flex-grow: 1; /* Cho phép label chiếm mọi không gian có sẵn */
+            text-align: left; /* Căn chỉnh text của label sang trái */
+        }
+
+        .custom-form-group .form-control {
+            flex-grow: 2; /* Cho phép select chiếm không gian lớn hơn */
+            width: 50%;
+            max-width: 130px;
+        }
+    </style>
     <div class="flex flex-col flex-1 w-full">
         <!--        header-->
         <header class="z-10 py-4 bg-white shadow-md dark:bg-gray-800">
@@ -390,18 +408,18 @@
                                 <td class="px-4 py-3 text-sm" th:text="${#dates.format(order.orderDate, 'yyyy/MM/dd')}">
                                     1
                                 </td>
-                                <td class="px-4 py-3 text-sm" th:text="${order.paymentMethod.name}">
+                                <td class="px-4 py-3 text-sm" th:text="${order.paymentMethod}">
                                     1
                                 </td>
                                 <td class="px-4 py-3 text-sm" th:text="${#numbers.formatDecimal(order.total, 0, 'COMMA', 0, 'COMMA')+'đ'}">
                                     1
                                 </td>
-                                <td class="px-4 py-3 text-sm" th:if="${order.status == 1}">Pending verification</td>
-                                <td class="px-4 py-3 text-sm" th:if="${order.status == 2}">Verified</td>
-                                <td class="px-4 py-3 text-sm" th:if="${order.status == 3}">On its way</td>
-                                <td class="px-4 py-3 text-sm" th:if="${order.status == 4}">Delivered</td>
-                                <td class="px-4 py-3 text-sm" th:if="${order.status == 5}">Processing return</td>
-                                <td class="px-4 py-3 text-sm" th:if="${order.status == 6}">Return processed</td>
+                                <td class="px-4 py-3 text-sm" th:text="${order.statusPayment}"></td>
+<!--                                <td class="px-4 py-3 text-sm" th:if="${order.statusPayment == 2}">Verified</td>-->
+<!--                                <td class="px-4 py-3 text-sm" th:if="${order.statusPayment == 3}">On its way</td>-->
+<!--                                <td class="px-4 py-3 text-sm" th:if="${order.statusPayment == 4}">Delivered</td>-->
+<!--                                <td class="px-4 py-3 text-sm" th:if="${order.statusPayment == 5}">Processing return</td>-->
+<!--                                <td class="px-4 py-3 text-sm" th:if="${order.statusPayment == 6}">Return processed</td>-->
                                 <td class="px-4 py-3 text-sm">
                                     <a href="#editModal" class="edit" data-toggle="modal"
                                        onclick="showEditModal()"><i
@@ -443,24 +461,26 @@
                         <!-- Pagination -->
                         <span class="flex col-span-4 mt-2 sm:mt-auto sm:justify-end">
                     <nav aria-label="Table navigation">
-                        <ul class="inline-flex items-center">
-                            <li class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple" th:classappend="${currentPage == 1 ? 'disabled' :''}"
-                                th:if="${currentPage>1}">
-                                <a th:href="@{/admin/order(sortType=${sortType}, currentPage=${currentPage - 1})}" tabindex="-1">Previous</a>
-                            </li>
-                            <li class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple"
-                                th:classappend="${page==currentPage ? 'active': ''}"
-                                th:style="${page == currentPage ? 'background: blue; color: white;' : ''}"
-                                th:each="page : ${#numbers.sequence(1, totalPages)}">
-                                <a th:href="@{/admin/order(sortType=${sortType}, currentPage=${page})}" class="page-link"
-                                   th:text="${page}">3</a></li>
-                            <li class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple"
-                                th:classappend="${currentPage == totalPages ? 'disabled' : ''}"
-                                th:if="${currentPage<totalPages}">
-                                <a th:href="@{/admin/order(sortType=${sortType}, currentPage=${currentPage+1})}"
-                                   class="page-link">Next</a>
-                            </li>
-                        </ul>
+                      <ul class="inline-flex items-center">
+                        <li class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple" th:classappend="${currentPage == 1 ? 'disabled' :''}" th:if="${currentPage>1}">
+                          <a th:href="@{/admin/order(sortType=${sortType}, currentPage=${currentPage - 1})}" tabindex="-1">Previous</a>
+                        </li>
+
+                        <li th:if="${currentPage > 3}" class="px-3 py-1">...</li>
+
+                        <li class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple"
+                            th:classappend="${page==currentPage ? 'active': ''}"
+                            th:style="${page == currentPage ? 'background: blue; color: white;' : ''}"
+                            th:each="page : ${#numbers.sequence(currentPage > 3 ? currentPage - 2 : 1, currentPage < totalPages - 2 ? currentPage + 2 : totalPages)}">
+                          <a th:href="@{/admin/order(sortType=${sortType}, currentPage=${page})}" class="page-link" th:text="${page}">3</a>
+                        </li>
+
+                        <li th:if="${currentPage < totalPages - 2}" class="px-3 py-1">...</li>
+
+                        <li class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple" th:classappend="${currentPage == totalPages ? 'disabled' : ''}" th:if="${currentPage<totalPages}">
+                          <a th:href="@{/admin/order(sortType=${sortType}, currentPage=${currentPage+1})}" class="page-link">Next</a>
+                        </li>
+                      </ul>
                     </nav>
                 </span>
                     </div>
@@ -479,51 +499,55 @@
                                     </div>
                                 </div>
                                 <div class="modal-body">
-                                    <div class="form-group">
+                                    <div class="form-group custom-form-group">
                                         <label>User ID</label>
                                         <input type="text" id="user" class="form-control" readonly>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group custom-form-group">
                                         <label>Email</label>
                                         <input type="email" id="email" class="form-control" readonly>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group custom-form-group">
                                         <label>Order Date</label>
                                         <input type="text" id="orderDate" class="form-control" readonly>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group custom-form-group">
                                         <label>Phone Number</label>
                                         <input type="text" name="phoneNumber" id="phoneNumber" class="form-control">
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group custom-form-group">
                                         <label>Address</label>
                                         <input type="text" name="address" id="address" class="form-control">
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group custom-form-group">
                                         <label>City</label>
                                         <input type="text" name="city" id="city" class="form-control">
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group custom-form-group">
                                         <label>Zip</label>
                                         <input type="text" name="zip" id="zip" class="form-control">
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group custom-form-group">
                                         <label>Payment Method</label>
                                         <input type="text" id="paymentMethod" class="form-control" readonly>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group custom-form-group">
                                         <label>Total</label>
                                         <input type="text" id="total" class="form-control" readonly>
                                     </div>
-                                    <label for="status">Status:</label>
-                                    <select id="status" name="status">
-                                        <option value="1">Pending verification</option>
-                                        <option value="2">Verified</option>
-                                        <option value="3">On its way</option>
-                                        <option value="4">Delivered</option>
-                                        <option value="5">Processing return</option>
-                                        <option value="6">Return processed</option>
-                                    </select>
+                                    <div class="form-group custom-form-group">
+                                    <label for="statusPayment">Status:</label>
+                                        <select id="statusPayment" name="statusPayment">
+                                            <option th:value="${orderStatusList[0]}" >PENDING</option>
+                                            <option th:value="${orderStatusList[1]}">PAID_MOMO</option>
+                                            <option th:value="${orderStatusList[2]}">PAID_VNPAY</option>
+                                            <option th:value="${orderStatusList[3]}">CONFIRMED</option>
+                                            <option th:value="${orderStatusList[4]}">SHIPPING</option>
+                                            <option th:value="${orderStatusList[5]}">DELIVERED</option>
+                                            <option th:value="${orderStatusList[6]}">CANCELED</option>
+                                            <option th:value="${orderStatusList[7]}">FAILED</option>
+                                        </select>
+                                    </div>
                                 </div>
                                 <div class="modal-footer">
                                     <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
@@ -563,7 +587,7 @@
                 </div>
                 <form id="hiddenForm" th:href="@{/admin/order}" method="GET" style="display: none;">
                     <input type="hidden" name="sortType" th:value="${sortType}" />
-                    <input type="hidden" name="currentPage" th:value="${currentPage}" />
+                    <input type="hidden" name="currentPage" th:value="1" />
                 </form>
             </div>
         </main>
@@ -575,7 +599,8 @@
     <script>
         function getPageFromEntries(id){
             var sortType = document.querySelector('input[name="sortType"]');
-            var currentPage = document.querySelector('input[name="currentPage"]');
+            // var currentPage = document.querySelector('input[name="currentPage"]');
+            var currentPage = 1;
             sortType.value = id;
             document.getElementById("hiddenForm").submit();
         }

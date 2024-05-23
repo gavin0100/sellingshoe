@@ -52,21 +52,19 @@ public class StaffCRUDController {
         }
         int currentPage = page.orElse(1);
         int pageSize = sortType;
-        List<Staff> activeStaffs = staffService.getActiveStaff(1);
-        int numberActiveStaffs = activeStaffs.size();
-        Page<Staff> staffPage;
-        List<User> eligibleStaffs = userService.getEligibleAccountForStaff();
+        List<User> usableAccounts = userService.getEligibleAccountForStaff();
+//        usableAccounts.forEach(st -> System.out.println(usableAccounts.isEmpty() ? "null" : st.getId()));
         Pageable pageable;
+        Page<User> userPage;
         pageable = sortStaff(currentPage, pageSize, sortType);
-        staffPage = staffService.getAllPaging(pageable);
-        model.addAttribute("staffs", staffPage.getContent());
-        model.addAttribute("totalPages", staffPage.getTotalPages());
+        userPage = userService.getAllPagingStaff(pageable);
+        model.addAttribute("users", userPage.getContent());
+        model.addAttribute("totalPages", userPage.getTotalPages());
         model.addAttribute("currentPage", currentPage);
-        model.addAttribute("totalElements", staffPage.getTotalElements());
         model.addAttribute("sortType", sortType);
-        model.addAttribute("eligibleStaffs", eligibleStaffs);
-        model.addAttribute("numberActiveStaffs", numberActiveStaffs);
-        return "admin/boot1/staff";
+        model.addAttribute("totalElements", userPage.getTotalElements());
+        model.addAttribute("usableAccounts", usableAccounts);
+        return "admin/boot1/userStaff";
     }
 
     @PostMapping("/create")

@@ -128,7 +128,7 @@ public class OrderService {
         newOrder.setCity(order.getCity());
         newOrder.setZip(order.getZip());
 //        newOrder.setPaymentMethod(order.getPaymentMethod());
-        newOrder.setStatus(order.getStatus());
+        newOrder.setStatusPayment(order.getStatusPayment());
         orderRepository.save(newOrder);
     }
 
@@ -143,7 +143,7 @@ public class OrderService {
 
     @Transactional
     public void delete(int id) {
-        orderRepository.cancelOrder(id);
+        orderRepository.cancelOrder(id, OrderStatus.CANCELED);
     }
 
     public Order getOrderById(int id) {
@@ -161,7 +161,7 @@ public class OrderService {
 
     @Transactional
     public void updateCancelOrder(int id) {
-        orderRepository.updateCancelOrder(id);
+        orderRepository.cancelOrder(id, OrderStatus.CANCELED);
     }
 
     public List<Order> filterStatusOrder(int status){
@@ -234,10 +234,10 @@ public class OrderService {
         if (updatedOrder == null) {
             return;
         }
-        int status = updatedOrder.getStatus();
-        if (status == 4) {
+        OrderStatus status = updatedOrder.getStatusPayment();
+        if (status == OrderStatus.CONFIRMED) {
             updateSold(updatedOrder.getOrderDetails(), true);
-        } else if (status == 6) {
+        } else if (status == OrderStatus.CANCELED) {
             updateSold(updatedOrder.getOrderDetails(), false);
         }
     }
@@ -248,8 +248,10 @@ public class OrderService {
             int quantity = detail.getQuantity();
             if (isIncrease) {
                 product.setSold(product.getSold() + quantity);
+                product.setQuantity(product.getQuantity() - quantity);
             } else {
                 product.setSold(product.getSold() - quantity);
+                product.setQuantity(product.getQuantity() + quantity);
             }
             productService.save(product);
         }

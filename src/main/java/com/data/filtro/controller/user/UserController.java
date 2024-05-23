@@ -4,12 +4,14 @@ import com.data.filtro.exception.AuthenticationAccountException;
 import com.data.filtro.model.Account;
 import com.data.filtro.model.Order;
 import com.data.filtro.model.User;
+import com.data.filtro.model.payment.OrderStatus;
 import com.data.filtro.service.AccountService;
 import com.data.filtro.service.OrderService;
 import com.data.filtro.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -37,6 +39,7 @@ public class UserController {
     }
 
     @GetMapping("/profile")
+    @PreAuthorize("hasAnyRole('ADMIN', 'WAREHOUSE_STAFF', 'ACCOUNTING_STAFF', 'USER')")
     public String showProfile(HttpSession session, Model model) {
         User temp = (User) session.getAttribute("user");
         if (temp == null){
@@ -49,6 +52,7 @@ public class UserController {
     }
 
     @PostMapping("/profile/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'WAREHOUSE_STAFF', 'ACCOUNTING_STAFF', 'USER')")
     public String processProfile(@PathVariable("id") int id, @ModelAttribute("user") User updatedUser, HttpSession session, Model model) {
         try {
             userService.updateUser(updatedUser);
@@ -63,6 +67,7 @@ public class UserController {
 
 
     @GetMapping("/billing")
+    @PreAuthorize("hasAnyAuthority('FULL_ACCESS_PLACE_ORDER')")
     public String showBilling(HttpSession session, Model model) {
         User user = (User) session.getAttribute("user");
         if (user == null){
@@ -76,12 +81,15 @@ public class UserController {
         } catch (Exception e){
             orderList = new ArrayList<>();
         }
+        List<OrderStatus> orderStatusList = returnListOrderStatus();
         //orderList.forEach(s -> System.out.println(s.getId()));
         model.addAttribute("orderList", orderList);
+        model.addAttribute("orderStatusList", orderStatusList);
         return "user/boot1/user-billing";
     }
 
     @GetMapping("/security")
+    @PreAuthorize("hasAnyRole('ADMIN', 'WAREHOUSE_STAFF', 'ACCOUNTING_STAFF', 'USER')")
     public String showSecurity(HttpSession session, Model model) {
         User user = (User) session.getAttribute("user");
         if (user == null){
@@ -93,6 +101,7 @@ public class UserController {
 
 
     @PostMapping("/security")
+    @PreAuthorize("hasAnyRole('ADMIN', 'WAREHOUSE_STAFF', 'ACCOUNTING_STAFF', 'USER')")
     public String processSecurity(HttpSession session, Model model,
                                   @RequestParam("currentPassword") String currentPassword,
                                   @RequestParam("newPassword") String newPassword,
@@ -109,4 +118,16 @@ public class UserController {
         return "user/boot1/user-security";
     }
 
+    public List<OrderStatus> returnListOrderStatus(){
+        List<OrderStatus> danhSachOrderStatus = new ArrayList<>();
+        danhSachOrderStatus.add(OrderStatus.PENDING);
+        danhSachOrderStatus.add(OrderStatus.PAID_MOMO);
+        danhSachOrderStatus.add(OrderStatus.PAID_VNPAY);
+        danhSachOrderStatus.add(OrderStatus.CONFIRMED);
+        danhSachOrderStatus.add(OrderStatus.SHIPPING);
+        danhSachOrderStatus.add(OrderStatus.DELIVERED);
+        danhSachOrderStatus.add(OrderStatus.CANCELED);
+        danhSachOrderStatus.add(OrderStatus.FAILED);
+        return danhSachOrderStatus;
+    }
 }

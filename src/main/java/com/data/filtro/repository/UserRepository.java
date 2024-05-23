@@ -37,6 +37,12 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query("select u from User u")
     Page<User> findAll(Pageable pageable);
 
+    @Query("select u from User u where u.userPermission.permissionId = 4")
+    Page<User> findAllUser(Pageable pageable);
+
+    @Query("select u from User u where u.userPermission.permissionId != 4")
+    Page<User> findAllStaff(Pageable pageable);
+
 
     @Query("select a from User a where a.accountName = :accountName")
     User findAccountByName(@Param("accountName") String accountName);
@@ -64,10 +70,10 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query("select a from User a where a.userPermission.permissionId = :role")
     List<User> userUsers(@Param("role") int role);
 
-    @Query("select a from User a where a.userPermission.permissionId = 3")
+    @Query("select a from User a where a.userPermission.permissionId = 4")
     List<User> findAppropriateUserForUser();
 
-    @Query("select a from User a where a.userPermission.permissionId != 3")
+    @Query("select a from User a where a.userPermission.permissionId != 4")
     List<User> findEligibleUserForStaff();
 
 }
