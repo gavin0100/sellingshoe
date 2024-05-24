@@ -1,0 +1,127 @@
+server:
+  port: 3030
+  error:
+    include-message: always
+    whitelabel:
+      enabled: false
+spring:
+  datasource:
+    url: jdbc:mysql://sql12.freesqldatabase.com:3306/sql12708810
+    username: sql12708810
+    password: uacVqcHzDI
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+  mail:
+    host: smtp.gmail.com
+    username: voduc0100@gmail.com
+    password: tvhnwfasjnjhbcro
+    port: 587
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+  main:
+    allow-circular-references: true
+
+application:
+  security:
+    jwt:
+      secret-key: f2f1035db6a255e7885838b020f370d702d4bb0f35a368f06ded1ce8e6684a27
+      expiration: 36000000
+    momo:
+      access-key: mTCKt9W3eU1m39TW
+      partner-code: MOMOLRJZ20181206
+      secret-key: SetA5RDnLHvt51AULf51DyauxUo3kDU6
+    vnpay:
+      vnp_TmnCode: X3VCO73C
+      vnp_HashSecret: 70OXPPONL7XA9QR57L1QDWQVZPYC4L3U
+
+#server:
+#  port: 3030
+#  error:
+#    whitelabel:
+#      enabled: false
+#spring:
+#  datasource:
+#    url: jdbc:mysql://localhost:3306/fourleavesshoe2
+#    username: root
+#    password: duc2112002
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#  jpa:
+#    properties:
+#      hibernate:
+#        dialect: org.hibernate.dialect.MySQL8Dialect
+#  thymeleaf:
+#    prefix: classpath:/templates/
+#    suffix: .html
+#  mail:
+#    host: smtp.gmail.com
+#    username: voduc0100@gmail.com
+#    password: tvhnwfasjnjhbcro
+#    port: 587
+#    properties:
+#      mail:
+#        smtp:
+#          auth: true
+#          starttls:
+#            enable: true
+#  main:
+#    allow-circular-references: true
+#
+#application:
+#  security:
+#    jwt:
+#      secret-key: f2f1035db6a255e7885838b020f370d702d4bb0f35a368f06ded1ce8e6684a27
+#      expiration: 36000000
+#    momo:
+#      access-key: mTCKt9W3eU1m39TW
+#      partner-code: MOMOLRJZ20181206
+#      secret-key: SetA5RDnLHvt51AULf51DyauxUo3kDU6
+#    vnpay:
+#      vnp_TmnCode: X3VCO73C
+#      vnp_HashSecret: 70OXPPONL7XA9QR57L1QDWQVZPYC4L3U
+
+
+
+# server:
+#   port: 3030
+#   error:
+#     include-message: always
+#     whitelabel:
+#       enabled: false
+# spring:
+#   datasource:
+#     url: jdbc:mysql://root:V3o2EcvVi6lOr3LBnyLD@containers-us-west-7.railway.app:6989/railway
+#     username: root
+#     password: V3o2EcvVi6lOr3LBnyLD
+#     driver-class-name: com.mysql.cj.jdbc.Driver
+#   cloud:
+#     gcp:
+#       sql:
+#         enabled: false
+#   jpa:
+#     properties:
+#       hibernate:
+#         dialect: org.hibernate.dialect.MySQL8Dialect
+#   thymeleaf:
+#     prefix: classpath:/templates/
+#     suffix: .html
+#   mail:
+#     host: smtp.gmail.com
+#     username: voduc0100@gmail.com
+#     port: 587
+#     properties:
+#       mail:
+#         smtp:
+#           auth: true
+#           starttls:
+#             enable: true
+# #spring.config.import=secret.properties
