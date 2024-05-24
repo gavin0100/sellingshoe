@@ -3,6 +3,6 @@ COPY . .
 RUN mvn clean package -DskipTests
 
 FROM openjdk:17.0.1-jdk-slim
-COPY --from=build /target/doanxinviec_fourleavesshoes-0.0.1-SNAPSHOT.jar doanxinviec_fourleavesshoes.jar
+COPY --from=build /target/demo-0.0.1-SNAPSHOT.jar demo.jar
 EXPOSE 3030
-ENTRYPOINT ["java", "-jar", "DoAnXinViec_fourleavesshoes.jar"]
+ENTRYPOINT ["java", "-jar", "demo.jar"]
