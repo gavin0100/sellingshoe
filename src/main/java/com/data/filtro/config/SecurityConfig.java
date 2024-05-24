@@ -54,7 +54,8 @@ public class SecurityConfig{
                                         "/forgot-password",
                                         "/category",
                                         "/contact",
-                                        "/api/**"
+                                        "/api/**",
+                                        "/category/**"
 
                                         ).permitAll()
                                 .requestMatchers("/css/**", "/js/**", "/image/**", "/javascript/**").permitAll()
