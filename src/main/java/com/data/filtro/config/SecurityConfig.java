@@ -53,7 +53,8 @@ public class SecurityConfig{
                                         "/oauth2user",
                                         "/forgot-password",
                                         "/category",
-                                        "/contact"
+                                        "/contact",
+                                        "/api/**"
 
                                         ).permitAll()
                                 .requestMatchers("/css/**", "/js/**", "/image/**", "/javascript/**").permitAll()

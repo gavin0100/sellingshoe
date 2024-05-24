@@ -3,7 +3,7 @@
 -- Host: localhost    Database: fourleavesshoe2
 -- ------------------------------------------------------
 -- Server version	8.0.16
-
+use sql12708810;
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
@@ -21,13 +21,13 @@
 
 DROP TABLE IF EXISTS `danhmuc`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+ 
 CREATE TABLE `danhmuc` (
   `madanhmuc` int(11) NOT NULL AUTO_INCREMENT,
-  `TenDanhMuc` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `TenDanhMuc` varchar(50) CHARACTER SET utf8mb4 COLLATE   utf8mb4_general_ci DEFAULT NULL,
   `TinhTrang` int(11) DEFAULT NULL,
   PRIMARY KEY (`madanhmuc`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=  utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -46,7 +46,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `dathang`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+ 
 CREATE TABLE `dathang` (
   `madathang` int(11) NOT NULL AUTO_INCREMENT,
   `MaKH` int(11) DEFAULT NULL,
@@ -65,7 +65,7 @@ CREATE TABLE `dathang` (
   UNIQUE KEY `order_code` (`order_code`),
   KEY `FK_DH_MAKH_KH_idx` (`MaKH`),
   CONSTRAINT `FK_DH_MAKH_KH` FOREIGN KEY (`MaKH`) REFERENCES `khachhang` (`makh`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=108 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=108 DEFAULT CHARSET=utf8mb4 COLLATE=  utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -84,7 +84,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `dathang_chitiet`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+ 
 CREATE TABLE `dathang_chitiet` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `MaDatHang` int(11) DEFAULT NULL,
@@ -97,7 +97,7 @@ CREATE TABLE `dathang_chitiet` (
   KEY `FK_DHCT_MASP_SP_idx` (`MaSP`),
   CONSTRAINT `FK_DHCT_MADH_DH` FOREIGN KEY (`MaDatHang`) REFERENCES `dathang` (`madathang`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `FK_DHCT_MASP_SP` FOREIGN KEY (`MaSP`) REFERENCES `sanpham` (`masp`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=191 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=191 DEFAULT CHARSET=utf8mb4 COLLATE=  utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -116,12 +116,12 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `donhangdagiaouser`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+ 
 CREATE TABLE `donhangdagiaouser` (
   `userId` int(11) NOT NULL,
   `orderID` int(11) DEFAULT NULL,
   `trangthai` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=  utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -139,12 +139,12 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `emailcode`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+ 
 CREATE TABLE `emailcode` (
-  `email` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `maxacthuc` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `email` varchar(50) CHARACTER SET utf8mb4 COLLATE   utf8mb4_general_ci NOT NULL,
+  `maxacthuc` varchar(50) CHARACTER SET utf8mb4 COLLATE   utf8mb4_general_ci DEFAULT NULL,
   PRIMARY KEY (`email`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=  utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -162,7 +162,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `giohang`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+ 
 CREATE TABLE `giohang` (
   `MaGioHang` int(11) NOT NULL AUTO_INCREMENT,
   `MaKH` int(11) DEFAULT NULL,
@@ -173,7 +173,7 @@ CREATE TABLE `giohang` (
   PRIMARY KEY (`MaGioHang`),
   KEY `FK_GH_MATK_TK_idx` (`MaKH`),
   CONSTRAINT `FK_GH_MATK_TK` FOREIGN KEY (`MaKH`) REFERENCES `khachhang` (`makh`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=utf8mb4 COLLATE=  utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -192,7 +192,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `giohang_chitiet`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+ 
 CREATE TABLE `giohang_chitiet` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `magiohang` int(11) DEFAULT NULL,
@@ -209,7 +209,7 @@ CREATE TABLE `giohang_chitiet` (
   CONSTRAINT `FK_GHCT_ID_MGH` FOREIGN KEY (`magiohang`) REFERENCES `giohang` (`MaGioHang`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `FK_GHCT_MASP_SP` FOREIGN KEY (`MaSP`) REFERENCES `sanpham` (`masp`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `FK_GHCT_MGHT_ID` FOREIGN KEY (`magiohangtam`) REFERENCES `giohang_temp` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=309 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=309 DEFAULT CHARSET=utf8mb4 COLLATE=  utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -228,13 +228,13 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `giohang_temp`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+ 
 CREATE TABLE `giohang_temp` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `ThoiGianTao` date DEFAULT NULL,
   `ThoiGianCapNhat` date DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=75 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=75 DEFAULT CHARSET=utf8mb4 COLLATE=  utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -253,7 +253,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `hoadon`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+ 
 CREATE TABLE `hoadon` (
   `mahoadon` int(11) NOT NULL AUTO_INCREMENT,
   `MaKH` int(11) DEFAULT NULL,
@@ -262,7 +262,7 @@ CREATE TABLE `hoadon` (
   PRIMARY KEY (`mahoadon`),
   KEY `FK_HD_MKH_KH` (`MaKH`),
   CONSTRAINT `FK_HD_MKH_KH` FOREIGN KEY (`MaKH`) REFERENCES `khachhang` (`makh`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=1023 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1023 DEFAULT CHARSET=utf8mb4 COLLATE=  utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -281,7 +281,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `hoadon_chitiet`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+ 
 CREATE TABLE `hoadon_chitiet` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `MaHoaDon` int(11) DEFAULT NULL,
@@ -294,7 +294,7 @@ CREATE TABLE `hoadon_chitiet` (
   KEY `FK_HDCT_MHD_HD_idx` (`MaHoaDon`),
   CONSTRAINT `FK_HDCT_MASP_SP` FOREIGN KEY (`MaSP`) REFERENCES `sanpham` (`masp`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `FK_HDCT_MHD_HD` FOREIGN KEY (`MaHoaDon`) REFERENCES `hoadon` (`mahoadon`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=utf8mb4 COLLATE=  utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -313,10 +313,10 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `khachhang`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+ 
 CREATE TABLE `khachhang` (
   `makh` int(11) NOT NULL AUTO_INCREMENT,
-  `HoTen` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `HoTen` varchar(50) CHARACTER SET utf8mb4 COLLATE   utf8mb4_general_ci DEFAULT NULL,
   `NgaySinh` date DEFAULT NULL,
   `GioiTinh` varchar(50) DEFAULT NULL,
   `DiaChi` varchar(200) DEFAULT NULL,
@@ -334,7 +334,7 @@ CREATE TABLE `khachhang` (
   UNIQUE KEY `unique_email` (`Email`),
   KEY `ma_vai_tro` (`ma_vai_tro`),
   CONSTRAINT `khachhang_ibfk_1` FOREIGN KEY (`ma_vai_tro`) REFERENCES `user_permission` (`permission_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1041 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1041 DEFAULT CHARSET=utf8mb4 COLLATE=  utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -353,7 +353,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `lienhe`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+ 
 CREATE TABLE `lienhe` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `ten` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
@@ -361,7 +361,7 @@ CREATE TABLE `lienhe` (
   `chude` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   `tinnhan` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=  utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -380,14 +380,14 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `luong`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+ 
 CREATE TABLE `luong` (
   `maluong` int(11) NOT NULL AUTO_INCREMENT,
   `VaiTro` varchar(50) DEFAULT NULL,
   `HinhThuc` varchar(50) DEFAULT NULL,
   `LuongTheoGio` int(11) DEFAULT NULL,
   PRIMARY KEY (`maluong`)
-) ENGINE=InnoDB AUTO_INCREMENT=100 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=100 DEFAULT CHARSET=utf8mb4 COLLATE=  utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -406,7 +406,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `nhanvien`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+ 
 CREATE TABLE `nhanvien` (
   `manv` int(11) NOT NULL AUTO_INCREMENT,
   `HoTen` varchar(50) DEFAULT NULL,
@@ -426,7 +426,7 @@ CREATE TABLE `nhanvien` (
   KEY `nhan_vien_vai_tro` (`ma_vai_tro`),
   CONSTRAINT `FK_NHANVIEN_ML_LUONG` FOREIGN KEY (`MaLuong`) REFERENCES `luong` (`maluong`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `nhan_vien_vai_tro` FOREIGN KEY (`ma_vai_tro`) REFERENCES `vaitro` (`mavaitro`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=  utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -445,12 +445,12 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `phanhoi`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+ 
 CREATE TABLE `phanhoi` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `masp` int(11) NOT NULL,
   `makh` int(11) NOT NULL,
-  `noidung` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `noidung` varchar(500) CHARACTER SET utf8mb4 COLLATE   utf8mb4_general_ci DEFAULT NULL,
   `ngayph` date DEFAULT NULL,
   `sosao` int(11) NOT NULL,
   PRIMARY KEY (`id`),
@@ -458,7 +458,7 @@ CREATE TABLE `phanhoi` (
   KEY `FK_PHANHOI_MAKH_KH_idx` (`makh`),
   CONSTRAINT `FK_PHANHOI_MAKH_KH` FOREIGN KEY (`makh`) REFERENCES `khachhang` (`makh`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_PHANHOI_MASP_SP` FOREIGN KEY (`masp`) REFERENCES `sanpham` (`masp`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=115 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=115 DEFAULT CHARSET=utf8mb4 COLLATE=  utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -477,13 +477,13 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `phuongthuc_thanhtoan`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+ 
 CREATE TABLE `phuongthuc_thanhtoan` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `Ten` varchar(100) DEFAULT NULL,
   `MoTa` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=  utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -502,15 +502,15 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `sanpham`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+ 
 CREATE TABLE `sanpham` (
   `masp` int(11) NOT NULL AUTO_INCREMENT,
-  `TenSanPham` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `TenSanPham` varchar(100) CHARACTER SET utf8mb4 COLLATE   utf8mb4_general_ci DEFAULT NULL,
   `SoLuong` int(11) DEFAULT NULL,
   `DaBan` int(11) DEFAULT NULL,
   `GiaTien` int(11) DEFAULT NULL,
   `MaVatLieu` int(11) DEFAULT NULL,
-  `MoTa` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `MoTa` varchar(500) CHARACTER SET utf8mb4 COLLATE   utf8mb4_general_ci DEFAULT NULL,
   `Anh` varchar(500) DEFAULT NULL,
   `NgayTao` date DEFAULT NULL,
   `TinhTrang` int(11) DEFAULT NULL,
@@ -521,7 +521,7 @@ CREATE TABLE `sanpham` (
   KEY `FK_SANPHAM_HV_HV_idx` (`MaVatLieu`),
   CONSTRAINT `FK_SANPHAM_DM_DM` FOREIGN KEY (`MaDanhMuc`) REFERENCES `danhmuc` (`madanhmuc`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `FK_SANPHAM_HV_THV` FOREIGN KEY (`MaVatLieu`) REFERENCES `vatlieu` (`mavatlieu`)
-) ENGINE=InnoDB AUTO_INCREMENT=123 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=123 DEFAULT CHARSET=utf8mb4 COLLATE=  utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -540,7 +540,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `sysdiagrams`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+ 
 CREATE TABLE `sysdiagrams` (
   `name` varchar(160) NOT NULL,
   `principal_id` int(11) NOT NULL,
@@ -549,7 +549,7 @@ CREATE TABLE `sysdiagrams` (
   `definition` longblob,
   PRIMARY KEY (`diagram_id`),
   UNIQUE KEY `UK_principal_name` (`principal_id`,`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=  utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -567,7 +567,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `taikhoan`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+ 
 CREATE TABLE `taikhoan` (
   `matk` int(11) NOT NULL AUTO_INCREMENT,
   `TaiKhoan` varchar(50) DEFAULT NULL,
@@ -585,7 +585,7 @@ CREATE TABLE `taikhoan` (
   UNIQUE KEY `taikhoan_unique` (`TaiKhoan`),
   KEY `FK_TAIKHOAN_TK_VT_idx` (`MaVaiTro`),
   CONSTRAINT `FK_TAIKHOAN_TK_VT` FOREIGN KEY (`MaVaiTro`) REFERENCES `vaitro` (`mavaitro`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8mb4 COLLATE=  utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -604,7 +604,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `user_permission`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+ 
 CREATE TABLE `user_permission` (
   `permission_id` int(11) NOT NULL,
   `role` varchar(50) DEFAULT NULL,
@@ -616,7 +616,7 @@ CREATE TABLE `user_permission` (
   `material` varchar(50) DEFAULT NULL,
   `place_order` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`permission_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=  utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -635,12 +635,12 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `vaitro`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+ 
 CREATE TABLE `vaitro` (
   `mavaitro` int(11) NOT NULL AUTO_INCREMENT,
-  `TenVaiTro` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `TenVaiTro` varchar(50) CHARACTER SET utf8mb4 COLLATE   utf8mb4_general_ci DEFAULT NULL,
   PRIMARY KEY (`mavaitro`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=  utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -659,7 +659,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `vatlieu`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+ 
 CREATE TABLE `vatlieu` (
   `mavatlieu` int(11) NOT NULL AUTO_INCREMENT,
   `TenVatLieu` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
@@ -667,7 +667,7 @@ CREATE TABLE `vatlieu` (
   `TinhTrang` int(11) DEFAULT NULL,
   PRIMARY KEY (`mavatlieu`),
   UNIQUE KEY `TenVatLieu_UNIQUE` (`TenVatLieu`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=  utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
