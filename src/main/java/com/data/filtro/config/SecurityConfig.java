@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -55,41 +56,31 @@ public class SecurityConfig{
                                         "/category",
                                         "/contact",
                                         "/api/**",
-                                        "/category/**"
+                                        "/category/**",
+                                        "/cart/**",
+                                        "/product/**",
+                                        "/user_google_hihi"
 
-                                        ).permitAll()
+                                ).permitAll()
                                 .requestMatchers("/css/**", "/js/**", "/image/**", "/javascript/**").permitAll()
                                 .anyRequest().authenticated()
                                 .and()
                                 .exceptionHandling()
                                 .authenticationEntryPoint(accessDeniedHandler())  // chuyen huong den trang access-denied khi cố gắng truy cập vào một tài nguyên mà họ không được phép khi chưa xác thực
-//                                .anyRequest().authenticated()
-//                                .and()
-//                                .exceptionHandling()
-//                                .accessDeniedHandler(accessDeniedHandler())
-//                                .accessDeniedPage("/access-denied")
-//                                .authenticationEntryPoint(accessDeniedHandler())
                                 .and()
-//                                .formLogin(form ->  form.failureForwardUrl("/login/login-failure"))
-//                                .loginPage("/login")
-//                                .loginProcessingUrl("/sign-in")
-//                                .defaultSuccessUrl("/", true)
-//                                .permitAll()
-//                                .and()
                                 .logout() // neu da dang ky ngoai nay thi may cai viet trong controler logout khong duoc thuc hien
                                 .invalidateHttpSession(true)
                                 .deleteCookies("JSESSIONID")
                                 .deleteCookies("token")
                                 .clearAuthentication(true)
                                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                                .logoutSuccessUrl("/login");
-//                                .and()
-//                                .exceptionHandling()
-//                                .accessDeniedPage("/access-denied");
-//                                .and()
-//                                .oauth2Login()
-//                                .loginPage("/login")
-//                                .defaultSuccessUrl("/oauth2user", true);
+                                .logoutSuccessUrl("/login")
+                                .and()
+                                .oauth2Login(oauth2 -> {
+                                    oauth2.redirectionEndpoint()
+                                            .baseUri("/login/oauth2/code/*");
+                                    oauth2.defaultSuccessUrl("/user_google_hihi", true);
+                                });
                     } catch (Exception e) {
                         System.out.println("Lỗi truy cập xử lý html");
                         throw new RuntimeException(e);
@@ -97,13 +88,28 @@ public class SecurityConfig{
                 })
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
-//                .exceptionHandling(eh-> eh.authenticationEntryPoint(jwtAuthenticationEntryPoint))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-//                .exceptionHandling()
-//                .accessDeniedPage("/access-denied");
-//                .addFilterBefore(filterExceptionHandler, JwtFilter.class);
-
 
         return http.build();
+        // session nếu không bị khóa thì spring security sẽ chuyển sang sài session mặc định để lưu thông tin,
+        // nhưng quyền jwt thì lại được lưu trong cookie, điều này lại gây sự cố
+        // nhưng mà nếu session bị khóa, thì hệ thống phân quyền hoạt động bình thường nhưng oauth lại trả về null user
+        // vì spring security không thể tạo được session tạm thời để lưu thông tin user
+//        http
+//                .csrf(AbstractHttpConfigurer::disable)
+//                .authorizeHttpRequests(ahr -> {
+//                    try {
+//                        ahr
+//                                .anyRequest().authenticated()
+//                                .and()
+//                                .oauth2Login(oauth2 -> oauth2.redirectionEndpoint(redirection -> redirection.baseUri("/login/oauth2/code/google")).defaultSuccessUrl("/user_google_hihi", true));
+//                    } catch (Exception e) {
+//                        throw new RuntimeException(e);
+//                    }
+//                })
+//                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+//                .authenticationProvider(authenticationProvider)
+//                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+//        return http.build();
     }
 }

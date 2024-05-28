@@ -30,6 +30,16 @@ spring:
             enable: true
   main:
     allow-circular-references: true
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 955503971044-oo6d985jcqrn41hk31bc5ghasobipfl5.apps.googleusercontent.com
+            client-secret: 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
+          facebook:
+            client-id: 1535863076974023
+            client-secret: e59a8213e541a08975606a142f6eb922
 
 application:
   security:
@@ -75,6 +85,16 @@ application:
 #            enable: true
 #  main:
 #    allow-circular-references: true
+#  security:
+#    oauth2:
+#      client:
+#        registration:
+#          google:
+#            client-id: 955503971044-oo6d985jcqrn41hk31bc5ghasobipfl5.apps.googleusercontent.com
+#            client-secret: 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
+#          facebook:
+#            client-id: 1535863076974023
+#            client-secret: e59a8213e541a08975606a142f6eb922
 #
 #application:
 #  security:

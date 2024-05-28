@@ -25,9 +25,6 @@ public class AuthenticationService {
 
 
     public AuthenticateResponse authenticate(String accountName, String password, HttpSession session){
-//        System.out.println("truy cap vao authenticate cua authenticationService");
-//        HttpSession session = req.getSession(true);
-        System.out.println(accountName + " " + password);
         try{
             UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
                     accountName,
