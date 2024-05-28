@@ -59,7 +59,8 @@ public class SecurityConfig{
                                         "/category/**",
                                         "/cart/**",
                                         "/product/**",
-                                        "/user_google_hihi"
+                                        "/user_google_hihi",
+                                        "/otp/**"
 
                                 ).permitAll()
                                 .requestMatchers("/css/**", "/js/**", "/image/**", "/javascript/**").permitAll()
