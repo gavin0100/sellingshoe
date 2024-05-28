@@ -14,6 +14,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -81,5 +82,30 @@ public class CategoryCRUDController {
     public String delete(@RequestParam int id) {
         categoryService.delete(id);
         return "redirect:/admin/category";
+    }
+
+    @PostMapping("/import")
+    @PreAuthorize("hasAnyRole('ADMIN', 'WAREHOUSE_STAFF', 'ACCOUNTING_STAFF') and hasAnyAuthority('FULL_ACCESS_CATEGORY')")
+    public String importFile(@RequestParam("file") MultipartFile[] files,
+                             Model model){
+
+        try{
+            for (MultipartFile fileChild : files) {
+                MultipartFile file = fileChild;
+                boolean result = categoryService.importCategory(file);
+                if (result == true){
+                    model.addAttribute("message", "Successfully import!");
+                } else {
+                    model.addAttribute("message", "Import failed!");
+                }
+                break;
+            }
+
+        } catch (Exception ex){
+            model.addAttribute("message", "Import failed!");
+        }
+
+        return "redirect:/admin/category";
+
     }
 }
