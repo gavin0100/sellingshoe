@@ -108,10 +108,7 @@ application:
 #    vnpay:
 #      vnp_TmnCode: X3VCO73C
 #      vnp_HashSecret: 70OXPPONL7XA9QR57L1QDWQVZPYC4L3U
-#twilio:
-#  AccountSid: AC8c8c886543a259ef1c32a52428752846
-#  AuthToken: 7daaa874db1a91b5642a48344f678506
-#  phoneNumber: +14148009296
+
 
 
 # server:
