@@ -41,9 +41,9 @@ spring:
             client-id: 1535863076974023
             client-secret: e59a8213e541a08975606a142f6eb922
 twilio:
-  AccountSid: hsadnasndakjds
-  AuthToken: dnkjsanjdnsadn
-  phoneNumber: +86415531184
+  AccountSid: AC8c8c886543a259ef1c32a52428752846
+  AuthToken: 7daaa874db1a91b5642a48344f678506
+  phoneNumber: +14148009296
 application:
   security:
     jwt:
