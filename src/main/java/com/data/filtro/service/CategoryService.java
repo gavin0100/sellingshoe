@@ -19,9 +19,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.*;
+import java.util.zip.ZipInputStream;
 
 @Service
 public class CategoryService {
@@ -94,13 +97,17 @@ public class CategoryService {
                 Category category1 = new Category();
                 category1.setCategoryName(category.getCategoryName());
                 category1.setStatus(category.getStatus());
+                categoryRepository.save(category1);
             });
 
 
             return true;
         }
         else return false;
+
     }
+
+
 
     public boolean checkExcelFormat(MultipartFile file){
         String contentType = file.getContentType();
@@ -108,11 +115,17 @@ public class CategoryService {
         return contentType.equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
     }
 
+
+
     public Map<String, List<?>> toSyllabus(InputStream inputStream){
         List<Category> categoryList = new ArrayList<>();
+        System.out.println("truoc try");
         try{
+            System.out.println("tao workbook");
             XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
+            System.out.println("truy cap sheet");
             XSSFSheet sheet = workbook.getSheet("categories");
+            System.out.println("sau khi truy cap sheet");
             int rowNumber = 0;
             for (Row row : sheet) {
                 if (rowNumber == 0) {
@@ -132,13 +145,14 @@ public class CategoryService {
                     }
                     cid++;
                 }
+                System.out.println(categoryImport.getCategoryName());
                 categoryList.add(categoryImport);
             }
 
         } catch (Exception e){
             throw new RuntimeException("Error when convert file csv!" + e);
         }
-
+        System.out.println("sau try");
         HashMap<String, List<?>> map = new HashMap<>();
         map.put("category", categoryList);
         return map;

@@ -40,7 +40,10 @@ spring:
           facebook:
             client-id: 1535863076974023
             client-secret: e59a8213e541a08975606a142f6eb922
-
+twilio:
+  AccountSid: hsadnasndakjds
+  AuthToken: dnkjsanjdnsadn
+  phoneNumber: +86415531184
 application:
   security:
     jwt:
@@ -95,6 +98,10 @@ application:
 #          facebook:
 #            client-id: 1535863076974023
 #            client-secret: e59a8213e541a08975606a142f6eb922
+#twilio:
+#  AccountSid: hsadnasndakjds
+#  AuthToken: dnkjsanjdnsadn
+#  phoneNumber: +86415531184
 #
 #application:
 #  security:

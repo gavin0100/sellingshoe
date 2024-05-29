@@ -36,4 +36,5 @@ public class Category implements Serializable {
     @JsonIgnore
     //@JsonBackReference
     private List<Product> productList;
+
 }

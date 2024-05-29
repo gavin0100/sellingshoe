@@ -86,19 +86,16 @@ public class CategoryCRUDController {
 
     @PostMapping("/import")
     @PreAuthorize("hasAnyRole('ADMIN', 'WAREHOUSE_STAFF', 'ACCOUNTING_STAFF') and hasAnyAuthority('FULL_ACCESS_CATEGORY')")
-    public String importFile(@RequestParam("file") MultipartFile[] files,
+    public String importFile(@RequestParam("file") MultipartFile file,
                              Model model){
-
+        System.out.println(file.getOriginalFilename());
+        System.out.println(file.getSize());
         try{
-            for (MultipartFile fileChild : files) {
-                MultipartFile file = fileChild;
-                boolean result = categoryService.importCategory(file);
-                if (result == true){
-                    model.addAttribute("message", "Successfully import!");
-                } else {
-                    model.addAttribute("message", "Import failed!");
-                }
-                break;
+            boolean result = categoryService.importCategory(file);
+            if (result == true){
+                model.addAttribute("message", "Successfully import!");
+            } else {
+                model.addAttribute("message", "Import failed!");
             }
 
         } catch (Exception ex){
