@@ -1,0 +1,67 @@
+# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
+
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: Java CI with Maven
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-deploy:
+    name: Build and Deploy Spring Boot
+    services:
+      mysql:
+        image: mysql:8.0
+        ports:
+          - 3306:3306
+        env:
+            MYSQL_ROOT_PASSWORD: duc2112002
+            MYSQL_DATABASE: filtro_jwt
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
+    - name: Test with Maven
+      run: mvn -B test --file pom.xml
+    - name: Build with Maven
+      run: |
+        mvn clean install
+        mvn -B package --file pom.xml
+    - name: Login to DockerHub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Build Docker Image
+      uses: docker/build-push-action@v3
+      with:
+            context: .
+            dockerfile: Dockerfile
+            push: false
+            tags: voduc0100/springboot_filtro:latest
+
+    - name: Push Docker Image
+      uses: docker/build-push-action@v3
+      with:
+            context: .
+            dockerfile: Dockerfile
+            push: true
+            tags: voduc0100/springboot_filtro:latest
