@@ -63,6 +63,7 @@ public class OrderService {
             order.setZip(user.getZip());
         }
         order.setOrderDate(new Date());
+        System.out.println(java.time.LocalDateTime.now());
         order.setPaymentMethod(paymentMethod);
         order.setStatus(1);
 
