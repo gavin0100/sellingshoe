@@ -186,6 +186,8 @@ public class VNPayService {
         String vnp_CreateDate = dateFormat.format(calendar.getTime());
         calendar.add(Calendar.MINUTE, 15);
         String vnp_ExpireDate = dateFormat.format(calendar.getTime());
+        System.out.println(vnp_CreateDate);
+        System.out.println(vnp_ExpireDate);
         VNPRequest request = VNPRequest.builder()
                 .vnp_Version("2.1.0")
                 .vnp_Command("pay")
