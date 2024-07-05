@@ -183,6 +183,7 @@ public class VNPayService {
     private String vnpRequest(Order order, HttpServletRequest req){
         Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Etc/UTC+7"));
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+        calendar.add(Calendar.HOUR_OF_DAY, 7);
         String vnp_CreateDate = dateFormat.format(calendar.getTime());
         calendar.add(Calendar.MINUTE, 15);
         String vnp_ExpireDate = dateFormat.format(calendar.getTime());
