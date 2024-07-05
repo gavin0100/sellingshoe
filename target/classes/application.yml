@@ -55,7 +55,7 @@ application:
       secret-key: SetA5RDnLHvt51AULf51DyauxUo3kDU6
     vnpay:
       vnp_TmnCode: X3VCO73C
-      vnp_HashSecret: 70OXPPONL7XA9QR57L1QDWQVZPYC4L3U
+      vnp_HashSecret: L34MP36PVROCT5RAQXJFIP3RX24TKS0H
 
 #server:
 #  port: 3030
