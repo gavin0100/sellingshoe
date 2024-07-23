@@ -112,9 +112,19 @@
 - Send invoices after purchasing
   ![image](https://github.com/VoVanDuc20110635/DoAnXinViec_fourleavesshoes/assets/116067030/74141053-0ceb-459f-8ea7-8e6e59ff4b7e)
 
-### 3.2. Working with Excel (CSV) - under development
+### 3.2. Working with Excel (CSV)
 
 - Export, Import CSV files in store management for employees
+- Export
+![image](https://github.com/user-attachments/assets/8801a0c4-f7ee-449e-8212-3bf373395dbe)
+![image](https://github.com/user-attachments/assets/b3a67e2c-e46c-4048-84ce-69f818df1f48)
+
+- Import
+![image](https://github.com/user-attachments/assets/84f53cd9-cdfb-4206-907d-22c81f89affb)
+![image](https://github.com/user-attachments/assets/d018840d-6870-4726-9566-5e931d866e75)
+![image](https://github.com/user-attachments/assets/0a3fa7dd-f7d9-43d3-a123-8ffced111e01)
+![image](https://github.com/user-attachments/assets/ff757012-8846-4797-848f-2ea1fdcc739a)
+
 
 ### 3.3. Working with PDF - under development
 
