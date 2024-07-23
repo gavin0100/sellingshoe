@@ -99,6 +99,7 @@ public class CategoryCRUDController {
             }
 
         } catch (Exception ex){
+            System.out.println("Loi Exception: " + ex.getMessage());
             model.addAttribute("message", "Import failed!");
         }
 
