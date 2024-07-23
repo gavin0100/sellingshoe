@@ -126,9 +126,13 @@
 ![image](https://github.com/user-attachments/assets/ff757012-8846-4797-848f-2ea1fdcc739a)
 
 
-### 3.3. Working with PDF - under development
+### 3.3. Working with PDF
 
 - Print invoices in PDF format
+![image](https://github.com/user-attachments/assets/ebc921f5-cc36-41b2-b78e-0bdfc89ac0f1)
+![image](https://github.com/user-attachments/assets/e682897e-c6ad-430e-9107-be3013649220)
+![image](https://github.com/user-attachments/assets/a1bcb71b-47d1-41d1-b49e-98323ee22370)
+
 
 ## 4. Wrote APIs for Android app integration.
 - Example of getting product's list api
