@@ -14,13 +14,22 @@ import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.element.Cell;
+import org.springframework.core.io.ClassPathResource;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 public class ExportPdf {
+    public static FontProgram loadFont(String path) throws IOException {
+        ClassPathResource fontResource = new ClassPathResource(path);
+        try (InputStream fontStream = fontResource.getInputStream()) {
+            return FontProgramFactory.createFont(fontStream.readAllBytes());
+        }
+    }
     public static ByteArrayInputStream employeesReport(Order order, List<OrderDetail> orderDetailList) {
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -31,8 +40,8 @@ public class ExportPdf {
             Document document = new Document(pdf);
 
             // Thiết lập font
-            FontProgram fontProgram1 = FontProgramFactory.createFont("src/main/resources/fonts/SVN-Times New Roman.ttf");
-            FontProgram fontProgram2 = FontProgramFactory.createFont("src/main/resources/fonts/SVN-Times New Roman Bold.ttf");
+            FontProgram fontProgram1 = loadFont("fonts/SVN-Times New Roman.ttf");
+            FontProgram fontProgram2 = loadFont("fonts/SVN-Times New Roman Bold.ttf");
             PdfFont font = PdfFontFactory.createFont(fontProgram1, "Identity-H", true);
             PdfFont boldFont = PdfFontFactory.createFont(fontProgram2, "Identity-H", true);
 
