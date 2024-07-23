@@ -6,9 +6,9 @@ server:
       enabled: false
 spring:
   datasource:
-    url: jdbc:mysql://sql12.freesqldatabase.com:3306/sql12717720
-    username: sql12717720
-    password: mnvzHrt8YA
+    url: jdbc:mysql://sql12.freesqldatabase.com:3306/sql12721574
+    username: sql12721574
+    password: FlEJ3uZedc
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     properties:
