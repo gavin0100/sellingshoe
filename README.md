@@ -1,5 +1,7 @@
 # Four Leaves Shoe - Project Overview
 - URL: https://shoeselling-fourleavesshoes.onrender.com
+- Video demo: ???
+- This project utilizes Redis, the ELK stack, MinIO, and Docker. For more details, please visit the following link: https://github.com/gavin0100/FourLeavesShoeDocker. This repository is used to deploy in Render.
 - This project aims to replicate the functionality of an e-commerce website. It offers a comprehensive suite of features that cater to both customers and store managers.
 
 # Technologies Used
