@@ -1,5 +1,7 @@
 # Four Leaves Shoe - Project Overview
 - URL: https://shoeselling-fourleavesshoes.onrender.com
+- Video demo: ???
+- This project utilizes Redis, the ELK stack, MinIO, and Docker. For more details, please visit the following link: https://github.com/gavin0100/FourLeavesShoeDocker. This repository is used to deploy in Render.
 - This project aims to replicate the functionality of an e-commerce website. It offers a comprehensive suite of features that cater to both customers and store managers.
 
 # Technologies Used
@@ -112,13 +114,27 @@
 - Send invoices after purchasing
   ![image](https://github.com/VoVanDuc20110635/DoAnXinViec_fourleavesshoes/assets/116067030/74141053-0ceb-459f-8ea7-8e6e59ff4b7e)
 
-### 3.2. Working with Excel (CSV) - under development
+### 3.2. Working with Excel (CSV)
 
 - Export, Import CSV files in store management for employees
+- Export
+![image](https://github.com/user-attachments/assets/8801a0c4-f7ee-449e-8212-3bf373395dbe)
+![image](https://github.com/user-attachments/assets/b3a67e2c-e46c-4048-84ce-69f818df1f48)
 
-### 3.3. Working with PDF - under development
+- Import
+![image](https://github.com/user-attachments/assets/84f53cd9-cdfb-4206-907d-22c81f89affb)
+![image](https://github.com/user-attachments/assets/d018840d-6870-4726-9566-5e931d866e75)
+![image](https://github.com/user-attachments/assets/0a3fa7dd-f7d9-43d3-a123-8ffced111e01)
+![image](https://github.com/user-attachments/assets/ff757012-8846-4797-848f-2ea1fdcc739a)
+
+
+### 3.3. Working with PDF
 
 - Print invoices in PDF format
+![image](https://github.com/user-attachments/assets/ebc921f5-cc36-41b2-b78e-0bdfc89ac0f1)
+![image](https://github.com/user-attachments/assets/e682897e-c6ad-430e-9107-be3013649220)
+![image](https://github.com/user-attachments/assets/a1bcb71b-47d1-41d1-b49e-98323ee22370)
+
 
 ## 4. Wrote APIs for Android app integration.
 - Example of getting product's list api
