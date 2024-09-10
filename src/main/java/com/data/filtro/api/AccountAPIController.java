@@ -1,25 +1,5 @@
 package com.data.filtro.api;
 
-import com.data.filtro.exception.AccountNameExistException;
-import com.data.filtro.exception.PasswordDoNotMatchException;
-import com.data.filtro.model.*;
-import com.data.filtro.service.AccountService;
-import com.data.filtro.service.CartService;
-import com.data.filtro.service.EmailValidCodeService;
-import com.data.filtro.service.UserService;
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.web.bind.annotation.*;
-
-import java.io.UnsupportedEncodingException;
-import java.util.Random;
-import java.util.UUID;
-
 //@RestController
 //@RequestMapping("/api/account")
 public class AccountAPIController {

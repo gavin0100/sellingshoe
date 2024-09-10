@@ -1,0 +1,82 @@
+p {
+    color: black;
+}
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+h1 {
+    text-align: center;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tr:hover {
+    background-color: #ddd;
+}
+/* Set a solid border for table, th, and td elements */
+table, th, td {
+    border: 1px solid;
+}
+
+/* Make the table span the entire screen (full-width) */
+table {
+    width: 100%;
+}
+
+/* Collapse table borders into a single border */
+table {
+    border-collapse: collapse;
+}
+
+/* Style the table header cells */
+th {
+    background-color: #505050;
+    color: #fff;
+}
+
+/* Add background color to alternating rows */
+tr:nth-of-type(odd) td {
+    background-color: #eee;
+}
+
+/* Divide columns evenly */
+td {
+    width: calc(100% / 4); /* Adjust the denominator based on the number of columns */
+}
+
+/* Keep image proportions balanced */
+img {
+    max-width: 100%;
+    height: auto;
+}
+.edit-form-overlay {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    display: none;
+}

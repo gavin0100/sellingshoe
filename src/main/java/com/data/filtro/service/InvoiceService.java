@@ -1,6 +1,9 @@
 package com.data.filtro.service;
 
-import com.data.filtro.model.*;
+import com.data.filtro.model.Invoice;
+import com.data.filtro.model.InvoiceDetail;
+import com.data.filtro.model.Order;
+import com.data.filtro.model.OrderDetail;
 import com.data.filtro.repository.InvoiceDetailRepository;
 import com.data.filtro.repository.InvoiceRepository;
 import com.data.filtro.repository.OrderRepository;

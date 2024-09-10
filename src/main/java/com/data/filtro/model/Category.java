@@ -1,14 +1,11 @@
 package com.data.filtro.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
 import java.util.List;
@@ -34,7 +31,7 @@ public class Category implements Serializable {
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     @JsonIgnore
-    //@JsonBackReference
+    @JsonManagedReference(value = "category-product")
     private List<Product> productList;
 
 }

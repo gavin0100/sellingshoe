@@ -2,26 +2,17 @@ package com.data.filtro.controller;
 
 import com.data.filtro.Util.Utility;
 import com.data.filtro.exception.UserNotFoundException;
-import com.data.filtro.model.Account;
 import com.data.filtro.model.User;
-import com.data.filtro.service.AccountService;
 import com.data.filtro.service.MailSenderService;
 import com.data.filtro.service.UserService;
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.MailSender;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.mail.javamail.*;
-
-import java.io.UnsupportedEncodingException;
-import java.util.UUID;
 
 @Controller
 public class PasswordResetController {

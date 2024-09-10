@@ -15,9 +15,6 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Map;
 
 @Controller
 public class checkConnectionOAuth {
@@ -46,10 +43,8 @@ public class checkConnectionOAuth {
         }
 
         AuthenticateResponse authenticateResponse = authenticationService.authenticate(accountName, password, session);
-//            User user = userService.authenticateUser(accountName, password);
-//            System.out.println(user.getName());
         session.setAttribute("user", authenticateResponse.getUser());
-        Cookie cookie = new Cookie("token", authenticateResponse.getAccessToken());
+        Cookie cookie = new Cookie("fourleavesshoestoken", authenticateResponse.getAccessToken());
         cookie.setHttpOnly(true);
         cookie.setPath("/"); // This makes the cookie valid for all routes on your domain
         response.addCookie(cookie);

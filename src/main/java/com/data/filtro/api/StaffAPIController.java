@@ -1,7 +1,7 @@
 package com.data.filtro.api;
 
-import com.data.filtro.model.Staff;
 import com.data.filtro.model.ErrorResponse;
+import com.data.filtro.model.Staff;
 import com.data.filtro.service.StaffService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

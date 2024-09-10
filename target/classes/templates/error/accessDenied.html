@@ -1,8 +1,19 @@
-<link href="https://fonts.googleapis.com/css?family=Do+Hyeon|Frijole|Josefin+Sans:300,400,400i,600,700|Viga" rel="stylesheet">
-<link rel="stylesheet" href="/css/accessDenied.css" th:href="@{/css/accessDenied.css}"/>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+  <link href="https://fonts.googleapis.com/css?family=Do+Hyeon|Frijole|Josefin+Sans:300,400,400i,600,700|Viga" rel="stylesheet">
+  <link rel="stylesheet" href="/css/accessDenied.css" th:href="@{/css/accessDenied.css}"/>
+</head>
+<body>
+  <div style="text-align: center">
+    <a th:href="@{/}" style="border: 1px solid black;padding: 5px;background-color: white;color: #bb2d46;">
+      Trở về trang chủ
 
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-     viewBox="0 0 306.8 404.9" style="enable-background:new 0 0 306.8 404.9;" xml:space="preserve">
+    </a>
+  </div>
+  <svg version="1.1" xmlns:th="http://www.thymeleaf.org" x="0px" y="0px"
+     viewBox="0 0 306.8 410.9" style="enable-background:new 0 0 306.8 410.9;" xml:space="preserve">
 
 
 
@@ -1211,10 +1222,10 @@
                                                                                            AJL/CzAAVzO9MLNesgEAAAAASUVORK5CYII=" transform="matrix(1 0 0 1 -2.1111 200.7407)">
         </image>
         <g>
-          <rect x="5.9" y="208.8" class="st9" width="290" height="180"/>
+          <rect x="5.9" y="208.8" class="st9" width="290" height="200"/>
         </g>
       </g>
-      <rect x="10.9" y="213.8" class="st16" width="280" height="170"/>
+      <rect x="10.9" y="213.8" class="st16" width="280" height="190"/>
     </g>
     <g class="st0">
       <g class="st4">
@@ -1411,11 +1422,18 @@
 
       </g>
     </g>
-    <text opacity="0.6" x="15" y="257" fill="#000" font-family="Montserrat" font-size="25">Bạn không có quyền cập
-      <tspan x="35" y="292" >vào trang này đâu!</tspan>
-      <tspan x="100" y="357" fill="#000" font-size="65">403</tspan>
-      <tspan x="93" y="381.2" fill="#000" font-size="15">Access Forbidden.</tspan>
+    <text opacity="0.6" x="15" y="257" fill="#000" font-family="Montserrat" font-size="25">
+      <tspan x="66" y="257" th:text="${message1}"></tspan>
+      <tspan x="40" y="292" th:text="${message2}"></tspan>
+      <tspan x="100" y="357" fill="#000" font-size="65" th:text="${HTTPstatus}"></tspan>
+      <tspan x="93" y="381.2" fill="#000" font-size="15" th:text="${contentStatus}"></tspan>
+      <tspan x="102" y="400.2" fill="#000" font-size="15">
+        <a th:href="@{/logout_to_login/fromErrorPage}" style="border: 1px solid black;padding: 5px;background-color: white;color: #bb2d46;">
+          Login
+        </a>
+      </tspan>
     </text>
+
 
 <!--    <text x="15" y="255" fill="#6BA184" font-family="Viga" font-size="25">Bạn không có quyền truy cập-->
 <!--      <tspan x="35" y="290" >vào trang này đâu!</tspan>-->
@@ -1427,3 +1445,4 @@
   </g>
 
 </svg>
+</body>

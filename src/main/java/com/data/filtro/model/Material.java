@@ -1,14 +1,12 @@
 package com.data.filtro.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.io.Serializable;
 import java.util.List;
 
 @Entity
@@ -33,7 +31,7 @@ public class Material {
     private Integer status;
 
     @OneToMany(mappedBy = "material", cascade = CascadeType.ALL)
-    @JsonBackReference
+    @JsonManagedReference(value = "material-product")
     private List<Product> products;
 
 }

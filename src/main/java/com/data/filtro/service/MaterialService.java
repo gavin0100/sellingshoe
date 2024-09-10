@@ -1,6 +1,5 @@
 package com.data.filtro.service;
 
-import com.data.filtro.model.Account;
 import com.data.filtro.model.Material;
 import com.data.filtro.repository.MaterialRepository;
 import jakarta.transaction.Transactional;

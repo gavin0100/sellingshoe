@@ -2,18 +2,17 @@ package com.data.filtro.service;
 
 import com.data.filtro.Util.Utility;
 import com.data.filtro.model.*;
+import com.data.filtro.model.payment.ApiOrderDTO;
 import com.data.filtro.model.payment.OrderStatus;
 import com.data.filtro.model.payment.PaymentMethod;
 import com.data.filtro.repository.OrderDetailRepository;
 import com.data.filtro.repository.OrderRepository;
 import jakarta.transaction.Transactional;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import javax.management.Query;
 import java.util.*;
 
 @Service
@@ -63,7 +62,6 @@ public class OrderService {
             order.setZip(user.getZip());
         }
         order.setOrderDate(new Date());
-        System.out.println(java.time.LocalDateTime.now());
         order.setPaymentMethod(paymentMethod);
         order.setStatus(1);
 
@@ -148,7 +146,11 @@ public class OrderService {
     }
 
     public Order getOrderById(int id) {
-        return orderRepository.findOrderById(id);
+        return orderRepository.findById(id).orElse(null);
+    }
+
+    public ApiOrderDTO getApiOrderById(int id) {
+        return orderRepository.findById(id).orElse(null).convertToApiDTO();
     }
 
 

@@ -1,32 +1,47 @@
 package com.data.filtro.service;
 
-import com.data.filtro.model.Account;
+import com.data.filtro.Util.JsonConverter;
 import com.data.filtro.model.Product;
 import com.data.filtro.repository.ProductRepository;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 @Service
+@Slf4j
 public class ProductService {
     @Autowired
     private ProductRepository productRepository;
     @Autowired
     private CategoryService categoryService;
+
+
+    @Value("${spring.data.minio.bucketName}")
+    private String bucketName;
+
+    @Value("${spring.data.minio.url}")
+    private String url;
+
+    @Value("${spring.data.minio.url_host_image}")
+    private String urlHostImage;
+
+    @Value("${spring.data.app.resetTopSellingProductByDays}")
+    private String resetTopSellingProductByDays;
+
+    @Value("${spring.data.app.resetTopSellingProductByHours}")
+    private String resetTopSellingProductByHours;
+    private final String PREFIX_DETAILED_PRODUCT = "detailed_product:";
 
 
     public void save(Product product) {
@@ -38,11 +53,15 @@ public class ProductService {
         product.setCreatedDate(new Date());
         productRepository.save(product);
     }
+    public void addProductWithImage(Product product, MultipartFile avatarFile) throws Exception {
+        product.setCreatedDate(new Date());
+        productRepository.save(product);
+    }
 
 
-    public void update(Product product, MultipartFile file) throws Exception {
+    public void update(Product product, MultipartFile avatarFile) throws Exception {
 
-        Product existingProduct = productRepository.findById(product.getId()).orElseThrow(() -> new Exception("Product not found"));
+        Product existingProduct = productRepository.findById(product.getId()).orElseThrow(null);
 
         // Update the existing product's properties with the new product's properties
         existingProduct.setProductName(product.getProductName());
@@ -55,9 +74,9 @@ public class ProductService {
         existingProduct.setStatus(product.getStatus());
         existingProduct.setDiscount(product.getDiscount());
 
-        existingProduct.setImage(product.getImage());
         productRepository.save(existingProduct);
     }
+
 
 
     public void deleteById(int id) {
@@ -79,19 +98,31 @@ public class ProductService {
 
     @Transactional
     public List<Product> getTopSellingProducts() {
-        List<Product> productList = productRepository.findTop8SellingProducts();
+        List<Product> productList = new ArrayList<>();
+        productList = productRepository.findTop8SellingProducts();
         for (Product product : productList) {
             Hibernate.initialize(product.getCategory());
         }
+
         return productList;
     }
 
     public List<Product> getSixthProducts(){
-        List<Product> productList = productRepository.find6thProducts();
+        List<Product> productList = new ArrayList<>();
+        productList = productRepository.find6thProducts();
+        for (Product product : productList) {
+            Hibernate.initialize(product.getCategory());
+        }
+
         return productList;
     }
     public List<Product> getTopDiscountProducts() {
-        List<Product> productList = productRepository.findTop4MostDiscountProducts();
+        List<Product> productList = new ArrayList<>();
+        productList = productRepository.findTop4MostDiscountProducts();
+        for (Product product : productList) {
+            Hibernate.initialize(product.getCategory());
+        }
+
         return productList;
     }
 

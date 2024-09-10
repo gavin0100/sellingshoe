@@ -5,20 +5,23 @@ import com.data.filtro.model.OrderDetail;
 import com.itextpdf.io.font.FontProgram;
 import com.itextpdf.io.font.FontProgramFactory;
 import com.itextpdf.kernel.font.PdfFont;
-import com.itextpdf.layout.element.Table;
-import com.itextpdf.layout.property.TextAlignment;
-import com.itextpdf.io.font.constants.StandardFonts;
 import com.itextpdf.kernel.font.PdfFontFactory;
-import com.itextpdf.layout.Document;
-import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Cell;
+import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.property.TextAlignment;
+import org.springframework.core.io.ClassPathResource;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 public class ExportPdf {
     public static ByteArrayInputStream employeesReport(Order order, List<OrderDetail> orderDetailList) {
@@ -31,8 +34,8 @@ public class ExportPdf {
             Document document = new Document(pdf);
 
             // Thiết lập font
-            FontProgram fontProgram1 = FontProgramFactory.createFont("src/main/resources/fonts/SVN-Times New Roman.ttf");
-            FontProgram fontProgram2 = FontProgramFactory.createFont("src/main/resources/fonts/SVN-Times New Roman Bold.ttf");
+            FontProgram fontProgram1 = loadFont("fonts/SVN-Times New Roman.ttf");
+            FontProgram fontProgram2 = loadFont("fonts/SVN-Times New Roman Bold.ttf");
             PdfFont font = PdfFontFactory.createFont(fontProgram1, "Identity-H", true);
             PdfFont boldFont = PdfFontFactory.createFont(fontProgram2, "Identity-H", true);
 
@@ -46,8 +49,11 @@ public class ExportPdf {
             // Thêm ngày in phiếu
             LocalDateTime now = LocalDateTime.now();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+            String currentTime = getCurrentTime();
             Paragraph dateParagraph = new Paragraph("Thời gian in phiếu: " + now.format(formatter))
                     .setFont(font).setTextAlignment(TextAlignment.CENTER);
+//            dateParagraph = new Paragraph("Thời gian in phiếu: " + currentTime)
+//                    .setFont(font).setTextAlignment(TextAlignment.CENTER);
             document.add(dateParagraph);
 
             // Thêm thông tin hóa đơn
@@ -87,5 +93,19 @@ public class ExportPdf {
         }
 
         return new ByteArrayInputStream(out.toByteArray());
+    }
+    public static String getCurrentTime(){
+        String timeSendMail = String.valueOf(new Date());
+//        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Etc/UTC+7"));
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+//        calendar.add(Calendar.HOUR_OF_DAY, 7);
+//        timeSendMail = dateFormat.format(calendar.getTime());
+        return timeSendMail;
+    }
+    public static FontProgram loadFont(String path) throws IOException {
+        ClassPathResource fontResource = new ClassPathResource(path);
+        try (InputStream fontStream = fontResource.getInputStream()) {
+            return FontProgramFactory.createFont(fontStream.readAllBytes());
+        }
     }
 }

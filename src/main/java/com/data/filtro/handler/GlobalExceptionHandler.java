@@ -1,13 +1,16 @@
 package com.data.filtro.handler;
 
+import com.data.filtro.exception.ApiResponse;
 import com.data.filtro.exception.EmptyException;
 import com.data.filtro.exception.NotFoundException;
-import com.data.filtro.exception.ApiResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,6 +32,12 @@ public class GlobalExceptionHandler {
         ApiResponse<?> apiResponse = new ApiResponse<>();
         apiResponse.error(error);
         return apiResponse;
+    }
+
+    @ExceptionHandler({AccessDeniedException.class})
+    public void handleAccessDeniedException(Exception ex, HttpServletResponse response) throws IOException {
+        System.out.println("handleAccessDeniedException");
+        response.sendRedirect("/");
     }
 
 

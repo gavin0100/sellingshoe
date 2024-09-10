@@ -92,7 +92,7 @@ public class OrderController {
         for (CartItem cartItem : cartItems){
             cartItemService.deleteCartItemFromCartItemIdAndCartId(cartItem.getId(), cartItem.getCart().getId());
         }
-        orderService.updateStatusOrder(OrderStatus.CONFIRMED, order);
+        orderService.updateStatusOrder(OrderStatus.PENDING, order);
         String to = user.getEmail();
 
         // Sender's email ID needs to be mentioned
@@ -137,8 +137,6 @@ public class OrderController {
         int orderId = order.getId();
         String url = "";
         MomoResponse momoResponse = placeMomoOrder(orderId);
-//        model.addAttribute("redirectUrl", momoResponse.getPayUrl());
-//        return "user/boot1/payment/paymentRedirect";
         response.sendRedirect(momoResponse.getPayUrl());
     }
 
@@ -169,7 +167,6 @@ public class OrderController {
         int orderId = order.getId();
         String url = "";
         VNPResponse vnpResponse = placeVNPayOrder(orderId, request);
-//        model.addAttribute("redirectUrl", vnpResponse.getPaymentUrl());
         response.sendRedirect(vnpResponse.getPaymentUrl());
 
     }

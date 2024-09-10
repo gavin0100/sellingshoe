@@ -1,6 +1,5 @@
 package com.data.filtro.repository;
 
-import com.data.filtro.model.Account;
 import com.data.filtro.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

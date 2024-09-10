@@ -2,12 +2,13 @@ package com.data.filtro.controller.user;
 
 import com.data.filtro.Util.ExportPdf;
 import com.data.filtro.exception.AuthenticationAccountException;
-import com.data.filtro.model.*;
+import com.data.filtro.model.Order;
+import com.data.filtro.model.OrderDetail;
+import com.data.filtro.model.User;
 import com.data.filtro.service.CartService;
 import com.data.filtro.service.InvoiceService;
 import com.data.filtro.service.OrderService;
 import jakarta.servlet.http.HttpSession;
-import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
@@ -38,7 +39,7 @@ public class InvoiceController {
         try {
             User user = (User) session.getAttribute("user");
             if (user == null) {
-                throw new AuthenticationAccountException("Please login to see your order!");
+                throw new AuthenticationAccountException("Vui lòng đăng nhập để xem đơn hàng của bạn!");
             }
             Order order = orderService.getOrderById(orderId);
             List<OrderDetail> orderDetailList = order.getOrderDetails();
@@ -75,7 +76,7 @@ public class InvoiceController {
         try {
             User user = (User) session.getAttribute("user");
             if (user == null) {
-                throw new AuthenticationAccountException("Please login to see your order!");
+                throw new AuthenticationAccountException("Vui lòng đăng nhập để xem đơn hàng của bạn!");
             }
             Order order = orderService.getOrderById(orderId);
             invoiceService.makeInvoice(order, totalPrice);

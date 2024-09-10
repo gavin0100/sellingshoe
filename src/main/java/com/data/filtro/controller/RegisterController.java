@@ -3,6 +3,7 @@ package com.data.filtro.controller;
 import com.data.filtro.exception.AccountNameExistException;
 import com.data.filtro.exception.PasswordDoNotMatchException;
 import com.data.filtro.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.UUID;
 
 import static com.data.filtro.service.InputService.*;
-import static com.data.filtro.service.InputService.isStringLengthLessThan50;
 
 @Controller
 @RequestMapping("/register")
@@ -26,11 +26,10 @@ public class RegisterController {
     private String csrfToken;
 
     @GetMapping
-    public String showRegister(Model model) {
-        String _csrfToken = generateRandomString();
-        csrfToken = _csrfToken;
-//        System.out.println("csrfToken:" + _csrfToken);
-        model.addAttribute("_csrfToken", _csrfToken);
+    public String showRegister(HttpServletRequest request, Model model) {
+        if (request.getSession().getAttribute("user") != null){
+            return "redirect:/";
+        }
         return "user/boot1/register";
     }
 
@@ -45,16 +44,6 @@ public class RegisterController {
         if(containsUTF8(userName) && containsAllowedCharacters(accountName)
                 && containsAllowedCharacters(email) && isStringLengthLessThan50(userName)
                 && isStringLengthLessThan50(accountName) && isStringLengthLessThan50(password)){
-            //        System.out.println("Sau khi nhan nut dang ky thi csrf token la: " + csrfToken);
-            if (!_csrfToken.equals(csrfToken)) {
-//            System.out.println("csrfToken form: " + _csrfToken);
-                String message = "Anti-CSRF token is not correct";
-//            System.out.println(message);
-                model.addAttribute("errorMessage", message);
-                model.addAttribute("_csrfToken", csrfToken);
-                return "user/boot1/register";
-            }
-            System.out.println(password);
             if (password.length() >= 8 && password.matches(".*[A-Z].*")
                     && password.matches(".*\\d.*") && password.matches("^(?=.*[@#$%^&+=]).*$")){
                 try {
@@ -68,22 +57,19 @@ public class RegisterController {
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
-                String message = "Register Successfully! Login now!";
+                String message = "Đăng ký thành công. Hãy đăng nhập ngay!";
                 model.addAttribute("message", message);
                 return "user/boot1/register";
             }
             else{
-                String message = "The password must have a minimum length of 8 characters, including at least one uppercase letter, at least one digit, and exactly one special character.";
+                String message = "Mật khẩu phải có độ dài tối thiểu là 8 ký tự, bao gồm ít nhất một chữ cái viết hoa, ít nhất một chữ số và ít nhất một ký tự đặc biệt.";
                 model.addAttribute("errorMessage", message);
-                model.addAttribute("_csrfToken", csrfToken);
                 return "user/boot1/register";
             }
         }
         else {
-            String message = "Username can only contain lowercase letters; email, name can only contain lowercase letters, and the characters '()', '@', and the length must be more than 8 and less than 50 symbols.";
-//            System.out.println(message);
+            String message = "Tên người dùng chỉ được chứa chữ cái viết thường; email, tên chỉ được chứa chữ cái viết thường và các ký tự '()', '@', độ dài phải nhiều hơn 8 và ít hơn 50 ký tự.";
             model.addAttribute("errorMessage", message);
-            model.addAttribute("_csrfToken", csrfToken);
             return "user/boot1/register";
         }
     }

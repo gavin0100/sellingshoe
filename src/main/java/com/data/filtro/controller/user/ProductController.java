@@ -1,5 +1,6 @@
 package com.data.filtro.controller.user;
 
+import com.data.filtro.Util.JsonConverter;
 import com.data.filtro.model.Feedback;
 import com.data.filtro.model.Product;
 import com.data.filtro.model.User;
@@ -7,18 +8,19 @@ import com.data.filtro.service.FeedbackService;
 import com.data.filtro.service.InputService;
 import com.data.filtro.service.ProductService;
 import jakarta.servlet.http.HttpSession;
+import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriUtils;
 
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.UUID;
 
 @Controller
 @RequestMapping("/product")
+@Slf4j
 public class ProductController {
 
     @Autowired
@@ -29,6 +31,8 @@ public class ProductController {
 
     @Autowired
     InputService inputService;
+
+    private final String PREFIX_DETAILED_PRODUCT = "detailed_product:";
 
     private String errorMessage;
     private String csrfToken;
@@ -47,7 +51,10 @@ public class ProductController {
         long maxProductId = productService.countAll();
         int t1 = 13;
         long t2 = 24;
-        Product product = productService.getProductById(id);
+        Product product = new Product();
+
+        product = productService.getProductById(id);
+
         List<Feedback> feedbackList = feedbackService.getAllFeedBackByProductId(id);
         int numberOfFeedback = feedbackList.size();
         List<Product> productList = productService.getTop4ProductsByMaterial(product.getMaterial().getId(), currentProductId);
@@ -59,7 +66,7 @@ public class ProductController {
         model.addAttribute("feedbackList", feedbackList);
         if (errorMessage != null){
             model.addAttribute("errorMessage", errorMessage);
-            System.out.println(errorMessage);
+            log.error(errorMessage);
         }
         errorMessage = null;
         return "user/boot1/detail";

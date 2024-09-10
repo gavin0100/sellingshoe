@@ -1,0 +1,189 @@
+<!--A template is a pre-designed interface for a specific topic, where HTML, CSS, and JS serve and have practical significance only within this context.
+Bootstrap, on the other hand, is a collection of CSS classes. Any theme in front-end design can use these CSS classes to style its elements-->
+
+<!--Thymeleaf has the following folder structure: layout, fragment, content.-->
+
+<!--Layout is used to define the structure of a view. In this project, the structure of a view includes {header, content, footer}.-->
+
+<!--Fragment is used to store components that do not change when the view changes. In this project, Fragment includes {header, footer}.-->
+
+<!--Content is the main content of the view.-->
+
+<!--The Controller will return an HTML file containing the content.-->
+
+<!--At the beginning of each HTML content file, there is a line declaring which layout type to use:-->
+
+<!--<html xmlns:th="http://www.thymeleaf.org" th:replace="~{test/template/test_layout :: layout_test(~{::content}, ~{::head_additional})}">-->
+
+<!--At this point, the Thymeleaf system will go to the test_layout.html file to load the predefined view structure. Then, Thymeleaf will load the defined fragments. Finally, we have a complete HTML structure.-->
+
+<!--When loading CSS and JS resources from the head, the order of appearance will follow the order listed in the structure file. For example, in the layout file, the head section is defined as follows:-->
+
+<!--<head>-->
+<!--  <div th:replace="~{test/template/test_fragment :: head_html}"></div>-->
+<!--  &lt;!&ndash; this head will be executed first, this belongs to fragment &ndash;&gt;-->
+
+<!--  <div th:replace="${head_additional}"></div>-->
+<!--  &lt;!&ndash; this head will overwrite any changes made by the first one &ndash;&gt;-->
+<!--</head>-->
+
+<!--The head of the view will be as follows: {head of test_fragment, head of content “head_additional”}.-->
+
+<!--However, the tags in this head section have different priorities. -->
+<!--The following tags are prioritized when they appear first:-->
+<!--  <meta charset="utf-8"> Ensures your website uses the correct character set.-->
+<!--  <title> Sets the title for your website.-->
+<!--  <meta name="viewport"> Ensures your website displays correctly on mobile devices.-->
+<!--  <meta name="keywords"> and <meta name="description"> Provide information about keywords and descriptions of the website for search engines.-->
+<!--  -->
+<!-- The following tags are prioritized when they appear last:-->
+<!--  CSS file: <link rel="stylesheet">-->
+<!--  JS file: `<script src=“”>-->
+<!--  However, if not configured using a .java config file combined with application.yml, CSS files must be placed in /resources/static/css and accessed via /css. Similarly, JavaScript files must be placed in /resources/static/javascript and accessed via /javascript. This is the default when using Thymeleaf; otherwise, it will result in an error.-->
+
+
+
+
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{test/template/test_layout :: layout_test(~{::content}, ~{::head_additional})}">
+<html lang="en">
+
+<head>
+  <th:block th:fragment="head_additional">
+    <meta charset="utf-8">
+    <title>EShopper - InterView hihi</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="Free HTML Templates" name="keywords">
+    <meta content="Free HTML Templates" name="description">
+    <link rel="stylesheet" th:href="@{/css/CSS_test/test_default_page.css}">
+    <script th:src="@{/javascript/JS_test/test_default_page.js}"></script>
+  </th:block>
+</head>
+<body>
+<div th:fragment="content">
+  <p>Welcome to my website!</p>
+  <h1>Model List</h1>
+  <table>
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Status</th>
+      <th>Avatar</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="model : ${models}" style="white-space: nowrap;">
+      <td th:text="${model.id}"></td>
+      <td th:text="${model.name}"></td>
+      <td th:text="${model.status ? 'Active' : 'Inactive'}"></td>
+      <td>
+        <img th:src="${model.avatar}" th:alt="${'Avatar of ' + model.name}" width="50" height="50" style="vertical-align: middle; margin-right: 10px;">
+        <button class="edit-button"
+                th:data-id="${model.id}"
+                th:data-name="${model.name}"
+                th:data-status="${model.status}"
+                th:data-avatar="${model.avatar}"
+                style="background-color: #008CBA; border: none; color: white; padding: 5px 10px; text-align: center; display: inline-block; font-size: 14px; margin-right: 10px; cursor: pointer; vertical-align: middle;">
+          Edit
+        </button>
+
+        <!-- Download Button -->
+        <a th:href="@{'http://localhost:8080/app-minio/download/' + ${model.avatar != null ? model.avatar.substring(model.avatar.lastIndexOf('/') + 1) : ''}}"
+           th:if="${model.avatar != null}"
+           style="text-decoration: none; display: inline-block; vertical-align: middle;">
+          <button type="button"
+                  style="background-color: #4CAF50; border: none; color: white; padding: 5px 10px; text-align: center; font-size: 14px; cursor: pointer;">
+            Download
+          </button>
+        </a>
+
+      </td>
+
+    </tr>
+    </tbody>
+  </table>
+
+  <div class="edit-form-overlay">
+    <form id="editForm" enctype="multipart/form-data" method="post" th:action="@{/test/mvc/editModel}" th:object="${MyModel}">
+      <!-- Close Button -->
+      <button type="button" id="closeButton" style="position: absolute; top: 10px; right: 10px; background-color: transparent; border: none; font-size: 18px; cursor: pointer;">&times;</button>
+
+      <div>
+        <label for="editName">Name:</label><br>
+        <input type="text" id="editName" name="name"><br><br>
+      </div>
+
+      <div>
+        <label for="editStatus">Status:</label><br>
+        <select id="editStatus" name="status">
+          <option value="true" >Active</option>
+          <option value="false">Inactive</option>
+        </select><br><br>
+      </div>
+      <div>
+        <label for="editAvatar">Avatar:</label><br>
+        <input type="file" id="editAvatar" name="avatarFile" accept="image/*"><br><br>
+        <img id="previewAvatar" src="#" alt="Preview Avatar" width="50" height="50" style="display: none;"><br><br>
+      </div>
+
+      <input type="hidden" id="editId" name="id">
+
+      <button type="submit" id="saveButton">Save</button>
+    </form>
+  </div>
+
+  <script>
+    document.querySelectorAll('.edit-button').forEach(button => {
+      button.addEventListener('click', function() {
+        const form = document.querySelector('.edit-form-overlay');
+        form.style.display = 'block';
+
+        // Set the ID field
+        document.getElementById('editId').value = this.getAttribute('data-id');
+
+        // Set the Name field
+        document.getElementById('editName').value = this.getAttribute('data-name');
+
+        // Set the Status field
+        const status = this.getAttribute('data-status') === 'true';
+        document.getElementById('editStatus').value = status ? 'true' : 'false';
+
+        // Handle the Avatar preview
+        const avatarUrl = this.getAttribute('data-avatar');
+        const previewAvatar = document.getElementById('previewAvatar');
+        if (avatarUrl) {
+          previewAvatar.src = avatarUrl;
+          previewAvatar.style.display = 'block';
+        } else {
+          previewAvatar.style.display = 'none';
+        }
+      });
+    });
+
+
+    document.getElementById('editAvatar').addEventListener('change', function() {
+      const [file] = this.files;
+      if (file) {
+        const previewAvatar = document.getElementById('previewAvatar');
+        previewAvatar.src = URL.createObjectURL(file);
+        previewAvatar.style.display = 'block';
+      }
+    });
+
+    document.getElementById('editForm').addEventListener('submit', function(event) {
+      const form = document.querySelector('.edit-form-overlay');
+      form.style.display = 'none';
+    });
+
+    // Close the form when the close button is clicked
+    document.getElementById('closeButton').addEventListener('click', function() {
+      document.querySelector('.edit-form-overlay').style.display = 'none';
+    });
+
+
+  </script>
+
+</div>
+</body>

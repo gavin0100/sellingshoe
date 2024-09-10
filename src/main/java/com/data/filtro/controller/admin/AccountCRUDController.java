@@ -1,22 +1,5 @@
 package com.data.filtro.controller.admin;
 
-import com.data.filtro.model.Account;
-import com.data.filtro.model.User;
-import com.data.filtro.service.AccountService;
-import com.data.filtro.service.UserService;
-import jakarta.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Optional;
-
 //@Controller
 //@RequestMapping("/admin/account")
 public class AccountCRUDController {

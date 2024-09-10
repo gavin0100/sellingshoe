@@ -1,9 +1,8 @@
 package com.data.filtro.controller.admin;
 
 import com.data.filtro.exception.AuthenticationAccountException;
-import com.data.filtro.model.*;
+import com.data.filtro.model.AuthenticateResponse;
 import com.data.filtro.service.AuthenticationService;
-import com.data.filtro.service.CartService;
 import com.data.filtro.service.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -43,14 +42,12 @@ public class LoginAdminController {
         try {
             AuthenticateResponse authenticateResponse = authenticationService.authenticate(accountName, password, session);
             session.setAttribute("admin", authenticateResponse.getUser());
-            Cookie cookie = new Cookie("token", authenticateResponse.getAccessToken());
+            Cookie cookie = new Cookie("fourleavesshoestoken", authenticateResponse.getAccessToken());
             cookie.setHttpOnly(true);
             cookie.setPath("/"); // This makes the cookie valid for all routes on your domain
             response.addCookie(cookie);
-//            System.out.println(account.getAccountName());
-            return "redirect:/admin";
+            return "redirect:/admin/dashboard";
         } catch (AuthenticationAccountException exception) {
-            exception.printStackTrace();
             model.addAttribute("message", "Tên tài khoản hoặc mật khẩu không chính xác");
         } catch (Exception err){
             model.addAttribute("message", "Tên tài khoản hoặc mật khẩu không chính xác");

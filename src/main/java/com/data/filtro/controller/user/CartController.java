@@ -139,7 +139,6 @@ public class CartController {
         User user = (User) session.getAttribute("user");
         GuestCart guestCart = (GuestCart) session.getAttribute("guestCart");
         if (user != null) {
-            //Cart cart = cartService.getCartByUserId(user.getId());
             Cart cart = cartService.getCurrentCartByUserId(user.getId());
             if (cart != null) {
                 return cartService.totalOfCartItem(user);

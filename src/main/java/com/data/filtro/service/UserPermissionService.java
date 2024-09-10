@@ -1,14 +1,10 @@
 package com.data.filtro.service;
 
-import com.data.filtro.model.DTO.UserDTO;
-import com.data.filtro.model.User;
 import com.data.filtro.model.UserPermission;
 import com.data.filtro.repository.UserPermissionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 
 @Service

@@ -11,6 +11,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
@@ -26,39 +27,20 @@ public class MailSenderService {
         properties.put("mail.smtp.port", "587");
         properties.put("mail.smtp.auth", "true");
         properties.put("mail.smtp.starttls.enable", "true");
-
-        // Setup mail server
         properties.setProperty("mail.smtp.host", host);
-
-
         Session session = Session.getInstance(properties, new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication(){
                 return new  PasswordAuthentication("voduc0100@gmail.com", "arozojkhspxuuxeg");
             }
         });
-
         try {
-            // Create a default MimeMessage object
             MimeMessage message = new MimeMessage(session);
-
-            // Set From: header field of the header
             message.setFrom(new InternetAddress(from));
-
-            // Set To: header field of the header
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
-
-            // Set Subject: header field
             message.setSubject(subject);
-
-            // Now set the actual message
-//            message.setText(text);
-
-//            String htmlMessage = buildHtmlBill(customerName, items);
             String htmlMessage = buildHtmlBill4(matKhauMoi);
-//            message.setContent(htmlMessage, "text/html");
             message.setContent(htmlMessage, "text/html; charset=UTF-8");
-            // Send message
             Transport.send(message);
             System.out.println("Sent message successfully....");
         } catch (MessagingException mex) {
@@ -67,12 +49,14 @@ public class MailSenderService {
     }
 
     public String buildHtmlBill4(String matKhauMoi) {
+        String timeSendMail = getCurrentTime();
+
         // Use StringBuilder to create the HTML content
         StringBuilder sb = new StringBuilder();
         sb.append("<html><head><meta charset='UTF-8'></head><body style='font-family: Arial, sans-serif; background-color: #f7f7f7; color: #333;'>");
         sb.append("<div style='max-width: 600px; margin: auto; background-color: #fff; padding: 20px; border: 1px solid #ddd;'>");
         sb.append("<h2 style='text-align: center; color: #4A90E2;'>Shop bán giày Four Leave Shoes</h2>");
-        sb.append("<p style='text-align: center;'>Thời gian in:" + String.valueOf(localDateParseMethod(LocalDateTime.now())) +"</p>");
+        sb.append("<p style='text-align: center;'>Thời gian in: " + timeSendMail +"</p>");
         sb.append("<h1 style='background-color: #4A90E2; color: #fff; padding: 10px; text-align: center;'>MẬT KHẨU MỚI</h1>");
         sb.append("<p>Mật khẩu:   " + String.valueOf(matKhauMoi) + "</p>");
 
@@ -133,12 +117,13 @@ public class MailSenderService {
     }
 
     public String buildHtmlBillHoaDon(Order hoaDon, List<OrderDetail> danhSachHoaDonChiTiet) {
+        String timeSendMail = getCurrentTime();
         // Use StringBuilder to create the HTML content
         StringBuilder sb = new StringBuilder();
         sb.append("<html><head><meta charset='UTF-8'></head><body style='font-family: Arial, sans-serif; background-color: #f7f7f7; color: #333;'>");
         sb.append("<div style='max-width: 600px; margin: auto; background-color: #fff; padding: 20px; border: 1px solid #ddd;'>");
         sb.append("<h2 style='text-align: center; color: #4A90E2;'>Shop bán giày Four Leave Shoes</h2>");
-        sb.append("<p style='text-align: center;'>Thời gian in phiếu:" + String.valueOf(localDateParseMethod(LocalDateTime.now())) +"</p>");
+        sb.append("<p style='text-align: center;'>Thời gian in phiếu :" + timeSendMail +"</p>");
         sb.append("<h1 style='background-color: #4A90E2; color: #fff; padding: 10px; text-align: center;'>HÓA ĐƠN</h1>");
         sb.append("<p>Mã phiếu:" + String.valueOf(hoaDon.getOrder_code()) + "</p>");
         User khachHang = khachHang = userService.getByUserId(hoaDon.getUser().getId());
@@ -179,5 +164,13 @@ public class MailSenderService {
         sb.append("</body></html>");
 
         return sb.toString();
+    }
+    public String getCurrentTime(){
+        String timeSendMail = String.valueOf(new Date());
+//        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Etc/UTC+7"));
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+//        calendar.add(Calendar.HOUR_OF_DAY, 7);
+//        timeSendMail = dateFormat.format(calendar.getTime());
+        return timeSendMail;
     }
 }

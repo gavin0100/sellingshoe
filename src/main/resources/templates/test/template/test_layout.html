@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:fragment="layout_test(content, head_additional)">
+<head>
+
+  <div th:replace="~{test/template/test_fragment :: head_html}"></div>
+<!--  this head will be execute first, this belongs to fragment-->
+
+  <div th:replace="${head_additional}"></div>
+<!--  this head will overwrite any changes made by the first one-->
+
+</head>
+<body>
+<div th:replace="~{test/template/test_fragment :: header}"></div>
+
+<div th:replace="${content}"></div>
+
+<div th:replace="~{test/template/test_fragment :: footer}"></div>
+
+</body>
+</html>

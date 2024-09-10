@@ -1,6 +1,5 @@
 package com.data.filtro.repository;
 
-import com.data.filtro.model.Order;
 import com.data.filtro.model.OrderDetail;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

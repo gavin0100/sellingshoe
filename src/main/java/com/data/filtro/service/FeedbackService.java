@@ -1,7 +1,6 @@
 package com.data.filtro.service;
 
 import com.data.filtro.model.Feedback;
-import com.data.filtro.model.User;
 import com.data.filtro.repository.FeedbackRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

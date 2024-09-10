@@ -1,8 +1,6 @@
 package com.data.filtro.controller.admin;
 
-import com.data.filtro.model.Account;
 import com.data.filtro.model.Material;
-import com.data.filtro.model.User;
 import com.data.filtro.service.MaterialService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,7 +20,8 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/admin/material")
 public class MaterialCRUDController {
-
+    private String errorMessage = "";
+    private String message="";
     @Autowired
     MaterialService materialService;
 
@@ -40,9 +40,13 @@ public class MaterialCRUDController {
     @GetMapping()
     @PreAuthorize("hasAnyRole('ADMIN', 'WAREHOUSE_STAFF', 'ACCOUNTING_STAFF') and hasAnyAuthority('FULL_ACCESS_MATERIAL', 'VIEW_MATERIAL')")
     public String show(@RequestParam(defaultValue = "5") int sortType, @RequestParam("currentPage") Optional<Integer> page, Model model, HttpSession session) {
-        User admin = (User) session.getAttribute("admin");
-        if (admin == null) {
-            return "redirect:/admin/login";
+        if (!errorMessage.equals("")){
+            model.addAttribute("errorMessage", errorMessage);
+            errorMessage="";
+        }
+        if (!message.equals("")){
+            model.addAttribute("message", message);
+            message="";
         }
         List<Material> activeMaterials = materialService.getActiveMaterial(1);
         int numberActiveMaterials = activeMaterials.size();
@@ -64,15 +68,25 @@ public class MaterialCRUDController {
 
     @PostMapping("/create")
     @PreAuthorize("hasAnyRole('ADMIN', 'WAREHOUSE_STAFF', 'ACCOUNTING_STAFF') and hasAnyAuthority('FULL_ACCESS_MATERIAL')")
-    public String create(@ModelAttribute Material material) {
+    public String create(@ModelAttribute Material material, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            errorMessage = "Nhập sai định dạng dữ liệu";
+            return "redirect:/admin/material";
+        }
         materialService.create(material);
+        message="Tạo material thành công";
         return "redirect:/admin/material";
     }
 
     @PostMapping("/update")
     @PreAuthorize("hasAnyRole('ADMIN', 'WAREHOUSE_STAFF', 'ACCOUNTING_STAFF') and hasAnyAuthority('FULL_ACCESS_MATERIAL')")
-    public String update(@ModelAttribute Material material) {
+    public String update(@ModelAttribute Material material, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            errorMessage = "Nhập sai định dạng dữ liệu";
+            return "redirect:/admin/material";
+        }
         materialService.update(material);
+        message="Cập nhật material thành công";
         return "redirect:/admin/material";
     }
 
@@ -80,6 +94,7 @@ public class MaterialCRUDController {
     @PreAuthorize("hasAnyRole('ADMIN', 'WAREHOUSE_STAFF', 'ACCOUNTING_STAFF') and hasAnyAuthority('FULL_ACCESS_MATERIAL')")
     public String delete(@RequestParam int id) {
         materialService.delete(id);
+        message="Xóa material thành công";
         return "redirect:/admin/material";
     }
 

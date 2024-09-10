@@ -1,13 +1,15 @@
 package com.data.filtro.controller.user;
 
 import com.data.filtro.exception.AuthenticationAccountException;
-import com.data.filtro.model.Account;
-import com.data.filtro.model.Order;
-import com.data.filtro.model.User;
+import com.data.filtro.exception.PasswordDoNotMatchException;
+import com.data.filtro.model.*;
 import com.data.filtro.model.payment.OrderStatus;
-import com.data.filtro.service.AccountService;
+import com.data.filtro.service.AuthenticationService;
+import com.data.filtro.service.CartService;
 import com.data.filtro.service.OrderService;
 import com.data.filtro.service.UserService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/user")
@@ -30,6 +33,12 @@ public class UserController {
 
     @Autowired
     OrderService orderService;
+
+    @Autowired
+    AuthenticationService authenticationService;
+
+    @Autowired
+    CartService cartService;
 
 
     @GetMapping
@@ -75,7 +84,6 @@ public class UserController {
             model.addAttribute("message", "Please Login");
             return "user/boot1/user-billing";
         }
-//        System.out.println("user id: " + user.getId() + " " + user.getName());
         List<Order> orderList;
         try {
             orderList = orderService.getOrderByUserId(user.getId());
@@ -83,7 +91,6 @@ public class UserController {
             orderList = new ArrayList<>();
         }
         List<OrderStatus> orderStatusList = returnListOrderStatus();
-        //orderList.forEach(s -> System.out.println(s.getId()));
         model.addAttribute("orderList", orderList);
         model.addAttribute("orderStatusList", orderStatusList);
         return "user/boot1/user-billing";
@@ -115,8 +122,32 @@ public class UserController {
             model.addAttribute("errorMessage", e.getMessage());
         } catch (AuthenticationAccountException ex) {
             model.addAttribute("errorMessage", ex.getMessage());
+        } catch (PasswordDoNotMatchException pe){
+            model.addAttribute("errorMessage", pe.getMessage());
+        } catch (Exception ex){
+            model.addAttribute("errorMessage", "Không thể đổi mật khẩu!");
         }
         return "user/boot1/user-security";
+    }
+    @GetMapping("/billing/reset_login")
+    public String resetLogin(@RequestParam Map<String , String> params, HttpSession session, HttpServletResponse response){
+        System.out.println("/billing/reset_login");
+        String accountName = params.get("username");
+        System.out.println("accountName trong vnpay reset login: " + accountName);
+        AuthenticateResponse authenticateResponse = authenticationService.authenticateWithOnlyAccountName(accountName);
+        session.setAttribute("user", authenticateResponse.getUser());
+        Cookie cookie = new Cookie("fourleavesshoestoken", authenticateResponse.getAccessToken());
+        cookie.setHttpOnly(true);
+        cookie.setPath("/"); // This makes the cookie valid for all routes on your domain
+        response.addCookie(cookie);
+        Cart cart = cartService.getCurrentCartByUserId(authenticateResponse.getUser().getId());
+        GuestCart guestCart = (GuestCart) session.getAttribute("guestCart");
+        if (guestCart != null) {
+            cart = cartService.convertGuestCartToCart(guestCart,  authenticateResponse.getUser());
+            session.removeAttribute("guestCart");
+        }
+        session.setAttribute("cart", cart);
+        return "redirect:/user/billing";
     }
 
     public List<OrderStatus> returnListOrderStatus(){
@@ -131,4 +162,5 @@ public class UserController {
         danhSachOrderStatus.add(OrderStatus.FAILED);
         return danhSachOrderStatus;
     }
+
 }

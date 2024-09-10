@@ -1,9 +1,7 @@
 package com.data.filtro.repository;
 
-import com.data.filtro.model.Account;
 import com.data.filtro.model.Category;
 import com.data.filtro.model.Material;
-import com.data.filtro.model.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

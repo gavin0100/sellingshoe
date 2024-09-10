@@ -1,6 +1,5 @@
 package com.data.filtro.repository;
 
-import com.data.filtro.model.Account;
 import com.data.filtro.model.Order;
 import com.data.filtro.model.payment.OrderStatus;
 import org.springframework.data.domain.Page;

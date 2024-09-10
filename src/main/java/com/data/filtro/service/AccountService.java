@@ -1,21 +1,5 @@
 package com.data.filtro.service;
 
-import com.data.filtro.exception.AuthenticationAccountException;
-import com.data.filtro.exception.PasswordDoNotMatchException;
-import com.data.filtro.exception.UserNotFoundException;
-import com.data.filtro.model.Account;
-import com.data.filtro.model.User;
-import com.data.filtro.repository.AccountRepository;
-import javassist.NotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Service;
-
-import java.util.Date;
-import java.util.List;
-
 //@Service
 public class AccountService {
 //    private final UserService userService;

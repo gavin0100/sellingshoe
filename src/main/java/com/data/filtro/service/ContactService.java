@@ -1,13 +1,11 @@
 package com.data.filtro.service;
 
 import com.data.filtro.model.Contact;
-import com.data.filtro.model.Feedback;
 import com.data.filtro.repository.ContactRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Service

@@ -4,24 +4,21 @@ import com.data.filtro.exception.AccountNameExistException;
 import com.data.filtro.exception.AuthenticationAccountException;
 import com.data.filtro.exception.PasswordDoNotMatchException;
 import com.data.filtro.exception.UserNotFoundException;
-import com.data.filtro.model.Account;
 import com.data.filtro.model.Cart;
 import com.data.filtro.model.DTO.UserDTO;
 import com.data.filtro.model.User;
 import com.data.filtro.model.UserPermission;
-import com.data.filtro.repository.AccountRepository;
 import com.data.filtro.repository.UserPermissionRepository;
 import com.data.filtro.repository.UserRepository;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.util.Date;
@@ -263,7 +260,7 @@ public class UserService implements UserDetailsService {
             user.setPasswordResetToken(token);
             userRepository.save(user);
         } else {
-            throw new UserNotFoundException("User not found with the email address: " + email);
+            throw new UserNotFoundException("Không tìm thấy người dùng với địa chỉ email: " + email);
         }
     }
 
@@ -289,21 +286,20 @@ public class UserService implements UserDetailsService {
         try{
             tempUser = getUserByAccountName(accountName.trim());
             if (tempUser.getUserPermission().getPermissionId() != 4){
-                throw new AuthenticationAccountException("Incorrect Account");
+                throw new AuthenticationAccountException("Tài khoản không có quyền");
             }
             if (tempUser != null) {
                 if (passwordEncoder.matches(password, tempUser.getPassword())) {
                     User authenticateAccount = userRepository.authenticate(accountName, tempUser.getPassword());
                     return authenticateAccount;
                 } else {
-//                System.out.println("sai mat khau");
-                    throw new AuthenticationAccountException("Incorrect Password!");
+                    throw new AuthenticationAccountException("Mật khẩu không đúng!");
                 }
             } else {
-                throw new AuthenticationAccountException("Incorrect AccountName!");
+                throw new AuthenticationAccountException("Teen taif khoản không đúng!");
             }
         } catch (Exception exception){
-            throw new AuthenticationAccountException("Incorrect Account");
+            throw new AuthenticationAccountException("Tên tài khoản không đúng!");
         }
     }
 
@@ -314,19 +310,19 @@ public class UserService implements UserDetailsService {
             if (passwordEncoder.matches(password, tempUser.getPassword())) {
                 return userRepository.authenticateAdmin(accountName, tempUser.getPassword());
             } else {
-                throw new AuthenticationAccountException("Incorrect Password!");
+                throw new AuthenticationAccountException("Mật khẩu không đúng!");
             }
         } else {
-            throw new AuthenticationAccountException("Incorrect AccountName!");
+            throw new AuthenticationAccountException("Tên tài khoản không đúng!");
         }
     }
 
     public void changePassword(User user, String currentPassword, String newPassword, String repeatPassword) throws NotFoundException {
         if (user == null) {
-            throw new NotFoundException("Account not found!");
+            throw new NotFoundException("Không tìm thấy tài khoản!");
         }
         if (!newPassword.equals(repeatPassword)) {
-            throw new PasswordDoNotMatchException("Incorrrect password !");
+            throw new PasswordDoNotMatchException("Mật khẩu không khớp !");
         }
         String userPassword = user.getPassword();
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -335,7 +331,7 @@ public class UserService implements UserDetailsService {
             user.setPassword(hashPassword);
             userRepository.save(user);
         } else {
-            throw new AuthenticationAccountException("Incorrrect password!");
+            throw new AuthenticationAccountException("Mật khẩu không đúng!");
         }
 
     }

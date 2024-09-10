@@ -18,7 +18,6 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -57,6 +56,8 @@ public class ApplicationConfig {
         dao.setPasswordEncoder(passwordEncoder());
         return dao;
     }
+
+
 
     @Bean
     public PasswordEncoder passwordEncoder(){

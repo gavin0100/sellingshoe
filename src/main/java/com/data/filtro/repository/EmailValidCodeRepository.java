@@ -1,6 +1,5 @@
 package com.data.filtro.repository;
 
-import com.data.filtro.model.Category;
 import com.data.filtro.model.EmailValidCode;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

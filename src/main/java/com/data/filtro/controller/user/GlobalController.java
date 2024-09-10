@@ -4,6 +4,7 @@ import com.data.filtro.model.*;
 import com.data.filtro.service.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,9 +17,11 @@ public class GlobalController {
 
     @Autowired
     ProductService productService;
+    @Lazy
     @Autowired
     CategoryService categoryService;
 
+    @Lazy
     @Autowired
     MaterialService flavorService;
 

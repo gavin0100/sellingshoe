@@ -1,22 +1,20 @@
 package com.data.filtro.config;
 
-import com.data.filtro.handler.FilterExceptionHandler;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 
@@ -27,18 +25,30 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class SecurityConfig{
     private final AuthenticationProvider authenticationProvider;
     private final JwtFilter jwtFilter;
-    private final FilterExceptionHandler filterExceptionHandler;
+//    private final FilterExceptionHandler filterExceptionHandler;
 
-    private final JWTAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    @Autowired
+    @Lazy
+    private  AuthenticationManager authenticationManager;
 
     @Bean
     public CustomAccessDeniedHandler accessDeniedHandler(){
         return new CustomAccessDeniedHandler();
     }
 
+    @Bean
+    public CustomErrorHandler accessErrorHandler(){
+        return new CustomErrorHandler();
+    }
+
+
 //    private final LogoutHandler logoutHandler;
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
+        CustomUsernamePasswordAuthenticationFilter customFilter = new CustomUsernamePasswordAuthenticationFilter(authenticationManager);
+        customFilter.setAuthenticationSuccessHandler(new CustomAuthenticationSuccessHandler());
+        customFilter.setAuthenticationFailureHandler(new CustomAuthenticationFailureHandler());
+        CustomExceptionFilter customExceptionFilter = new CustomExceptionFilter();
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(ahr -> {
@@ -60,38 +70,63 @@ public class SecurityConfig{
                                         "/cart/**",
                                         "/product/**",
                                         "/user_google_hihi",
-                                        "/otp/**"
+                                        "/otp/**",
+                                        "/test/**",
+                                        "/app-minio/**",
+                                        "/logout_to_login/**",
+                                        "/user/billing/reset_login",
+                                        "/session"
 
                                 ).permitAll()
-                                .requestMatchers("/css/**", "/js/**", "/image/**", "/javascript/**").permitAll()
+                                .requestMatchers("/css/**", "/js/**", "/image/**", "/javascript/**", "/access-denied", "/img/**", "/product/img/**").permitAll()
                                 .anyRequest().authenticated()
                                 .and()
                                 .exceptionHandling()
-                                .authenticationEntryPoint(accessDeniedHandler())  // chuyen huong den trang access-denied khi cố gắng truy cập vào một tài nguyên mà họ không được phép khi chưa xác thực
-                                .and()
-                                .logout() // neu da dang ky ngoai nay thi may cai viet trong controler logout khong duoc thuc hien
-                                .invalidateHttpSession(true)
-                                .deleteCookies("JSESSIONID")
-                                .deleteCookies("token")
-                                .clearAuthentication(true)
-                                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                                .logoutSuccessUrl("/login")
-                                .and()
-                                .oauth2Login(oauth2 -> {
-                                    oauth2.redirectionEndpoint()
-                                            .baseUri("/login/oauth2/code/*");
-                                    oauth2.defaultSuccessUrl("/user_google_hihi", true);
-                                });
+                                .accessDeniedPage("/");  // chuyen huong den trang access-denied khi cố gắng truy cập vào một tài nguyên mà họ không được phép khi chưa xác thực
+//                                .and()
+//                                .logout() // neu da dang ky ngoai nay thi may cai viet trong controler logout khong duoc thuc hien
+//                                .invalidateHttpSession(true)
+//                                .deleteCookies("JSESSIONID")
+//                                .deleteCookies("fourleavesshoestoken")
+//                                .clearAuthentication(true)
+//                                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+//                                .logoutSuccessUrl("/login")
+//                                .and()
+//                                .oauth2Login(oauth2 -> {
+//                                    oauth2.redirectionEndpoint()
+//                                            .baseUri("/login/oauth2/code/*");
+//                                    oauth2.defaultSuccessUrl("/user_google_hihi", true);
+//                                });
                     } catch (Exception e) {
-                        System.out.println("Lỗi truy cập xử lý html");
-                        throw new RuntimeException(e);
+                        e.printStackTrace();
                     }
                 })
-                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .formLogin().disable()
+                .addFilter(customFilter)
                 .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(customExceptionFilter, LogoutFilter.class)
+                .logout(ahr -> {
+                    ahr.invalidateHttpSession(true)
+                            .deleteCookies("JSESSIONID")
+                            .deleteCookies("fourleavesshoestoken")
+                            .clearAuthentication(true)
+                            .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                            .logoutSuccessUrl("/login");
+                })
+                .exceptionHandling(ahr -> {
+                    try {
+                        ahr
+                                .accessDeniedPage("/")
+                                .authenticationEntryPoint(accessErrorHandler());
+                    } catch (Exception e) {
+                        e.printStackTrace(); // Or use a logging framework
+                    }
+                })
 
+                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         return http.build();
+
         // session nếu không bị khóa thì spring security sẽ chuyển sang sài session mặc định để lưu thông tin,
         // nhưng quyền jwt thì lại được lưu trong cookie, điều này lại gây sự cố
         // nhưng mà nếu session bị khóa, thì hệ thống phân quyền hoạt động bình thường nhưng oauth lại trả về null user
