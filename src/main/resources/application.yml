@@ -68,7 +68,7 @@ spring:
 #    password: duc2112002
 #    driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://sql12.freesqldatabase.com:3306/sql12732260
-    username: sql12730469
+    username: sql12732260
     password: I8NdvHLxUW
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:

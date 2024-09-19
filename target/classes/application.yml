@@ -57,7 +57,7 @@
 #      vnp_TmnCode: X3VCO73C
 #      vnp_HashSecret: 70OXPPONL7XA9QR57L1QDWQVZPYC4L3U
 
-# email sql online: hokiyif875@esterace.com
+# email sql online: vayig80959@degcos.com
 # password: Duc2112002@
 server:
   port: 8080
@@ -67,9 +67,9 @@ spring:
 #    username: root
 #    password: duc2112002
 #    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://sql12.freesqldatabase.com:3306/sql12730469
-    username: sql12730469
-    password: EfK9XXJkMP
+    url: jdbc:mysql://sql12.freesqldatabase.com:3306/sql12732260
+    username: sql12732260
+    password: I8NdvHLxUW
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     properties:
