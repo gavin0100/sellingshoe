@@ -6,6 +6,8 @@ import com.data.filtro.exception.NotFoundException;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -36,8 +38,14 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({AccessDeniedException.class})
     public void handleAccessDeniedException(Exception ex, HttpServletResponse response) throws IOException {
-        System.out.println("handleAccessDeniedException");
-        response.sendRedirect("/");
+        for (GrantedAuthority authority : SecurityContextHolder.getContext().getAuthentication().getAuthorities()) {
+            if (!authority.getAuthority().equals("ROLE_USER")) {
+                response.sendRedirect("/admin/dashboard");
+            } else {
+                response.sendRedirect("/");
+            }
+            return;
+        }
     }
 
 

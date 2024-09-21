@@ -487,13 +487,9 @@
                                         <label>Description</label>
                                         <textarea name="description" id="description" class="form-control" style="width: 187px; height: 90px;"  required></textarea>
                                     </div>
-                                    <div class="form-group custom-form-group" style="margin: 5px 0px;">
+                                    <div class="form-group custom-form-group">
                                         <label>Image</label>
-<!--                                        <input type="text" name="image" id="image" class="form-control" required>-->
-                                        <div class="form-control" style="text-align: -webkit-right;">
-                                            <input type="file" id="editAvatar" name="avatarFile" accept="image/*"><br><br>
-                                            <img id="previewAvatar" src="#" alt="Preview Avatar" style="display: none; width: 150px;height: auto;margin-bottom: 15px;">
-                                        </div>
+                                        <input type="text" name="image" class="form-control" required>
                                     </div>
                                     <div class="form-group custom-form-group">
                                         <label>Sold</label>
@@ -567,13 +563,9 @@
                                         <label>Description</label>
                                         <textarea name="description" class="form-control" required></textarea>
                                     </div>
-                                    <div class="form-group custom-form-group" style="margin: 5px 0px;">
+                                    <div class="form-group custom-form-group">
                                         <label>Image</label>
-                                        <!--                                        <input type="text" name="image" id="image" class="form-control" required>-->
-                                        <div class="form-control" style="text-align: -webkit-right;">
-                                            <input type="file" id="createAvatar" name="avatarFile" accept="image/*"><br><br>
-                                            <img id="previewCreatedAvatar" src="#" alt="Preview Avatar" style="display: none; width: 150px;height: auto;margin-bottom: 15px;">
-                                        </div>
+                                        <input type="text" name="image" id="image" class="form-control" required>
                                     </div>
                                     <div class="form-group custom-form-group">
                                         <label>Sold</label>
@@ -714,41 +706,6 @@
         closeButton.addEventListener("click", function() {
             var editModal = document.getElementById("deleteModal");
             editModal.style.display = "none";
-        });
-    </script>
-    <script>
-        document.querySelectorAll('.edit-button').forEach(button => {
-            button.addEventListener('click', function() {
-                const avatarUrl = this.getAttribute('data-avatar');
-                console.log(avatarUrl);
-                console.log("hihi");
-                const previewAvatar = document.getElementById('previewAvatar');
-                if (avatarUrl) {
-                    previewAvatar.src = avatarUrl;
-                    previewAvatar.style.display = 'block';
-                } else {
-                    previewAvatar.style.display = 'none';
-                }
-            });
-        });
-        document.getElementById('editAvatar').addEventListener('change', function() {
-            const [file] = this.files;
-            if (file) {
-                const previewAvatar = document.getElementById('previewAvatar');
-                previewAvatar.src = URL.createObjectURL(file);
-                previewAvatar.style.display = 'block';
-            }
-        });
-    </script>
-
-    <script>
-        document.getElementById('createAvatar').addEventListener('change', function() {
-            const [file] = this.files;
-            if (file) {
-                const previewAvatar = document.getElementById('previewCreatedAvatar');
-                previewAvatar.src = URL.createObjectURL(file);
-                previewAvatar.style.display = 'block';
-            }
         });
     </script>
 
