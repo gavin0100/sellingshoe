@@ -7,15 +7,14 @@ import com.data.filtro.service.CategoryService;
 import com.data.filtro.service.MaterialService;
 import com.data.filtro.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/category")
@@ -68,7 +67,7 @@ public class CategoryController {
     @GetMapping("/{id}")
     public String showProductsByCategory(@PathVariable String id,
                                          @RequestParam(defaultValue = "0") String lowPrice,
-                                         @RequestParam(defaultValue = "1000") String highPrice,
+                                         @RequestParam(defaultValue = "10000000") String highPrice,
                                          @RequestParam(defaultValue = "best_selling") String sortType,
                                          @RequestParam(defaultValue = "0") String materialId,
                                          @RequestParam(defaultValue = "1") String currentPage,
