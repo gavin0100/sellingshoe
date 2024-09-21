@@ -15,6 +15,14 @@ public class AccessDeniedController {
         model.addAttribute("contentStatus", "Unauthorized");
         return "error/accessDenied";
     }
+    @GetMapping("/404")
+    public String getNotFound(HttpServletResponse response, Model model) {
+        model.addAttribute("message1", "Trang cần tìm");
+        model.addAttribute("message2", "không tồn tại");
+        model.addAttribute("HTTPstatus", "404");
+        model.addAttribute("contentStatus", "Not Found");
+        return "error/accessDenied";
+    }
 
 
 

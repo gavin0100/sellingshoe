@@ -4,7 +4,37 @@
 
 <head>
     <th:block th:fragment="head_additional">
-<!--        <link rel="stylesheet" type="text/css" href="/css/boot1/style.css" th:href="@{/css/boot1/style.css}">-->
+        <style>
+            #navbar-vertical {
+                position: absolute; /* Hoặc sử dụng fixed nếu muốn giữ nó cố định khi cuộn trang */
+                top: 65px; /* Điều chỉnh vị trí của nav */
+                left: 0;
+                z-index: 1000; /* Đảm bảo nav sẽ nằm trên các phần tử khác */
+                width: 92%;
+                margin-left: 4%;
+                background-color: white;
+                display: none; /* Mặc định ẩn đi */
+            }
+
+            #navbar-vertical.show {
+                display: block; /* Hiển thị khi được bật */
+            }
+
+            #navbarCollapse {
+                position: absolute; /* Hoặc sử dụng fixed nếu muốn giữ nó cố định khi cuộn trang */
+                top: 80%; /* Điều chỉnh vị trí của nav */
+                left: 0;
+                z-index: 1000; /* Đảm bảo nav sẽ nằm trên các phần tử khác */
+                width: 100%;
+                background-color: white;
+            }
+
+            #navbarCollapse.show {
+                display: block; /* Hiển thị khi được bật */
+            }
+
+
+        </style>
     </th:block>
 </head>
 
@@ -15,28 +45,24 @@
     <div class="container-fluid mb-5">
         <div class="row border-top px-xl-5">
             <div class="col-lg-3 d-none d-lg-block">
-                <a class="btn shadow-none d-flex align-items-center justify-content-between bg-primary text-white w-100" th:href="@{'#navbar-vertical'}" data-toggle="collapse" style="height: 65px; margin-top: -1px; padding: 0 30px;">
+                <a class="btn shadow-none d-flex align-items-center justify-content-between bg-primary text-white w-100" data-toggle="collapse" style="height: 65px; margin-top: -1px; padding: 0 30px;" onclick="toggleNav()">
                     <h6 class="m-0">Categories</h6>
                     <i class="fa fa-angle-down text-dark"></i>
                 </a>
-                <nav class="collapse show navbar navbar-vertical navbar-light align-items-start p-0 border border-top-0 border-bottom-0" id="navbar-vertical">
+                <nav class="collapse navbar navbar-vertical navbar-light align-items-start p-0 border border-top-0 border-bottom-0" id="navbar-vertical">
                     <div style="height: 410px" class="w-100">
                         <div class="navbar-nav w-100 overflow-hidden" th:each="category, item : ${categories}">
-                            <a class="nav-item nav-link" th:href="@{/category/{id}(id=${category.id})}"
-                               th:text="${category.categoryName}">Action</a>
-                            <th:block th:if="${item.count == item.size}">
-                                <a class="nav-item nav-link" th:href="@{/category/all}">Read more...</a>
-                            </th:block>
+                            <a class="nav-item nav-link" th:href="@{/category/{id}(id=${category.id})}" th:text="${category.categoryName}">Action</a>
                         </div>
                     </div>
                 </nav>
             </div>
             <div class="col-lg-9">
                 <nav class="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-0">
-                    <a href="" class="text-decoration-none d-block d-lg-none">
+                    <a th:href="@{/}" class="text-decoration-none d-block d-lg-none">
                         <h1 class="m-0 display-5 font-weight-semi-bold"><span class="text-primary font-weight-bold border px-3 mr-1">E</span>Shopper</h1>
                     </a>
-                    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse" onclick="toggleNavCollapse()">
                         <span class="navbar-toggler-icon"></span>
                     </button>
                     <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
@@ -131,62 +157,16 @@
             <h2 class="section-title px-5"><span class="px-2">Latest products</span></h2>
         </div>
         <div  class="row px-xl-5 pb-3" >
-<!--            <div th:each="product : ${product6thList}" class="row px-xl-5 pb-3">-->
-                <div th:each="product : ${product6thList}" class="col-lg-4 col-md-6 pb-1">
-                    <div class="cat-item d-flex-product flex-column border mb-4" style="padding: 30px;">
-                        <p class="text-right" th:text="${product.quantity}">15 Products</p>
-                        <a href="" class="cat-img position-relative overflow-hidden mb-3">
-                            <img class="img-fluid" th:src="@{${product.image}}" alt="">
-                        </a>
-                        <h5 class="font-weight-semi-bold m-0" th:text="${product.productName}">Men's dresses</h5>
-                    </div>
+            <div th:each="product : ${product6thList}" class="col-lg-4 col-md-6 pb-1">
+                <div class="cat-item d-flex-product flex-column border mb-4" style="padding: 30px;">
+                    <p class="text-right" th:text="'Còn ' + ${product.quantity} + ' sản phẩm'">15 Products</p>
+                    <a th:href="@{/product/{id}(id=${product.id})}" class="cat-img position-relative overflow-hidden mb-3">
+                        <img class="img-fluid" th:src="@{${product.image}}" alt="">
+                    </a>
+                    <h5 class="font-weight-semi-bold m-0"><a th:href="@{/product/{id}(id=${product.id})}" th:text="${product.productName}" style="color: black">Men's dresses</a></h5>
+
                 </div>
-<!--            </div>-->
-<!--            <div class="col-lg-4 col-md-6 pb-1">-->
-<!--                <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px;">-->
-<!--                    <p class="text-right">15 Products</p>-->
-<!--                    <a href="" class="cat-img position-relative overflow-hidden mb-3">-->
-<!--                        <img class="img-fluid" th:src="@{/image/boot1/cat-2.jpg}" alt="">-->
-<!--                    </a>-->
-<!--                    <h5 class="font-weight-semi-bold m-0">Women's dresses</h5>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="col-lg-4 col-md-6 pb-1">-->
-<!--                <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px;">-->
-<!--                    <p class="text-right">15 Products</p>-->
-<!--                    <a href="" class="cat-img position-relative overflow-hidden mb-3">-->
-<!--                        <img class="img-fluid" th:src="@{/image/boot1/cat-3.jpg}" alt="">-->
-<!--                    </a>-->
-<!--                    <h5 class="font-weight-semi-bold m-0">Baby's dresses</h5>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="col-lg-4 col-md-6 pb-1">-->
-<!--                <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px;">-->
-<!--                    <p class="text-right">15 Products</p>-->
-<!--                    <a href="" class="cat-img position-relative overflow-hidden mb-3">-->
-<!--                        <img class="img-fluid" th:src="@{/image/boot1/cat-4.jpg}" alt="">-->
-<!--                    </a>-->
-<!--                    <h5 class="font-weight-semi-bold m-0">Accerssories</h5>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="col-lg-4 col-md-6 pb-1">-->
-<!--                <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px;">-->
-<!--                    <p class="text-right">15 Products</p>-->
-<!--                    <a href="" class="cat-img position-relative overflow-hidden mb-3">-->
-<!--                        <img class="img-fluid" th:src="@{/image/boot1/cat-5.jpg}" alt="">-->
-<!--                    </a>-->
-<!--                    <h5 class="font-weight-semi-bold m-0">Bags</h5>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="col-lg-4 col-md-6 pb-1">-->
-<!--                <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px;">-->
-<!--                    <p class="text-right">15 Products</p>-->
-<!--                    <a href="" class="cat-img position-relative overflow-hidden mb-3">-->
-<!--                        <img class="img-fluid" th:src="@{/image/boot1/cat-6.jpg}" alt="">-->
-<!--                    </a>-->
-<!--                    <h5 class="font-weight-semi-bold m-0">Shoes</h5>-->
-<!--                </div>-->
-<!--            </div>-->
+            </div>
         </div>
     </div>
     <!-- Categories End -->
@@ -201,7 +181,7 @@
                     <div class="position-relative" style="z-index: 1;">
                         <h5 class="text-uppercase text-primary mb-3">20% off the all order</h5>
                         <h1 class="mb-4 font-weight-semi-bold">Spring Collection</h1>
-                        <a href="" class="btn btn-outline-primary py-md-2 px-md-3">Shop Now</a>
+                        <a th:href="@{/category/all}" class="btn btn-outline-primary py-md-2 px-md-3">Shop Now</a>
                     </div>
                 </div>
             </div>
@@ -211,7 +191,7 @@
                     <div class="position-relative" style="z-index: 1;">
                         <h5 class="text-uppercase text-primary mb-3">20% off the all order</h5>
                         <h1 class="mb-4 font-weight-semi-bold">Winter Collection</h1>
-                        <a href="" class="btn btn-outline-primary py-md-2 px-md-3">Shop Now</a>
+                        <a th:href="@{/category/all}" class="btn btn-outline-primary py-md-2 px-md-3">Shop Now</a>
                     </div>
                 </div>
             </div>
@@ -235,7 +215,7 @@
                         <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
                             <h6 class="text-truncate mb-3" th:text="${product.productName}">Colorful Stylish Shirt</h6>
                             <div class="d-flex justify-content-center">
-                                <h6 th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'COMMA') + 'đ'}">$123.00</h6><h6 class="text-muted ml-2"><del>$123.00</del></h6>
+                                <h6 th:text="${#numbers.formatDecimal(product.price - product.price*product.discount/100, 0, 'COMMA', 0, 'COMMA') + 'đ'}">$123.00</h6><h6 class="text-muted ml-2"><del th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'COMMA') + 'đ'}">$123.00</del></h6>
                             </div>
                         </div>
                         <input type="hidden" th:value="${product.id}" name="productId">
@@ -247,125 +227,6 @@
                     </div>
                 </form>
             </div>
-<!--            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">-->
-<!--                <div class="card product-item border-0 mb-4">-->
-<!--                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">-->
-<!--                        <img class="img-fluid w-100" th:src="@{/image/boot1/product-2.jpg}" alt="">-->
-<!--                    </div>-->
-<!--                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">-->
-<!--                        <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>-->
-<!--                        <div class="d-flex justify-content-center">-->
-<!--                            <h6>$123.00</h6><h6 class="text-muted ml-2"><del>$123.00</del></h6>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="card-footer d-flex justify-content-between bg-light border">-->
-<!--                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>-->
-<!--                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">-->
-<!--                <div class="card product-item border-0 mb-4">-->
-<!--                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">-->
-<!--                        <img class="img-fluid w-100" th:src="@{/image/boot1/product-3.jpg}" alt="">-->
-<!--                    </div>-->
-<!--                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">-->
-<!--                        <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>-->
-<!--                        <div class="d-flex justify-content-center">-->
-<!--                            <h6>$123.00</h6><h6 class="text-muted ml-2"><del>$123.00</del></h6>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="card-footer d-flex justify-content-between bg-light border">-->
-<!--                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>-->
-<!--                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">-->
-<!--                <div class="card product-item border-0 mb-4">-->
-<!--                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">-->
-<!--                        <img class="img-fluid w-100" th:src="@{/image/boot1/product-4.jpg}" alt="">-->
-<!--                    </div>-->
-<!--                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">-->
-<!--                        <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>-->
-<!--                        <div class="d-flex justify-content-center">-->
-<!--                            <h6>$123.00</h6><h6 class="text-muted ml-2"><del>$123.00</del></h6>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="card-footer d-flex justify-content-between bg-light border">-->
-<!--                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>-->
-<!--                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">-->
-<!--                <div class="card product-item border-0 mb-4">-->
-<!--                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">-->
-<!--                        <img class="img-fluid w-100" th:src="@{/image/boot1/product-5.jpg}" alt="">-->
-<!--                    </div>-->
-<!--                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">-->
-<!--                        <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>-->
-<!--                        <div class="d-flex justify-content-center">-->
-<!--                            <h6>$123.00</h6><h6 class="text-muted ml-2"><del>$123.00</del></h6>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="card-footer d-flex justify-content-between bg-light border">-->
-<!--                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>-->
-<!--                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">-->
-<!--                <div class="card product-item border-0 mb-4">-->
-<!--                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">-->
-<!--                        <img class="img-fluid w-100" th:src="@{/image/boot1/product-6.jpg}" alt="">-->
-<!--                    </div>-->
-<!--                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">-->
-<!--                        <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>-->
-<!--                        <div class="d-flex justify-content-center">-->
-<!--                            <h6>$123.00</h6><h6 class="text-muted ml-2"><del>$123.00</del></h6>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="card-footer d-flex justify-content-between bg-light border">-->
-<!--                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>-->
-<!--                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">-->
-<!--                <div class="card product-item border-0 mb-4">-->
-<!--                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">-->
-<!--                        <img class="img-fluid w-100" th:src="@{/image/boot1/product-7.jpg}" alt="">-->
-<!--                    </div>-->
-<!--                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">-->
-<!--                        <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>-->
-<!--                        <div class="d-flex justify-content-center">-->
-<!--                            <h6>$123.00</h6><h6 class="text-muted ml-2"><del>$123.00</del></h6>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="card-footer d-flex justify-content-between bg-light border">-->
-<!--                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>-->
-<!--                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">-->
-<!--                <div class="card product-item border-0 mb-4">-->
-<!--                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">-->
-<!--                        <img class="img-fluid w-100" th:src="@{/image/boot1/product-8.jpg}" alt="">-->
-<!--                    </div>-->
-<!--                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">-->
-<!--                        <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>-->
-<!--                        <div class="d-flex justify-content-center">-->
-<!--                            <h6>$123.00</h6><h6 class="text-muted ml-2"><del>$123.00</del></h6>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="card-footer d-flex justify-content-between bg-light border">-->
-<!--                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>-->
-<!--                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
         </div>
     </div>
     <!-- Products End -->
@@ -394,7 +255,7 @@
 
 
     <!-- Products Start -->
-   <div class="container-fluid pt-5">
+    <div class="container-fluid pt-5">
         <div class="text-center mb-4">
             <h2 class="section-title px-5"><span class="px-2">Discount Product</span></h2>
         </div>
@@ -408,7 +269,7 @@
                         <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
                             <h6 class="text-truncate mb-3" th:text="${product.productName}">Colorful Stylish Shirt</h6>
                             <div class="d-flex justify-content-center">
-                                <h6 th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'COMMA') + 'đ'}">$123.00</h6><h6 class="text-muted ml-2"><del>$123.00</del></h6>
+                                <h6 th:text="${#numbers.formatDecimal(product.price - product.price*product.discount/100, 0, 'COMMA', 0, 'COMMA') + 'đ'}">$123.00</h6><h6 class="text-muted ml-2"><del th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'COMMA') + 'đ'}">$123.00</del></h6>
                             </div>
                         </div>
                         <input type="hidden" th:value="${product.id}" name="productId">
@@ -419,187 +280,28 @@
                         </div>
                     </div>
                 </form>
-<!--                <div class="card product-item border-0 mb-4">-->
-<!--                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">-->
-<!--                        <img class="img-fluid w-100" th:src="@{/image/boot1/product-1.jpg}" alt="">-->
-<!--                    </div>-->
-<!--                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">-->
-<!--                        <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>-->
-<!--                        <div class="d-flex justify-content-center">-->
-<!--                            <h6>$123.00</h6><h6 class="text-muted ml-2"><del>$123.00</del></h6>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="card-footer d-flex justify-content-between bg-light border">-->
-<!--                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>-->
-<!--                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>  -->
-<!--            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">-->
-<!--                <div class="card product-item border-0 mb-4">-->
-<!--                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">-->
-<!--                        <img class="img-fluid w-100" th:src="@{/image/boot1/product-2.jpg}" alt="">-->
-<!--                    </div>-->
-<!--                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">-->
-<!--                        <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>-->
-<!--                        <div class="d-flex justify-content-center">-->
-<!--                            <h6>$123.00</h6><h6 class="text-muted ml-2"><del>$123.00</del></h6>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="card-footer d-flex justify-content-between bg-light border">-->
-<!--                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>-->
-<!--                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">-->
-<!--                <div class="card product-item border-0 mb-4">-->
-<!--                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">-->
-<!--                        <img class="img-fluid w-100" th:src="@{/image/boot1/product-3.jpg}" alt="">-->
-<!--                    </div>-->
-<!--                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">-->
-<!--                        <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>-->
-<!--                        <div class="d-flex justify-content-center">-->
-<!--                            <h6>$123.00</h6><h6 class="text-muted ml-2"><del>$123.00</del></h6>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="card-footer d-flex justify-content-between bg-light border">-->
-<!--                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>-->
-<!--                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">-->
-<!--                <div class="card product-item border-0 mb-4">-->
-<!--                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">-->
-<!--                        <img class="img-fluid w-100" th:src="@{/image/boot1/product-4.jpg}" alt="">-->
-<!--                    </div>-->
-<!--                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">-->
-<!--                        <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>-->
-<!--                        <div class="d-flex justify-content-center">-->
-<!--                            <h6>$123.00</h6><h6 class="text-muted ml-2"><del>$123.00</del></h6>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="card-footer d-flex justify-content-between bg-light border">-->
-<!--                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>-->
-<!--                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">-->
-<!--                <div class="card product-item border-0 mb-4">-->
-<!--                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">-->
-<!--                        <img class="img-fluid w-100" th:src="@{/image/boot1/product-5.jpg}" alt="">-->
-<!--                    </div>-->
-<!--                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">-->
-<!--                        <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>-->
-<!--                        <div class="d-flex justify-content-center">-->
-<!--                            <h6>$123.00</h6><h6 class="text-muted ml-2"><del>$123.00</del></h6>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="card-footer d-flex justify-content-between bg-light border">-->
-<!--                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>-->
-<!--                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">-->
-<!--                <div class="card product-item border-0 mb-4">-->
-<!--                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">-->
-<!--                        <img class="img-fluid w-100" th:src="@{/image/boot1/product-6.jpg}" alt="">-->
-<!--                    </div>-->
-<!--                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">-->
-<!--                        <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>-->
-<!--                        <div class="d-flex justify-content-center">-->
-<!--                            <h6>$123.00</h6><h6 class="text-muted ml-2"><del>$123.00</del></h6>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="card-footer d-flex justify-content-between bg-light border">-->
-<!--                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>-->
-<!--                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">-->
-<!--                <div class="card product-item border-0 mb-4">-->
-<!--                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">-->
-<!--                        <img class="img-fluid w-100" th:src="@{/image/boot1/product-7.jpg}" alt="">-->
-<!--                    </div>-->
-<!--                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">-->
-<!--                        <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>-->
-<!--                        <div class="d-flex justify-content-center">-->
-<!--                            <h6>$123.00</h6><h6 class="text-muted ml-2"><del>$123.00</del></h6>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="card-footer d-flex justify-content-between bg-light border">-->
-<!--                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>-->
-<!--                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">-->
-<!--                <div class="card product-item border-0 mb-4">-->
-<!--                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">-->
-<!--                        <img class="img-fluid w-100" th:src="@{/image/boot1/product-8.jpg}" alt="">-->
-<!--                    </div>-->
-<!--                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">-->
-<!--                        <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>-->
-<!--                        <div class="d-flex justify-content-center">-->
-<!--                            <h6>$123.00</h6><h6 class="text-muted ml-2"><del>$123.00</del></h6>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="card-footer d-flex justify-content-between bg-light border">-->
-<!--                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>-->
-<!--                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
             </div>
         </div>
     </div>
     <!-- Products End -->
 
 
-    <!-- Vendor Start -->
-    <div class="container-fluid py-5">
-        <div class="row px-xl-5">
-            <div class="col">
-                <div class="owl-carousel vendor-carousel">
-                    <div class="vendor-item border p-4">
-                        <img th:src="@{/image/boot1/vendor-1.jpg}" alt="">
-                    </div>
-                    <div class="vendor-item border p-4">
-                        <img th:src="@{/image/boot1/vendor-2.jpg}" alt="">
-                    </div>
-                    <div class="vendor-item border p-4">
-                        <img th:src="@{/image/boot1/vendor-3.jpg}" alt="">
-                    </div>
-                    <div class="vendor-item border p-4">
-                        <img th:src="@{/image/boot1/vendor-4.jpg}" alt="">
-                    </div>
-                    <div class="vendor-item border p-4">
-                        <img th:src="@{/image/boot1/vendor-5.jpg}" alt="">
-                    </div>
-                    <div class="vendor-item border p-4">
-                        <img th:src="@{/image/boot1/vendor-6.jpg}" alt="">
-                    </div>
-                    <div class="vendor-item border p-4">
-                        <img th:src="@{/image/boot1/vendor-7.jpg}" alt="">
-                    </div>
-                    <div class="vendor-item border p-4">
-                        <img th:src="@{/image/boot1/vendor-8.jpg}" alt="">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Vendor End -->
-
     <!-- Back to Top -->
     <a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
 
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script>
+        function toggleNav() {
+            let nav = document.getElementById("navbar-vertical");
+            nav.classList.toggle("show");
+        }
+
+        function toggleNavCollapse() {
+            let nav = document.getElementById("navbarCollapse");
+            nav.classList.toggle("show");
+        }
+    </script>
 </div>
 
 

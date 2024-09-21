@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -87,10 +88,12 @@ public class UserController {
         List<Order> orderList;
         try {
             orderList = orderService.getOrderByUserId(user.getId());
+            Collections.reverse(orderList);
         } catch (Exception e){
             orderList = new ArrayList<>();
         }
         List<OrderStatus> orderStatusList = returnListOrderStatus();
+
         model.addAttribute("orderList", orderList);
         model.addAttribute("orderStatusList", orderStatusList);
         return "user/boot1/user-billing";

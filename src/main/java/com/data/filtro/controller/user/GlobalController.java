@@ -33,7 +33,7 @@ public class GlobalController {
 
     @ModelAttribute("categories")
     public List<Category> getCategories() {
-        List<Category> categories = categoryService.get5Categories();
+        List<Category> categories = categoryService.getAll();
         return categories;
     }
 
