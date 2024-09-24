@@ -11,13 +11,13 @@ import org.springframework.context.ApplicationContext;
 @SpringBootApplication
 public class FiltroApplication {
 
-    @Autowired
-    private TwilioConfig twilioConfig;
-
-    @PostConstruct
-    public void setup() {
-        Twilio.init(twilioConfig.getAccountSid(), twilioConfig.getAuthToken());
-    }
+//    @Autowired
+//    private TwilioConfig twilioConfig;
+//
+//    @PostConstruct
+//    public void setup() {
+//        Twilio.init(twilioConfig.getAccountSid(), twilioConfig.getAuthToken());
+//    }
     public static void main(String[] args) {
         ApplicationContext context = SpringApplication.run(FiltroApplication.class, args);
     }

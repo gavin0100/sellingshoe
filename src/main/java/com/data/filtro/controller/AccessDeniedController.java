@@ -21,9 +21,7 @@ public class AccessDeniedController {
         model.addAttribute("message2", "không tồn tại");
         model.addAttribute("HTTPstatus", "404");
         model.addAttribute("contentStatus", "Not Found");
+        model.addAttribute("errorNotFound", "404");
         return "error/accessDenied";
     }
-
-
-
 }

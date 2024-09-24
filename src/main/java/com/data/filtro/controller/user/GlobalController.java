@@ -2,9 +2,10 @@ package com.data.filtro.controller.user;
 
 import com.data.filtro.model.*;
 import com.data.filtro.service.*;
-import jakarta.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,21 +16,24 @@ import java.util.List;
 @RequestMapping({"/", "/product", "/category", "/search"})
 public class GlobalController {
 
-    @Autowired
-    ProductService productService;
-    @Lazy
-    @Autowired
-    CategoryService categoryService;
+    private final ProductService productService;
 
-    @Lazy
-    @Autowired
-    MaterialService flavorService;
+    private final CategoryService categoryService;
 
-    @Autowired
-    UserService userService;
+    private final MaterialService flavorService;
 
-    @Autowired
-    CartService cartService;
+    private final UserService userService;
+
+    private final CartService cartService;
+
+    public GlobalController(ProductService productService, @Lazy CategoryService categoryService, @Lazy MaterialService flavorService, UserService userService, CartService cartService) {
+        this.productService = productService;
+        this.categoryService = categoryService;
+        this.flavorService = flavorService;
+        this.userService = userService;
+        this.cartService = cartService;
+    }
+
 
     @ModelAttribute("categories")
     public List<Category> getCategories() {
@@ -50,18 +54,18 @@ public class GlobalController {
     }
 
     @ModelAttribute("cartItemList")
-    public List<CartItem> cartItemList(HttpSession session) {
-        User user = (User) session.getAttribute("user");
-        GuestCart guestCart = (GuestCart) session.getAttribute("guestCart");
+    public List<CartItem> cartItemList() {
+        User user = null;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken)) {
+            user = (User) authentication.getPrincipal();
+        }
         if (user != null) {
             Cart cart = cartService.getCurrentCartByUserId(user.getId());
             if (cart != null) {
                 List<CartItem> cartItemList = cart.getCartItemList();
                 return cartItemList;
             }
-        } else if (guestCart != null) {
-            List<CartItem> cartItemList = guestCart.getCartItemList();
-            return cartItemList;
         }
         return null;
     }

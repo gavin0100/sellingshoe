@@ -1,4 +1,4 @@
-package com.data.filtro.config;
+package com.data.filtro.authentication;
 
 import com.data.filtro.service.UserService;
 import lombok.RequiredArgsConstructor;

@@ -6,13 +6,13 @@
   <link rel="stylesheet" href="/css/accessDenied.css" th:href="@{/css/accessDenied.css}"/>
 </head>
 <body>
-  <div style="text-align: center">
-    <a th:href="@{/}" style="border: 1px solid black;padding: 5px;background-color: white;color: #bb2d46;">
-      Trở về trang chủ
+<div style="text-align: center">
+  <a th:href="@{/}" style="border: 1px solid black;padding: 5px;background-color: white;color: #bb2d46;">
+    Trở về trang chủ
 
-    </a>
-  </div>
-  <svg version="1.1" xmlns:th="http://www.thymeleaf.org" x="0px" y="0px"
+  </a>
+</div>
+<svg version="1.1" xmlns:th="http://www.thymeleaf.org" x="0px" y="0px"
      viewBox="0 0 306.8 410.9" style="enable-background:new 0 0 306.8 410.9;" xml:space="preserve">
 
 
@@ -1427,7 +1427,7 @@
       <tspan x="85" y="292" th:text="${message2}"></tspan>
       <tspan x="100" y="357" fill="#000" font-size="65" th:text="${HTTPstatus}"></tspan>
       <tspan x="107" y="381.2" fill="#000" font-size="15" th:text="${contentStatus}"></tspan>
-      <tspan x="130" y="400.2" fill="#000" font-size="15" style="border: 1px solid black;padding: 5px;background-color: white;color: #bb2d46;">
+      <tspan x="130" y="400.2" fill="#000" font-size="15" style="border: 1px solid black;padding: 5px;background-color: white;color: #bb2d46;" th:if="${errorNotFound == null}">
         <a th:href="@{/logout_to_login/fromErrorPage}">
           Login
         </a>
@@ -1435,11 +1435,11 @@
     </text>
 
 
-<!--    <text x="15" y="255" fill="#6BA184" font-family="Viga" font-size="25">Bạn không có quyền truy cập-->
-<!--      <tspan x="35" y="290" >vào trang này đâu!</tspan>-->
-<!--      <tspan x="100" y="355" fill="#BF3E73" font-size="65">403</tspan>-->
-<!--      <tspan x="93" y="380" fill="#6BA184" font-size="15">Access Forbidden.</tspan>-->
-<!--    </text>-->
+    <!--    <text x="15" y="255" fill="#6BA184" font-family="Viga" font-size="25">Bạn không có quyền truy cập-->
+    <!--      <tspan x="35" y="290" >vào trang này đâu!</tspan>-->
+    <!--      <tspan x="100" y="355" fill="#BF3E73" font-size="65">403</tspan>-->
+    <!--      <tspan x="93" y="380" fill="#6BA184" font-size="15">Access Forbidden.</tspan>-->
+    <!--    </text>-->
   </g>
   </g>
   </g>

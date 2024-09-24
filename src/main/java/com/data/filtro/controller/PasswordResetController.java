@@ -6,7 +6,6 @@ import com.data.filtro.model.User;
 import com.data.filtro.service.MailSenderService;
 import com.data.filtro.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,14 +17,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class PasswordResetController {
     public static int statusAPIResetPassword;
 
-    @Autowired
-    MailSenderService mailSenderService;
+    private final MailSenderService mailSenderService;
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private JavaMailSender mailSender;
+    private final JavaMailSender mailSender;
+
+    public PasswordResetController(MailSenderService mailSenderService, UserService userService, JavaMailSender mailSender) {
+        this.mailSenderService = mailSenderService;
+        this.userService = userService;
+        this.mailSender = mailSender;
+    }
 
     @GetMapping("/forgot-password")
     public String showForgotPassword() {
@@ -53,11 +55,16 @@ public class PasswordResetController {
             String subject = "SHOP BÁN GIÀY FOUR LEAVES SHOE - ĐẶT LẠI MẬT KHẨU CHO TÀI KHOẢN!";
             String newPassword = Utility.getRandomString();
             User user = userService.getUserByEmail(email);
+            if (user == null){
+                throw new UserNotFoundException("Email chưa đăng ký tài khoản!");
+            }
             userService.updatePassword(user, newPassword);
             mailSenderService.sendEmailGetPassword(to, from, host, subject, newPassword );
             model.addAttribute("successMessage", "Mật khẩu mới đã được gửi tới email của bạn.!");
         } catch (UserNotFoundException ex) {
             model.addAttribute("message", ex.getMessage());
+        } catch (Exception ex) {
+            model.addAttribute("message", "Không thể gửi mail!");
         }
         return "user/boot1/forgotPassword";
     }

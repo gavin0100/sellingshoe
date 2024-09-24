@@ -9,15 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/admin")
 public class DashboardController {
 
-//    @GetMapping
-//    public String show(HttpSession session) {
-//        User admin = (User) session.getAttribute("admin");
-//        if (admin == null) {
-//            return "redirect:/admin/login";
-//        }
-//
-//        return "redirect:/admin/dashboard";
-//    }
 
 
     @GetMapping({"/dashboard", ""})

@@ -2,8 +2,6 @@ package com.data.filtro.controller.admin;
 
 import com.data.filtro.model.UserPermission;
 import com.data.filtro.service.UserPermissionService;
-import jakarta.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,15 +17,18 @@ import java.util.List;
 @RequestMapping("/admin/user-permission")
 public class UserPermissionCRUDController {
 
-    @Autowired
-    UserPermissionService userPermissionService;
+    private final UserPermissionService userPermissionService;
 
     private String errorMessage = "";
     private String message="";
 
+    public UserPermissionCRUDController(UserPermissionService userPermissionService) {
+        this.userPermissionService = userPermissionService;
+    }
+
     @GetMapping()
     @PreAuthorize("hasAnyRole('ADMIN')")
-    public String show( Model model, HttpSession session) {
+    public String show( Model model) {
         if (!errorMessage.equals("")){
             model.addAttribute("errorMessage", errorMessage);
             errorMessage="";

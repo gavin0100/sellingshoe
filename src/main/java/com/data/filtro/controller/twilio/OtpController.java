@@ -1,13 +1,5 @@
 package com.data.filtro.controller.twilio;
 
-import com.data.filtro.model.DTO.OtpRequest;
-import com.data.filtro.model.DTO.OtpResponseDto;
-import com.data.filtro.model.DTO.OtpValidationRequest;
-import com.data.filtro.service.SmsService;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
 //@RestController
 //@RequestMapping("/otp")
 //@Slf4j

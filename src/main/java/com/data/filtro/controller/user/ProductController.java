@@ -1,6 +1,5 @@
 package com.data.filtro.controller.user;
 
-import com.data.filtro.Util.JsonConverter;
 import com.data.filtro.model.Feedback;
 import com.data.filtro.model.Product;
 import com.data.filtro.model.User;
@@ -9,8 +8,9 @@ import com.data.filtro.service.InputService;
 import com.data.filtro.service.ProductService;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.Hibernate;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -23,27 +23,36 @@ import java.util.UUID;
 @Slf4j
 public class ProductController {
 
-    @Autowired
-    ProductService productService;
+    private final ProductService productService;
 
-    @Autowired
-    FeedbackService feedbackService;
+    private final FeedbackService feedbackService;
 
-    @Autowired
-    InputService inputService;
+    private final InputService inputService;
 
     private final String PREFIX_DETAILED_PRODUCT = "detailed_product:";
 
     private String errorMessage;
     private String csrfToken;
 
+    public ProductController(ProductService productService, FeedbackService feedbackService, InputService inputService) {
+        this.productService = productService;
+        this.feedbackService = feedbackService;
+        this.inputService = inputService;
+    }
+
     @GetMapping
     public String product() {
-        return "user/boot1/shop";
+        return "redirect:/category/all";
     }
 
     @GetMapping("/{id}")
     public String product(@PathVariable Integer id, Model model) {
+        User user = null;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken)) {
+            user = (User) authentication.getPrincipal();
+        }
+        model.addAttribute("user", user);
         String _csrfToken = generateRandomString();
         csrfToken = _csrfToken;
         model.addAttribute("_csrfToken", _csrfToken);
@@ -73,7 +82,7 @@ public class ProductController {
     }
 
     @PostMapping("/{id}/feedback")
-    public String feedback(@RequestParam String content, @RequestParam("numberOfStars") int numberOfStars, @RequestParam("_csrfParameterName") String csrfTokenForm, @PathVariable Integer id, HttpSession session, Model model) {
+    public String feedback(@RequestParam String content, @RequestParam("numberOfStars") int numberOfStars, @RequestParam("_csrfParameterName") String csrfTokenForm, @PathVariable Integer id, Model model) {
         if (!csrfTokenForm.equals(csrfToken)) {
             String message = "Incorrect Anti-CSRF token code!";
             errorMessage = message;
@@ -90,7 +99,12 @@ public class ProductController {
         feedback.setContent(content);
         feedback.setUser(null);
         feedback.setStars(numberOfStars);
-        User user = (User) session.getAttribute("user");
+        User user = null;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken)) {
+            user = (User) authentication.getPrincipal();
+        }
+        model.addAttribute("user", user);
         feedback.setUser(user);
         feedback.setProduct(productService.getProductById(id));
         feedbackService.addFeedback(feedback);

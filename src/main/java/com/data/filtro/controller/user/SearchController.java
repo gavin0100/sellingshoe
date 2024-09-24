@@ -3,14 +3,17 @@ package com.data.filtro.controller.user;
 import com.data.filtro.model.Category;
 import com.data.filtro.model.Material;
 import com.data.filtro.model.Product;
+import com.data.filtro.model.User;
 import com.data.filtro.service.CategoryService;
 import com.data.filtro.service.MaterialService;
 import com.data.filtro.service.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,14 +29,17 @@ import java.util.Optional;
 public class SearchController {
 
 
-    @Autowired
-    ProductService productService;
+    private final ProductService productService;
 
-    @Autowired
-    CategoryService categoryService;
+    private final CategoryService categoryService;
 
-    @Autowired
-    MaterialService materialService;
+    private final MaterialService materialService;
+
+    public SearchController(ProductService productService, CategoryService categoryService, MaterialService materialService) {
+        this.productService = productService;
+        this.categoryService = categoryService;
+        this.materialService = materialService;
+    }
 
 
     @ModelAttribute(name = "discountProducts")
@@ -47,6 +53,12 @@ public class SearchController {
                                  @RequestParam(defaultValue = "best_selling") String sortType,
                                  @RequestParam(name = "page") Optional<Integer> page,
                                  Model model) {
+        User user = null;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken)) {
+            user = (User) authentication.getPrincipal();
+        }
+        model.addAttribute("user", user);
 
         int currentPage = page.orElse(1);
         int pageSize = 6;
@@ -86,7 +98,7 @@ public class SearchController {
         String currentIdAll = "";
         currentIdAll = "all";
         int dataLowPrice = 0;
-        int dataHighPrice = 1000;
+        int dataHighPrice = 10000000;
         int dataMaterialId = 0;
         int dataCurrentPage = 1;
 
@@ -104,7 +116,7 @@ public class SearchController {
         model.addAttribute("dataHighPrice", dataHighPrice);
         model.addAttribute("dataMaterialId", dataMaterialId);
         model.addAttribute("currentPage", dataCurrentPage);
-        return "user/boot1/search";
+        return "user/boot1/shop";
     }
 
 }

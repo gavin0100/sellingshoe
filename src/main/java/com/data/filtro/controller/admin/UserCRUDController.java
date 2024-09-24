@@ -4,8 +4,6 @@ import com.data.filtro.model.DTO.UserDTO;
 import com.data.filtro.model.User;
 import com.data.filtro.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -34,8 +32,11 @@ import java.util.Optional;
 @RequestMapping("/admin/user")
 public class UserCRUDController {
 
-    @Autowired
-    UserService userService;
+    private final UserService userService;
+
+    public UserCRUDController(UserService userService) {
+        this.userService = userService;
+    }
 
 
     public Pageable sortUser(int currentPage, int pageSize, int sortType) {
@@ -45,7 +46,7 @@ public class UserCRUDController {
             case 10:
             case 25:
             case 50:
-                pageable = PageRequest.of(currentPage - 1, pageSize, Sort.by("name"));
+                pageable = PageRequest.of(currentPage - 1, pageSize, Sort.by("name").descending());
                 break;
             default:
                 pageSize = 5;
@@ -59,7 +60,7 @@ public class UserCRUDController {
 
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'WAREHOUSE_STAFF', 'ACCOUNTING_STAFF') and hasAnyAuthority('FULL_ACCESS_USER', 'VIEW_USER')")
-    public String show(@RequestParam(defaultValue = "5") int sortType, @RequestParam("currentPage") Optional<Integer> page, Model model, HttpSession session) {
+    public String show(@RequestParam(defaultValue = "5") int sortType, @RequestParam("currentPage") Optional<Integer> page, Model model) {
         if (!errorMessage.equals("")){
             model.addAttribute("errorMessage", errorMessage);
             errorMessage="";
@@ -86,7 +87,7 @@ public class UserCRUDController {
 
     @GetMapping("/export")
     @PreAuthorize("hasAnyRole('ADMIN', 'WAREHOUSE_STAFF', 'ACCOUNTING_STAFF') and hasAnyAuthority('FULL_ACCESS_USER', 'VIEW_USER')")
-    public void exportFileCSV(HttpServletResponse response, Model model, HttpSession session) throws IOException {
+    public void exportFileCSV(HttpServletResponse response, Model model) throws IOException {
         response.setContentType("text/csv; charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
 
@@ -122,9 +123,13 @@ public class UserCRUDController {
                 new org.supercsv.cellprocessor.Optional(new FmtDate("yyyy-MM-dd"))
         };
 
-        for (User user : listUsers) {
-            csvWriter.write(user, nameMapping, processors);
-        }
+        listUsers.stream().forEach(user -> {
+            try {
+                csvWriter.write(user, nameMapping, processors);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
 
         writer.flush(); // Flush the writer to ensure all data is written to the stream
         csvWriter.close(); // Close the csvWriter

@@ -7,9 +7,10 @@ import com.data.filtro.model.payment.vnpay.VNPResponse;
 import com.data.filtro.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -22,35 +23,43 @@ import java.util.List;
 @RequestMapping("/order")
 public class OrderController {
 
-    @Autowired
-    OrderService orderService;
+    private final OrderService orderService;
 
-    @Autowired
-    CartItemService cartItemService;
+    private final CartItemService cartItemService;
 
-    @Autowired
-    CartService cartService;
+    private final CartService cartService;
 
-    @Autowired
-    PaymentMethodService paymentMethodService;
+    private final PaymentMethodService paymentMethodService;
 
-    @Autowired
-    MomoService momoService;
-    @Autowired
-    VNPayService vnpayService;
+    private final MomoService momoService;
+    private final VNPayService vnpayService;
 
-    @Autowired
-    MailSenderService mailSender;
+    private final MailSenderService mailSender;
+
+    public OrderController(OrderService orderService, CartItemService cartItemService, CartService cartService, PaymentMethodService paymentMethodService, MomoService momoService, VNPayService vnpayService, MailSenderService mailSender) {
+        this.orderService = orderService;
+        this.cartItemService = cartItemService;
+        this.cartService = cartService;
+        this.paymentMethodService = paymentMethodService;
+        this.momoService = momoService;
+        this.vnpayService = vnpayService;
+        this.mailSender = mailSender;
+    }
 
     @GetMapping
     @PreAuthorize("hasAnyAuthority('FULL_ACCESS_PLACE_ORDER')")
-    public String show(HttpSession session, Model model) {
-        User user = (User) session.getAttribute("user");
+    public String show(Model model) {
+        User user = null;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken)) {
+            user = (User) authentication.getPrincipal();
+        }
         if (user != null) {
             Cart cart = cartService.getCurrentCartByUserId(user.getId());
             if (cart != null) {
                 List<CartItem> cartItemList = cart.getCartItemList();
                 if (user.getAddress() != null && user.getCity() != null && user.getZip() != null && user.getPhoneNumber() != null) {
+                    model.addAttribute("user", user);
                     model.addAttribute("address", user.getAddress());
                     model.addAttribute("city", user.getCity());
                     model.addAttribute("zip", user.getZip());
@@ -74,12 +83,15 @@ public class OrderController {
             @RequestParam("city") String city,
             @RequestParam("zip") Integer zip,
             @RequestParam("paymentMethod") String paymentMethod,
-            HttpSession session,
             HttpServletRequest request,
             Model model
     ) {
 
-        User user = (User) session.getAttribute("user");
+        User user = null;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken)) {
+            user = (User) authentication.getPrincipal();
+        }
         if (user == null) {
             throw new RuntimeException("Please login before checkout");
         }
@@ -118,14 +130,16 @@ public class OrderController {
             @RequestParam("city") String city,
             @RequestParam("zip") Integer zip,
             @RequestParam("paymentMethod") String paymentMethod,
-            HttpSession session,
             HttpServletRequest request,
             HttpServletResponse response,
             Model model,
             RedirectAttributes redirectAttributes
     ) throws IOException {
-        System.out.println("truy cap order controller momo");
-        User user = (User) session.getAttribute("user");
+        User user = null;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken)) {
+            user = (User) authentication.getPrincipal();
+        }
         if (user == null) {
             throw new RuntimeException("Please login before checkout");
         }
@@ -135,8 +149,8 @@ public class OrderController {
         paymentMethod1 = com.data.filtro.model.payment.PaymentMethod.MOMO;
         Order order = orderService.placeOrder(user, phone, email, address, city, zip, paymentMethod1, cartItemList);
         int orderId = order.getId();
-        String url = "";
         MomoResponse momoResponse = placeMomoOrder(orderId);
+        System.out.println("momoResponse.getPayUrl(): " + momoResponse.getPayUrl());
         response.sendRedirect(momoResponse.getPayUrl());
     }
 
@@ -149,13 +163,16 @@ public class OrderController {
             @RequestParam("city") String city,
             @RequestParam("zip") Integer zip,
             @RequestParam("paymentMethod") String paymentMethod,
-            HttpSession session,
             HttpServletRequest request,
             HttpServletResponse response,
             Model model,
             RedirectAttributes redirectAttributes
     ) throws IOException {
-        User user = (User) session.getAttribute("user");
+        User user = null;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken)) {
+            user = (User) authentication.getPrincipal();
+        }
         if (user == null) {
             throw new RuntimeException("Please login before checkout");
         }
@@ -167,6 +184,7 @@ public class OrderController {
         int orderId = order.getId();
         String url = "";
         VNPResponse vnpResponse = placeVNPayOrder(orderId, request);
+
         response.sendRedirect(vnpResponse.getPaymentUrl());
 
     }
@@ -192,8 +210,12 @@ public class OrderController {
     }
 
     @ModelAttribute("sum")
-    public int sumOfProducts(HttpSession session) {
-        User user = (User) session.getAttribute("user");
+    public int sumOfProducts() {
+        User user = null;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken)) {
+            user = (User) authentication.getPrincipal();
+        }
         if (user != null) {
             Cart cart = cartService.getCurrentCartByUserId(user.getId());
             if (cart != null) {

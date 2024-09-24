@@ -1,8 +1,12 @@
 package com.data.filtro.controller;
 
+import com.data.filtro.model.Role;
+import com.data.filtro.model.User;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,15 +19,18 @@ import javax.servlet.http.HttpServletRequest;
 public class LogoutController {
     @GetMapping
     public String logout(HttpSession session, HttpServletRequest request, HttpServletResponse response) {
-        System.out.println("vao logout");
+        User user = null;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken)) {
+            user = (User) authentication.getPrincipal();
+        }
         String sessionAccount = "";
-        if (session.getAttribute("user") != null){
+        if (user.getUserPermission().getRole() == Role.USER){
             sessionAccount = "user";
         }
-        if (session.getAttribute("admin") != null){
+        if (user.getUserPermission().getRole() == Role.USER){
             sessionAccount = "admin";
         }
-        System.out.println(sessionAccount);
         session.invalidate();
         // Clear the security context
         SecurityContextHolder.clearContext();

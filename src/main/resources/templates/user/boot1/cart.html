@@ -50,7 +50,7 @@
                     <i class="fa fa-angle-down text-dark"></i>
                 </a>
                 <nav class="collapse navbar navbar-vertical navbar-light align-items-start p-0 border border-top-0 border-bottom-0" id="navbar-vertical">
-                    <div style="height: 410px" class="w-100">
+                    <div style="height: auto" class="w-100">
                         <div class="navbar-nav w-100 overflow-hidden" th:each="category, item : ${categories}">
                             <a class="nav-item nav-link" th:href="@{/category/{id}(id=${category.id})}" th:text="${category.categoryName}">Action</a>
                         </div>
@@ -69,13 +69,13 @@
                         <div class="navbar-nav mr-auto py-0">
                             <a th:href="@{/}" class="nav-item nav-link">Home</a>
                             <a th:href="@{/category/{id}(id='all')}" class="nav-item nav-link ">Shop</a>
-                            <a th:if="${session.containsKey('user') && session.user != null}" th:href="@{/user/profile}" class="nav-item nav-link">Account</a>
+                            <a th:if="${userSession != null}" th:href="@{/user/profile}" class="nav-item nav-link">Account</a>
                             <a th:href="@{/contact}" class="nav-item nav-link active">Contact</a>
                         </div>
                         <div class="navbar-nav ml-auto py-0">
-                            <a th:if="${session.containsKey('user') && session.user == null}" th:href="@{/login}" class="nav-item nav-link">Login</a>
-                            <a th:if="${session.containsKey('user') && session.user == null}" th:href="@{/register}" class="nav-item nav-link">Register</a>
-                            <a th:if="${session.containsKey('user') && session.user != null}" th:href="@{/logout}" class="nav-item nav-link">Logout</a>
+                            <a th:if="${userSession == null}" th:href="@{/login}" class="nav-item nav-link">Login</a>
+                            <a th:if="${userSession == null}" th:href="@{/register}" class="nav-item nav-link">Register</a>
+                            <a th:if="${userSession != null}" th:href="@{/logout}" class="nav-item nav-link">Logout</a>
                         </div>
                     </div>
                 </nav>
@@ -102,7 +102,11 @@
 
     <!-- Cart Start -->
     <div class="container-fluid pt-5">
-        <div class="row px-xl-5">
+        <div class="text-center" th:if="${userSession == null}">
+            <a th:href="@{/login}" th:text="${message}" style="border: 1px solid black; padding: 5px; background-color: white;">
+            </a>
+        </div>
+        <div class="row px-xl-5" th:if="${userSession != null}">
             <div class="col-lg-8 table-responsive mb-5">
                 <table class="table table-bordered text-center mb-0">
                     <thead class="bg-secondary text-dark">
@@ -164,10 +168,10 @@
                             <h5 class="font-weight-bold" id="totalPriceCart">$160</h5>
                         </div>
                         <a th:href="@{/category/all}" class="btn btn-block btn-primary my-3 py-3">Continue Shopping</a>
-                        <th:block th:if="${session.user == null}">
+                        <th:block th:if="${userSession == null}">
                             <a th:href="@{/login}" class="btn btn-block btn-primary my-3 py-3">Login to Checkout</a>
                         </th:block>
-                        <th:block th:if="${session.user != null}">
+                        <th:block th:if="${userSession != null}">
                             <a onclick="submitUpdateCartForm()" class="btn btn-block btn-primary my-3 py-3">Proceed To Checkout</a>
                         </th:block>
                     </div>

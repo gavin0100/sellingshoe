@@ -6,7 +6,6 @@ import com.data.filtro.model.Product;
 import com.data.filtro.service.CategoryService;
 import com.data.filtro.service.MaterialService;
 import com.data.filtro.service.ProductService;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -43,7 +41,7 @@ public class ProductCURDController {
     public Pageable sortProduct(int currentPage, int pageSize, int sortType) {
         Pageable pageable;
         switch (sortType) {
-            case 5, 10, 25, 50 -> pageable = PageRequest.of(currentPage - 1, pageSize, Sort.by("id"));
+            case 5, 10, 25, 50 -> pageable = PageRequest.of(currentPage - 1, pageSize, Sort.by("id").descending());
             default -> {
                 pageSize = 5;
                 pageable = PageRequest.of(currentPage - 1, pageSize);
@@ -54,7 +52,7 @@ public class ProductCURDController {
 
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'WAREHOUSE_STAFF', 'ACCOUNTING_STAFF') and hasAnyAuthority('FULL_ACCESS_PRODUCT', 'VIEW_PRODUCT')")
-    public String show(@RequestParam(defaultValue = "5") int sortType, @RequestParam("currentPage") Optional<Integer> page, Model model, HttpSession session) {
+    public String show(@RequestParam(defaultValue = "5") int sortType, @RequestParam("currentPage") Optional<Integer> page, Model model) {
         if (!errorMessage.equals("")){
             model.addAttribute("errorMessage", errorMessage);
             errorMessage="";

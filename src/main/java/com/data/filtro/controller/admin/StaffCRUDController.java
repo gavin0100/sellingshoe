@@ -4,8 +4,6 @@ import com.data.filtro.model.Staff;
 import com.data.filtro.model.User;
 import com.data.filtro.service.StaffService;
 import com.data.filtro.service.UserService;
-import jakarta.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,17 +21,20 @@ import java.util.Optional;
 @RequestMapping("/admin/staff")
 public class StaffCRUDController {
 
-    @Autowired
-    StaffService staffService;
+    private final StaffService staffService;
 
-    @Autowired
-    UserService userService;
+    private final UserService userService;
+
+    public StaffCRUDController(StaffService staffService, UserService userService) {
+        this.staffService = staffService;
+        this.userService = userService;
+    }
 
 
     public Pageable sortStaff(int currentPage, int pageSize, int sortType) {
         Pageable pageable;
         switch (sortType) {
-            case 5, 10, 25, 50 -> pageable = PageRequest.of(currentPage - 1, pageSize, Sort.by("id"));
+            case 5, 10, 25, 50 -> pageable = PageRequest.of(currentPage - 1, pageSize, Sort.by("id").descending());
             default -> {
                 pageSize = 5;
                 pageable = PageRequest.of(currentPage - 1, pageSize);
@@ -47,7 +48,7 @@ public class StaffCRUDController {
 
     @GetMapping()
     @PreAuthorize("hasAnyRole('ADMIN', 'WAREHOUSE_STAFF', 'ACCOUNTING_STAFF') and hasAnyAuthority('FULL_ACCESS_STAFF', 'VIEW_STAFF')")
-    public String show(@RequestParam(defaultValue = "5") int sortType, @RequestParam("currentPage") Optional<Integer> page, Model model, HttpSession session) {
+    public String show(@RequestParam(defaultValue = "5") int sortType, @RequestParam("currentPage") Optional<Integer> page, Model model) {
         if (!errorMessage.equals("")){
             model.addAttribute("errorMessage", errorMessage);
             errorMessage="";

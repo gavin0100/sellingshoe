@@ -1,4 +1,4 @@
-package com.data.filtro.config;
+package com.data.filtro.authentication.exception;
 
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -9,7 +9,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
 

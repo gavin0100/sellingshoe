@@ -1,30 +1,24 @@
-package com.data.filtro.config;
+package com.data.filtro.authentication;
 
-import com.data.filtro.handler.FilterExceptionHandler;
-import jakarta.servlet.http.HttpServletResponse;
+import com.data.filtro.authentication.exception.CustomAccessDeniedHandler;
+import com.data.filtro.authentication.exception.CustomAuthenticationFailureHandler;
+import com.data.filtro.authentication.exception.CustomAuthenticationSuccessHandler;
+import com.data.filtro.authentication.exception.CustomErrorHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.annotation.web.configurers.ExceptionHandlingConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.FilterChainProxy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.security.web.access.ExceptionTranslationFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
-import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 
@@ -83,7 +77,9 @@ public class SecurityConfig{
                                         "/logout_to_login/**",
                                         "/user/billing/reset_login",
                                         "/session",
-                                        "/favicon.ico"
+                                        "/favicon.ico",
+                                        "/search",
+                                        "/404"
 
                                 ).permitAll()
                                 .requestMatchers("/css/**", "/js/**", "/image/**", "/javascript/**", "/access-denied", "/img/**", "/product/img/**").permitAll()

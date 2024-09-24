@@ -1,5 +1,6 @@
-package com.data.filtro.config;
+package com.data.filtro.authentication;
 
+import com.data.filtro.authentication.exception.JwtNullOrEmptyException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
@@ -18,16 +19,10 @@ public class CustomExceptionFilter extends GenericFilterBean {
             filterChain.doFilter(servletRequest, servletResponse);
         }
         catch (AccessDeniedException accessDeniedException){
-            System.out.println("AccessDeniedException trong CustomExceptionFilter  được gọi");
             ((HttpServletResponse) servletResponse).sendRedirect("/");
         } catch(JwtNullOrEmptyException jwtNullOrEmptyException){
-            System.out.println("bat JwtNullOrEmptyException trong CustomExceptionFilter");
             ((HttpServletResponse) servletResponse).sendRedirect("/logout_to_login/fromJwtEmptyOrNullException");
-        }
-        // chỗ này bắt luôn AccessDeniedException
-        catch (RuntimeException ex) {
-            // Handle your custom exception here
-            System.out.println("bat RuntimeException trong CustomExceptionFilter");
+        } catch (RuntimeException ex) {
             ((HttpServletResponse) servletResponse).sendRedirect("/logout_to_login/fromJwtEmptyOrNullException");
         }
     }

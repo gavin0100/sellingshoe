@@ -3,8 +3,6 @@ package com.data.filtro.controller.admin;
 import com.data.filtro.model.Order;
 import com.data.filtro.model.payment.OrderStatus;
 import com.data.filtro.service.OrderService;
-import jakarta.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,11 +20,15 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/admin/order")
 public class OrderCRUDController {
-    @Autowired
-    OrderService orderService;
+
+    private final OrderService orderService;
 
     private String errorMessage = "";
     private String message="";
+
+    public OrderCRUDController(OrderService orderService) {
+        this.orderService = orderService;
+    }
 
     public Pageable sortOrder(int currentPage, int pageSize, int sortType) {
         Pageable pageable;
@@ -42,7 +44,7 @@ public class OrderCRUDController {
 
     @GetMapping()
     @PreAuthorize("hasAnyRole('ADMIN', 'WAREHOUSE_STAFF', 'ACCOUNTING_STAFF') and hasAnyAuthority('FULL_ACCESS_ORDER', 'VIEW_ORDER')")
-    public String show(@RequestParam(defaultValue = "5") int sortType, @RequestParam("currentPage") Optional<Integer> page, Model model, HttpSession session) {
+    public String show(@RequestParam(defaultValue = "5") int sortType, @RequestParam("currentPage") Optional<Integer> page, Model model) {
         if (!errorMessage.equals("")){
             model.addAttribute("errorMessage", errorMessage);
             errorMessage="";

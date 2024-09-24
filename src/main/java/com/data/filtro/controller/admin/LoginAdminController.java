@@ -2,12 +2,15 @@ package com.data.filtro.controller.admin;
 
 import com.data.filtro.exception.AuthenticationAccountException;
 import com.data.filtro.model.AuthenticateResponse;
+import com.data.filtro.model.Role;
+import com.data.filtro.model.User;
 import com.data.filtro.service.AuthenticationService;
 import com.data.filtro.service.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,15 +22,23 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("/admin/login")
 public class LoginAdminController {
 
-    @Autowired
-    UserService userService;
-    @Autowired
-    private AuthenticationService authenticationService;
+    private final UserService userService;
+    private final AuthenticationService authenticationService;
+
+    public LoginAdminController(UserService userService, AuthenticationService authenticationService) {
+        this.userService = userService;
+        this.authenticationService = authenticationService;
+    }
 
     @GetMapping
-    public String show(HttpSession session) {
-        if (session.getAttribute("admin") != null){
-            return "redirect:/admin/dashboard";
+    public String show() {
+        User user = null;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken)) {
+            user = (User) authentication.getPrincipal();
+            if (user.getUserPermission().getRole() == Role.ADMIN){
+                return "redirect:/admin/dashboard";
+            }
         }
         return "admin/boot1/login";
     }
@@ -36,12 +47,10 @@ public class LoginAdminController {
     public String login(@RequestParam("accountName") String accountName,
                         @RequestParam("password") String password,
                         HttpServletResponse response,
-                        HttpSession session,
                         Model model) {
 
         try {
-            AuthenticateResponse authenticateResponse = authenticationService.authenticate(accountName, password, session);
-            session.setAttribute("admin", authenticateResponse.getUser());
+            AuthenticateResponse authenticateResponse = authenticationService.authenticate(accountName, password);
             Cookie cookie = new Cookie("fourleavesshoestoken", authenticateResponse.getAccessToken());
             cookie.setHttpOnly(true);
             cookie.setPath("/"); // This makes the cookie valid for all routes on your domain

@@ -4,7 +4,6 @@ import com.data.filtro.exception.AccountNameExistException;
 import com.data.filtro.exception.PasswordDoNotMatchException;
 import com.data.filtro.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,11 +18,12 @@ import static com.data.filtro.service.InputService.*;
 @Controller
 @RequestMapping("/register")
 public class RegisterController {
+    private final UserService userService;
 
-    @Autowired
-    UserService userService;
+    public RegisterController(UserService userService) {
+        this.userService = userService;
+    }
 
-    private String csrfToken;
 
     @GetMapping
     public String showRegister(HttpServletRequest request, Model model) {

@@ -49,7 +49,7 @@
                     <i class="fa fa-angle-down text-dark"></i>
                 </a>
                 <nav class="collapse navbar navbar-vertical navbar-light align-items-start p-0 border border-top-0 border-bottom-0" id="navbar-vertical">
-                    <div style="height: 410px" class="w-100">
+                    <div style="height: auto" class="w-100">
                         <div class="navbar-nav w-100 overflow-hidden" th:each="category, item : ${categories}">
                             <a class="nav-item nav-link" th:href="@{/category/{id}(id=${category.id})}" th:text="${category.categoryName}">Action</a>
                         </div>
@@ -68,13 +68,13 @@
                         <div class="navbar-nav mr-auto py-0">
                             <a th:href="@{/}" class="nav-item nav-link">Home</a>
                             <a th:href="@{/category/{id}(id='all')}" class="nav-item nav-link active">Shop</a>
-                            <a th:if="${session.containsKey('user') && session.user != null}" th:href="@{/user/profile}" class="nav-item nav-link">Account</a>
+                            <a th:if="${user != null}" th:href="@{/user/profile}" class="nav-item nav-link">Account</a>
                             <a th:href="@{/contact}" class="nav-item nav-link">Contact</a>
                         </div>
                         <div class="navbar-nav ml-auto py-0">
-                            <a th:if="${session.containsKey('user') && session.user == null}" th:href="@{/login}" class="nav-item nav-link">Login</a>
-                            <a th:if="${session.containsKey('user') && session.user == null}" th:href="@{/register}" class="nav-item nav-link">Register</a>
-                            <a th:if="${session.containsKey('user') && session.user != null}" th:href="@{/logout}" class="nav-item nav-link">Logout</a>
+                            <a th:if="${user == null}" th:href="@{/login}" class="nav-item nav-link">Login</a>
+                            <a th:if="${user == null}" th:href="@{/register}" class="nav-item nav-link">Register</a>
+                            <a th:if="${user != null}" th:href="@{/logout}" class="nav-item nav-link">Logout</a>
                         </div>
                     </div>
                 </nav>
