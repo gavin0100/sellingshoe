@@ -41,14 +41,14 @@ spring:
           google:
             client-id: 955503971044-oo6d985jcqrn41hk31bc5ghasobipfl5.apps.googleusercontent.com
             client-secret: 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
-            redirectUri: ${REDIRECT_URI_GOOGLE:http://localhost:8080/oauth2/callback/google}
+            redirectUri: ${REDIRECT_URI_GOOGLE:https://shoeselling-fourleavesshoes.onrender.com/oauth2/callback/google}
             scope:
               - email
               - profile
           facebook:
             client-id: 1535863076974023
             client-secret: e59a8213e541a08975606a142f6eb922
-            redirectUri: ${REDIRECT_URI_FACEBOOK:http://localhost:8080/oauth2/callback/facebook}
+            redirectUri: ${REDIRECT_URI_FACEBOOK:https://shoeselling-fourleavesshoes.onrender.com/oauth2/callback/facebook}
             scope:
               - email
               - public_profile

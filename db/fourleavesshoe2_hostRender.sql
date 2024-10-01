@@ -716,3 +716,8 @@ UNLOCK TABLES;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2024-09-10  8:30:58
+
+alter table khachhang add provider varchar(15) default 'LOCAL';
+alter table khachhang add otp varchar(15) default 'duayskhdja';
+update khachhang set provider = 'local';
+select * from khachhang;
