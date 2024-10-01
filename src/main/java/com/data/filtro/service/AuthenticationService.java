@@ -60,4 +60,13 @@ public class AuthenticationService {
         return authenticateResponse;
     }
 
+    public AuthenticateResponse authenticateViaEmail(String email){
+        User user = userService.getUserByEmail(email);
+        String token = jwtService.generateToken(user);
+        AuthenticateResponse authenticateResponse = new AuthenticateResponse();
+        authenticateResponse.setAccessToken(token);
+        authenticateResponse.setUser(user);
+        return authenticateResponse;
+    }
+
 }

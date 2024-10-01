@@ -3,22 +3,26 @@ package com.data.filtro.service;
 import com.data.filtro.model.Order;
 import com.data.filtro.model.OrderDetail;
 import com.data.filtro.model.User;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import java.time.LocalDateTime;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class MailSenderService {
-    @Autowired
-    UserService userService;
+    private final UserService userService;
+
+    @Value("${spring.data.payment.serveo_link}")
+    private String IPN_API;
 
     public void sendEmailGetPassword(String to, String from, String host, String subject, String matKhauMoi) {
         // Get system properties
@@ -42,7 +46,6 @@ public class MailSenderService {
             String htmlMessage = buildHtmlBill4(matKhauMoi);
             message.setContent(htmlMessage, "text/html; charset=UTF-8");
             Transport.send(message);
-            System.out.println("Sent message successfully....");
         } catch (MessagingException mex) {
             mex.printStackTrace();
         }
@@ -63,10 +66,6 @@ public class MailSenderService {
         return sb.toString();
     }
 
-    public String localDateParseMethod(LocalDateTime ngayLam){
-        String formattedNgayLam = ngayLam.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        return formattedNgayLam;
-    }
 
 
     public void sendHoaDon(String to, String from, String host, String subject, Order hoaDon, List<OrderDetail> danhSachHoaDonChiTiet ) {
@@ -110,7 +109,6 @@ public class MailSenderService {
             message.setContent(htmlMessage, "text/html; charset=UTF-8");
             // Send message
             Transport.send(message);
-            System.out.println("Sent message successfully....");
         } catch (MessagingException mex) {
             mex.printStackTrace();
         }
@@ -165,12 +163,53 @@ public class MailSenderService {
 
         return sb.toString();
     }
+
+    public void sendEmailGetOtpLogin(String to, String from, String host, String subject, String otp) {
+        // Get system properties
+        Properties properties = System.getProperties();
+        properties.put("mail.smtp.host", "smtp.gmail.com");
+        properties.put("mail.smtp.port", "587");
+        properties.put("mail.smtp.auth", "true");
+        properties.put("mail.smtp.starttls.enable", "true");
+        properties.setProperty("mail.smtp.host", host);
+        Session session = Session.getInstance(properties, new Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication(){
+                return new  PasswordAuthentication("voduc0100@gmail.com", "arozojkhspxuuxeg");
+            }
+        });
+        try {
+            MimeMessage message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(from));
+            message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+            message.setSubject(subject);
+            String htmlMessage = buildHtmlOTP(otp);
+            message.setContent(htmlMessage, "text/html; charset=UTF-8");
+            Transport.send(message);
+        } catch (MessagingException mex) {
+            mex.printStackTrace();
+        }
+    }
+
+    public String buildHtmlOTP(String matKhauMoi) {
+        String timeSendMail = getCurrentTime();
+
+        // Use StringBuilder to create the HTML content
+        StringBuilder sb = new StringBuilder();
+        sb.append("<html><head><meta charset='UTF-8'></head><body style='font-family: Arial, sans-serif; background-color: #f7f7f7; color: #333;'>");
+        sb.append("<div style='max-width: 600px; margin: auto; background-color: #fff; padding: 20px; border: 1px solid #ddd;'>");
+        sb.append("<h2 style='text-align: center; color: #4A90E2;'>Shop bán giày Four Leave Shoes</h2>");
+        sb.append("<p style='text-align: center;'>Thời gian in: " + timeSendMail +"</p>");
+        sb.append("<h1 style='background-color: #4A90E2; color: #fff; padding: 10px; text-align: center;'>OTP: "+ matKhauMoi + "</h1>");
+
+        return sb.toString();
+    }
+
+
+
     public String getCurrentTime(){
-        String timeSendMail = String.valueOf(new Date());
-//        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Etc/UTC+7"));
-//        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-//        calendar.add(Calendar.HOUR_OF_DAY, 7);
-//        timeSendMail = dateFormat.format(calendar.getTime());
+        String timeSendMail = String.valueOf(Instant.now());
         return timeSendMail;
     }
+
 }

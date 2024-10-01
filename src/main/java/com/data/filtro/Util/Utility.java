@@ -1,5 +1,6 @@
 package com.data.filtro.Util;
 
+import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.Random;
@@ -37,4 +38,23 @@ public class Utility {
         matKhauMoi = sb.toString();
         return matKhauMoi;
     }
+    public static String getRandomNumberString() {
+        String digits = "0123456789";
+        StringBuilder sb = new StringBuilder();
+        Random random = new Random();
+        int length = 6;
+
+        for (int i = 0; i < length; i++) {
+            int index = random.nextInt(digits.length());
+            char randomDigit = digits.charAt(index);
+            sb.append(randomDigit);
+        }
+
+        return sb.toString();
+    }
+
+    public static boolean checkPhoneNumber(String phoneNumber){
+        return phoneNumber.matches("\\d+");
+    }
+
 }

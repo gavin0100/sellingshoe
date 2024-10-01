@@ -40,10 +40,18 @@ spring:
         registration:
           google:
             client-id: 955503971044-oo6d985jcqrn41hk31bc5ghasobipfl5.apps.googleusercontent.com
-            client-secret: ${{ secrets.GOOGLE}}
+            client-secret: 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
+            redirectUri: ${REDIRECT_URI_GOOGLE:http://localhost:8080/oauth2/callback/google}
+            scope:
+              - email
+              - profile
           facebook:
             client-id: 1535863076974023
-            client-secret: ${{ secrets.FACEBOOK}}
+            client-secret: e59a8213e541a08975606a142f6eb922
+            redirectUri: ${REDIRECT_URI_FACEBOOK:http://localhost:8080/oauth2/callback/facebook}
+            scope:
+              - email
+              - public_profile
   data:
     redis:
       host: ${SPRING_REDIS_HOST:localhost}

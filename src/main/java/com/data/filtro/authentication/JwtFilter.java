@@ -55,11 +55,13 @@ public class JwtFilter extends OncePerRequestFilter {
                 path.startsWith("/javascript/") ||
                 path.startsWith("/image/") ||
                 path.equals("/login") ||
+                path.equals("/login/login_failure") ||
+                path.equals("/login/oauth_failure") ||
                 path.startsWith("/img/") ||
                 path.startsWith("/access-denied") ||
                 path.startsWith("/product/img") ||
                 path.startsWith("/product/") ||
-                path.startsWith("/cart") ||
+                path.equals("/cart") ||
                 path.startsWith("/category/") ||
                 path.equals("/register") ||
                 path.startsWith("/api/") ||
@@ -73,7 +75,16 @@ public class JwtFilter extends OncePerRequestFilter {
                 path.startsWith("/logout_to_login") ||
                 path.startsWith("/user/billing/reset_login") ||
                 path.startsWith("/search") ||
-                path.equals("/404")){
+                path.equals("/404") ||
+                path.startsWith("/oauth") ||
+                path.equals("/login/google/code") ||
+                path.equals("/login/google/auth") ||
+                path.equals("/login/otp") ||
+                path.equals("/login/oauth2/code/google") ||
+                path.startsWith("/rest/api") ||
+                path.equals("/error_problem_detail") ||
+                path.startsWith("/v3") ||
+                path.startsWith("/swagger-ui")){
             if (path.startsWith("/product/") ||
                     path.startsWith("/cart") ||
                     path.startsWith("/category/") ||
@@ -83,6 +94,7 @@ public class JwtFilter extends OncePerRequestFilter {
                     path.startsWith("/forgot-password") ||
                     path.equals("/") ||
                     path.startsWith("/login") ||
+                    path.startsWith("/rest/api") ||
                     path.startsWith("/search")
             ){
 

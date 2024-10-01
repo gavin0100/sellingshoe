@@ -1,14 +1,12 @@
 package com.data.filtro.controller;
 
-import com.data.filtro.model.AuthenticateResponse;
-import com.data.filtro.model.User;
-import com.data.filtro.service.AuthenticationService;
-import com.data.filtro.service.CartService;
-import com.data.filtro.service.ProductService;
-import com.data.filtro.service.UserService;
+import com.data.filtro.Util.Utility;
+import com.data.filtro.model.*;
+import com.data.filtro.service.*;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,10 +17,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.io.IOException;
 import java.util.UUID;
 
 @Controller
 @RequestMapping("/login")
+@Slf4j
 public class LoginController {
 
 
@@ -33,11 +33,14 @@ public class LoginController {
 
     private final ProductService productService;
 
-    public LoginController(CartService cartService, UserService userService, AuthenticationService authenticationService, ProductService productService) {
+    private final MailSenderService mailSenderService;
+
+    public LoginController(CartService cartService, UserService userService, AuthenticationService authenticationService, ProductService productService, MailSenderService mailSenderService) {
         this.cartService = cartService;
         this.userService = userService;
         this.authenticationService = authenticationService;
         this.productService = productService;
+        this.mailSenderService = mailSenderService;
     }
 
 
@@ -52,6 +55,7 @@ public class LoginController {
             return "redirect:/";
         }
         if (user == null) {
+//            sendSMSViaSpeedSMS(Utility.getRandomNumberString());
             return "user/boot1/login";
         }
         else {
@@ -65,7 +69,99 @@ public class LoginController {
         return "user/boot1/login";
     }
 
-//    @PostMapping
+    @PostMapping
+    public String login(@RequestParam("username") String username,
+                        @RequestParam("password") String password,
+                        @RequestParam("_csrfParameterName") String csrfTokenForm,
+                        HttpServletResponse response,
+                        Authentication authentication,
+                        HttpSession session,
+                        Model model) {
+        model.addAttribute("message", "Thông tin đăng nhập không đúng");
+        return "user/boot1/login";
+    }
+
+    @GetMapping("/login_failure")
+    public String login(HttpServletResponse response,
+                        Authentication authentication,
+                        HttpSession session,
+                        Model model) {
+        model.addAttribute("message", "Thông tin đăng nhập không đúng");
+        return "user/boot1/login";
+    }
+
+    @GetMapping("/oauth_failure")
+    public String loginOauth(
+            @RequestParam String error,
+            HttpServletResponse response,
+            Authentication authentication,
+            HttpSession session,
+            Model model) {
+        model.addAttribute("message", "Xác thực qua FaceBook hoặc Google thất bại!");
+        return "user/boot1/login";
+    }
+
+    @PostMapping("/logincontroller")
+    public String login(
+            HttpServletResponse response,
+            HttpSession session,
+            Model model) {
+        AuthenticateResponse authenticateResponse = authenticationService.authenticate(SecurityContextHolder.getContext().getAuthentication());
+        model.addAttribute("accountName", authenticateResponse.getUser().getAccountName());
+        model.addAttribute("password", authenticateResponse.getUser().getPassword());
+        String newOtp = Utility.getRandomNumberString();
+        userService.updateOtpUser(newOtp, authenticateResponse.getUser().getId());
+        String to = authenticateResponse.getUser().getEmail();
+        String from = "voduc0100@gmail.com";
+        String host = "smtp.gmail.com";
+        String subject = "SHOP BÁN GIÀY FOUR LEAVES SHOE - OTP CHO TÀI KHOẢN!";
+        mailSenderService.sendEmailGetOtpLogin(to, from, host, subject, newOtp );
+        return "user/boot1/otpLogin";
+    }
+    @PostMapping("/otp")
+    public String otpLogin( @RequestParam("accountName") String accountName,
+                            @RequestParam("password") String password,
+                            @RequestParam("otp") String otp,
+                            HttpServletResponse response,
+                            HttpSession session,
+                            Model model) {
+        try{
+            User user = userService.getUserFromOtp(accountName, password, otp);
+            if (user == null){
+                throw new Exception("User not found");
+            }
+            AuthenticateResponse authenticateResponse = authenticationService.authenticateWithOnlyAccountName(accountName);
+            String newOtp = Utility.getRandomNumberString();
+            userService.updateOtpUser(newOtp, authenticateResponse.getUser().getId());
+            Cookie cookie = new Cookie("fourleavesshoestoken", authenticateResponse.getAccessToken());
+            cookie.setHttpOnly(true);
+            cookie.setPath("/"); // This makes the cookie valid for all routes on your domain
+            response.addCookie(cookie);
+            return "redirect:/";
+        } catch (Exception ex){
+            model.addAttribute("message", "Thông tin đăng nhập không đúng");
+            return "user/boot1/login";
+        }
+
+
+    }
+
+    @GetMapping("/session")
+    public String check(HttpSession session) {
+        return "session";
+    }
+    public String generateRandomString() {
+        return UUID.randomUUID().toString();
+    }
+
+    @PostMapping("/oauth2/code/google")
+    public String loginViaGoogle(){
+        return "loginViaGoogle";
+    }
+
+
+
+    //    @PostMapping
 //    public String login(@RequestParam("username") String username,
 //                        @RequestParam("password") String password,
 //                        @RequestParam("_csrfParameterName") String csrfTokenForm,
@@ -116,45 +212,4 @@ public class LoginController {
 //        return "user/boot1/login";
 //    }
 
-    @PostMapping
-    public String login(@RequestParam("username") String username,
-                        @RequestParam("password") String password,
-                        @RequestParam("_csrfParameterName") String csrfTokenForm,
-                        HttpServletResponse response,
-                        Authentication authentication,
-                        HttpSession session,
-                        Model model) {
-        model.addAttribute("message", "Thông tin đăng nhập không đúng");
-        return "user/boot1/login";
-    }
-
-    @GetMapping("/login_failure")
-    public String login(HttpServletResponse response,
-                        Authentication authentication,
-                        HttpSession session,
-                        Model model) {
-        model.addAttribute("message", "Thông tin đăng nhập không đúng");
-        return "user/boot1/login";
-    }
-
-    @PostMapping("/logincontroller")
-    public String login(
-            HttpServletResponse response,
-            HttpSession session,
-            Model model) {
-        AuthenticateResponse authenticateResponse = authenticationService.authenticate(SecurityContextHolder.getContext().getAuthentication());
-        Cookie cookie = new Cookie("fourleavesshoestoken", authenticateResponse.getAccessToken());
-        cookie.setHttpOnly(true);
-        cookie.setPath("/"); // This makes the cookie valid for all routes on your domain
-        response.addCookie(cookie);
-        return "redirect:/";
-    }
-
-    @GetMapping("/session")
-    public String check(HttpSession session) {
-        return "session";
-    }
-    public String generateRandomString() {
-        return UUID.randomUUID().toString();
-    }
 }

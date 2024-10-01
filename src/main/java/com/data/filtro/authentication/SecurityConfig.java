@@ -4,8 +4,11 @@ import com.data.filtro.authentication.exception.CustomAccessDeniedHandler;
 import com.data.filtro.authentication.exception.CustomAuthenticationFailureHandler;
 import com.data.filtro.authentication.exception.CustomAuthenticationSuccessHandler;
 import com.data.filtro.authentication.exception.CustomErrorHandler;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.data.filtro.authentication.oauth.CustomOAuth2UserService;
+import com.data.filtro.authentication.oauth.HttpCookieOAuth2AuthorizationRequestRepository;
+import com.data.filtro.authentication.oauth.OAuth2AuthenticationFailureHandler;
+import com.data.filtro.authentication.oauth.OAuth2AuthenticationSuccessHandler;
+import com.data.filtro.service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -24,16 +27,42 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
 @EnableMethodSecurity
-public class SecurityConfig{
+public class SecurityConfig {
     private final AuthenticationProvider authenticationProvider;
     private final JwtFilter jwtFilter;
 
-    @Autowired
-    @Lazy
-    private  AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
+    private final UserService userService;
+    private final CustomOAuth2UserService oauthUserService;
+
+    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+
+    private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
+
+    private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
+
+
+
+    public SecurityConfig(AuthenticationProvider authenticationProvider,
+                          JwtFilter jwtFilter,
+                          @Lazy AuthenticationManager authenticationManager,
+                          UserService userService, CustomOAuth2UserService oauthUserService, OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler, OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler, HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository){
+        this.authenticationManager = authenticationManager;
+        this.jwtFilter = jwtFilter;
+        this.authenticationProvider = authenticationProvider;
+        this.userService = userService;
+        this.oauthUserService = oauthUserService;
+        this.oAuth2AuthenticationSuccessHandler = oAuth2AuthenticationSuccessHandler;
+        this.oAuth2AuthenticationFailureHandler = oAuth2AuthenticationFailureHandler;
+        this.httpCookieOAuth2AuthorizationRequestRepository = httpCookieOAuth2AuthorizationRequestRepository;
+    }
+
+    @Bean
+    public HttpCookieOAuth2AuthorizationRequestRepository cookieAuthorizationRequestRepository() {
+        return new HttpCookieOAuth2AuthorizationRequestRepository();
+    }
     @Bean
     public CustomAccessDeniedHandler accessDeniedHandler(){
         return new CustomAccessDeniedHandler();
@@ -43,6 +72,8 @@ public class SecurityConfig{
     public CustomErrorHandler accessErrorHandler(){
         return new CustomErrorHandler();
     }
+
+
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
@@ -79,14 +110,17 @@ public class SecurityConfig{
                                         "/session",
                                         "/favicon.ico",
                                         "/search",
-                                        "/404"
+                                        "/404",
+                                        "/rest/api/**",
+                                        "/oauth/**",
+                                        "/auth/**",
+                                        "/error_problem_detail",
+                                        "/v3/**",
+                                        "/swagger-ui/**"
 
                                 ).permitAll()
                                 .requestMatchers("/css/**", "/js/**", "/image/**", "/javascript/**", "/access-denied", "/img/**", "/product/img/**").permitAll()
-                                .anyRequest().authenticated()
-                                .and()
-                                .exceptionHandling()
-                                .accessDeniedPage("/");
+                                .anyRequest().authenticated();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -112,8 +146,22 @@ public class SecurityConfig{
                         e.printStackTrace();
                     }
                 })
-
-                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .oauth2Login()
+                .loginPage("/login")
+                .authorizationEndpoint()
+                .baseUri("/oauth2/authorization")
+                .authorizationRequestRepository(cookieAuthorizationRequestRepository())
+                .and()
+                .redirectionEndpoint()
+                .baseUri("/oauth2/callback/*")
+                .and()
+                .userInfoEndpoint()
+                .userService(oauthUserService)
+                .and()
+                .successHandler(oAuth2AuthenticationSuccessHandler)
+                .failureHandler(oAuth2AuthenticationFailureHandler);
         return http.build();
     }
+
 }
